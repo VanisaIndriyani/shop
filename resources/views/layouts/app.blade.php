@@ -24,6 +24,7 @@
             body {
                 font-family: 'Plus Jakarta Sans', sans-serif;
             }
+            [x-cloak] { display: none !important; }
             /* Smooth transitions for interactive elements */
             a, button, input, .card, .btn {
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -73,7 +74,7 @@
 
         <!-- AOS Animation JS -->
         <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-        <!-- Alpine.js (Added for robustness) -->
+        <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
         
         <!-- Swiper JS -->
