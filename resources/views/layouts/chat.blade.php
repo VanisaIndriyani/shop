@@ -2,11 +2,13 @@
 <style>
     .refrens-chat-fab{position:fixed;right:24px;bottom:96px;z-index:9999}
     @media (min-width: 768px){.refrens-chat-fab{bottom:24px}}
+    .refrens-chat-login-modal{display:none}
+    .refrens-chat-login-toggle:checked ~ .refrens-chat-login-modal{display:block}
 </style>
-<div x-data="chatSystem()" class="refrens-chat-fab" data-chat-auth="{{ Auth::check() ? '1' : '0' }}">
+@auth
+<div x-data="chatSystem()" class="refrens-chat-fab">
     <!-- Chat Toggle Button -->
     <button @click="toggleChat()"
-            data-chat-toggle
             style="background: linear-gradient(135deg, #2563eb, #4f46e5); width:56px; height:56px; border:none;"
             class="hover:from-blue-700 hover:to-indigo-700 text-white rounded-2xl shadow-[0_18px_38px_rgba(37,99,235,0.35)] ring-1 ring-white/40 transition-all duration-300 transform hover:scale-105 flex items-center justify-center group relative z-[1]"
             aria-label="Chat Admin">
@@ -28,8 +30,8 @@
         </span>
     </button>
 
-    <div x-show="loginPromptOpen" x-cloak class="fixed inset-0 z-[60]" style="display: none;" data-chat-login-modal>
-        <div class="fixed inset-0 bg-black/35 backdrop-blur-[2px]" @click="closeLoginPrompt()" data-chat-login-backdrop></div>
+    <div x-show="loginPromptOpen" x-cloak class="fixed inset-0 z-[60]" style="display: none;">
+        <div class="fixed inset-0 bg-black/35 backdrop-blur-[2px]" @click="closeLoginPrompt()"></div>
         <div class="min-h-screen flex items-center justify-center p-6">
             <div class="w-full max-w-md bg-white rounded-[2rem] shadow-2xl overflow-hidden">
                 <div class="p-8 text-center">
@@ -40,7 +42,7 @@
                     <a href="{{ route('login') }}" class="w-full inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl transition-colors">
                         Login
                     </a>
-                    <button type="button" @click="closeLoginPrompt()" class="mt-6 text-sm text-gray-400 hover:text-gray-600 underline" data-chat-login-close>
+                    <button type="button" @click="closeLoginPrompt()" class="mt-6 text-sm text-gray-400 hover:text-gray-600 underline">
                         Skip for now
                     </button>
                 </div>
@@ -263,30 +265,39 @@ function chatSystem() {
     }
 }
 </script>
+</div>
+@endauth
 
-<script>
-    (function () {
-        const root = document.querySelector('.refrens-chat-fab');
-        if (!root) return;
-        if (root.__x) return;
+@guest
+<div class="refrens-chat-fab">
+    <input id="refrensChatLoginToggle" type="checkbox" class="refrens-chat-login-toggle" style="display:none;">
+    <label for="refrensChatLoginToggle"
+           style="background: linear-gradient(135deg, #2563eb, #4f46e5); width:56px; height:56px; border:none;"
+           class="hover:from-blue-700 hover:to-indigo-700 text-white rounded-2xl shadow-[0_18px_38px_rgba(37,99,235,0.35)] ring-1 ring-white/40 transition-all duration-300 transform hover:scale-105 flex items-center justify-center group relative z-[1] cursor-pointer"
+           aria-label="Chat Admin">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h6m8-1c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+    </label>
 
-        const isAuthed = root.getAttribute('data-chat-auth') === '1';
-        if (isAuthed) return;
-
-        const toggleBtn = root.querySelector('[data-chat-toggle]');
-        const modal = root.querySelector('[data-chat-login-modal]');
-        const backdrop = root.querySelector('[data-chat-login-backdrop]');
-        const closeBtn = root.querySelector('[data-chat-login-close]');
-
-        if (!toggleBtn || !modal) return;
-
-        function open() { modal.style.display = 'block'; }
-        function close() { modal.style.display = 'none'; }
-        function toggle() { modal.style.display === 'none' || !modal.style.display ? open() : close(); }
-
-        close();
-        toggleBtn.addEventListener('click', toggle);
-        if (backdrop) backdrop.addEventListener('click', close);
-        if (closeBtn) closeBtn.addEventListener('click', close);
-    })();
-</script>
+    <div class="refrens-chat-login-modal fixed inset-0 z-[60]">
+        <label for="refrensChatLoginToggle" class="fixed inset-0 bg-black/35 backdrop-blur-[2px] cursor-pointer"></label>
+        <div class="min-h-screen flex items-center justify-center p-6">
+            <div class="w-full max-w-md bg-white rounded-[2rem] shadow-2xl overflow-hidden">
+                <div class="p-8 text-center">
+                    <h3 class="text-xl font-black text-gray-900">Chat Support</h3>
+                    <div class="mt-10 mb-10">
+                        <p class="text-sm text-gray-700 font-medium">Log in to save your chat and continue on any device.</p>
+                    </div>
+                    <a href="{{ route('login') }}" class="w-full inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl transition-colors">
+                        Login
+                    </a>
+                    <label for="refrensChatLoginToggle" class="mt-6 inline-block text-sm text-gray-400 hover:text-gray-600 underline cursor-pointer">
+                        Skip for now
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endguest
