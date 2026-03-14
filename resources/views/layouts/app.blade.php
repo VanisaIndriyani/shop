@@ -153,6 +153,40 @@
             })();
         </script>
 
+        <script>
+            (function () {
+                function load(src) {
+                    return new Promise((resolve, reject) => {
+                        const s = document.createElement('script');
+                        s.src = src;
+                        s.defer = true;
+                        s.onload = () => resolve(true);
+                        s.onerror = () => reject(new Error('failed: ' + src));
+                        document.head.appendChild(s);
+                    });
+                }
+
+                function ensureAlpine() {
+                    if (window.Alpine) return;
+                    if (window.__refrensAlpineFallback) return;
+                    window.__refrensAlpineFallback = true;
+
+                    load('https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.14.9/dist/cdn.min.js')
+                        .then(() => load('https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js'))
+                        .then(() => {
+                            try {
+                                if (window.Alpine && typeof window.Alpine.start === 'function') {
+                                    window.Alpine.start();
+                                }
+                            } catch (e) {}
+                        })
+                        .catch(() => {});
+                }
+
+                window.setTimeout(ensureAlpine, 1200);
+            })();
+        </script>
+
         @stack('scripts')
     </body>
 </html>
