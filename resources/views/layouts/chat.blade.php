@@ -3,9 +3,10 @@
     .refrens-chat-fab{position:fixed;right:24px;bottom:96px;z-index:9999}
     @media (min-width: 768px){.refrens-chat-fab{bottom:24px}}
 </style>
-<div x-data="chatSystem()" class="refrens-chat-fab">
+<div x-data="chatSystem()" class="refrens-chat-fab" data-chat-auth="{{ Auth::check() ? '1' : '0' }}">
     <!-- Chat Toggle Button -->
     <button @click="toggleChat()"
+            data-chat-toggle
             style="background: linear-gradient(135deg, #2563eb, #4f46e5); width:56px; height:56px; border:none;"
             class="hover:from-blue-700 hover:to-indigo-700 text-white rounded-2xl shadow-[0_18px_38px_rgba(37,99,235,0.35)] ring-1 ring-white/40 transition-all duration-300 transform hover:scale-105 flex items-center justify-center group relative z-[1]"
             aria-label="Chat Admin">
@@ -27,8 +28,8 @@
         </span>
     </button>
 
-    <div x-show="loginPromptOpen" x-cloak class="fixed inset-0 z-[60]">
-        <div class="fixed inset-0 bg-black/35 backdrop-blur-[2px]" @click="closeLoginPrompt()"></div>
+    <div x-show="loginPromptOpen" x-cloak class="fixed inset-0 z-[60]" style="display: none;" data-chat-login-modal>
+        <div class="fixed inset-0 bg-black/35 backdrop-blur-[2px]" @click="closeLoginPrompt()" data-chat-login-backdrop></div>
         <div class="min-h-screen flex items-center justify-center p-6">
             <div class="w-full max-w-md bg-white rounded-[2rem] shadow-2xl overflow-hidden">
                 <div class="p-8 text-center">
@@ -39,7 +40,7 @@
                     <a href="{{ route('login') }}" class="w-full inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl transition-colors">
                         Login
                     </a>
-                    <button type="button" @click="closeLoginPrompt()" class="mt-6 text-sm text-gray-400 hover:text-gray-600 underline">
+                    <button type="button" @click="closeLoginPrompt()" class="mt-6 text-sm text-gray-400 hover:text-gray-600 underline" data-chat-login-close>
                         Skip for now
                     </button>
                 </div>
@@ -261,4 +262,31 @@ function chatSystem() {
         }
     }
 }
+</script>
+
+<script>
+    (function () {
+        const root = document.querySelector('.refrens-chat-fab');
+        if (!root) return;
+        if (root.__x) return;
+
+        const isAuthed = root.getAttribute('data-chat-auth') === '1';
+        if (isAuthed) return;
+
+        const toggleBtn = root.querySelector('[data-chat-toggle]');
+        const modal = root.querySelector('[data-chat-login-modal]');
+        const backdrop = root.querySelector('[data-chat-login-backdrop]');
+        const closeBtn = root.querySelector('[data-chat-login-close]');
+
+        if (!toggleBtn || !modal) return;
+
+        function open() { modal.style.display = 'block'; }
+        function close() { modal.style.display = 'none'; }
+        function toggle() { modal.style.display === 'none' || !modal.style.display ? open() : close(); }
+
+        close();
+        toggleBtn.addEventListener('click', toggle);
+        if (backdrop) backdrop.addEventListener('click', close);
+        if (closeBtn) closeBtn.addEventListener('click', close);
+    })();
 </script>
