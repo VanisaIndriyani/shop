@@ -80,23 +80,36 @@
                                 Size Guide <span class="ml-1">&rsaquo;</span>
                             </button>
                         </div>
-                        <div class="flex gap-4">
-                            @foreach([ 'M', 'L', 'XL'] as $s)
-                            <button @click="size = '{{ $s }}'" 
-                                    class="relative border py-3 px-6 text-sm font-medium uppercase transition-all duration-200 focus:outline-none flex-1 flex items-center justify-center overflow-hidden"
-                                    :class="size === '{{ $s }}' ? 'border-blue-600 text-blue-600 bg-blue-50 ring-1 ring-blue-600' : 'border-gray-200 text-gray-900 hover:border-gray-400 bg-white'">
-                                
-                                {{ $s }}
-                                
-                                {{-- Simulasi stok habis (opsional, bisa diganti logic backend) --}}
-                                @if($product->stock <= 0)
-                                <div class="absolute inset-0">
-                                    <svg class="absolute inset-0 w-full h-full text-gray-200" preserveAspectRatio="none" stroke="currentColor" fill="none" viewBox="0 0 100 100" vector-effect="non-scaling-stroke">
-                                        <line x1="0" y1="100" x2="100" y2="0" stroke-width="2" />
-                                    </svg>
-                                </div>
-                                @endif
-                            </button>
+                        @php
+                            $sizeOrder = ['S','M','L','XL','39','40','41','42','43'];
+                            $sizeValues = is_array($product->sizes) ? $product->sizes : [];
+                            $sizeValues = array_values(array_filter($sizeValues, fn ($v) => $v !== null && $v !== ''));
+                            if (count($sizeValues) === 0) {
+                                $sizeValues = ['M', 'L', 'XL'];
+                            } else {
+                                usort($sizeValues, function ($a, $b) use ($sizeOrder) {
+                                    $ia = array_search((string) $a, $sizeOrder, true);
+                                    $ib = array_search((string) $b, $sizeOrder, true);
+                                    $ia = $ia === false ? 999 : $ia;
+                                    $ib = $ib === false ? 999 : $ib;
+                                    return $ia <=> $ib;
+                                });
+                            }
+                        @endphp
+                        <div class="flex flex-wrap gap-3">
+                            @foreach($sizeValues as $s)
+                                <button @click="size = '{{ $s }}'"
+                                        class="relative border py-3 px-6 text-sm font-medium uppercase transition-all duration-200 focus:outline-none flex items-center justify-center overflow-hidden"
+                                        :class="size === '{{ $s }}' ? 'border-blue-600 text-blue-600 bg-blue-50 ring-1 ring-blue-600' : 'border-gray-200 text-gray-900 hover:border-gray-400 bg-white'">
+                                    {{ $s }}
+                                    @if($product->stock <= 0)
+                                        <div class="absolute inset-0">
+                                            <svg class="absolute inset-0 w-full h-full text-gray-200" preserveAspectRatio="none" stroke="currentColor" fill="none" viewBox="0 0 100 100" vector-effect="non-scaling-stroke">
+                                                <line x1="0" y1="100" x2="100" y2="0" stroke-width="2" />
+                                            </svg>
+                                        </div>
+                                    @endif
+                                </button>
                             @endforeach
                         </div>
                     </div>
@@ -128,11 +141,7 @@
                         </button>
                         
                         @if($product->stock > 0)
-                        <button type="submit" name="buy_now" value="1"
-                                :disabled="!size"
-                                class="w-full bg-white border-2 border-blue-600 rounded-full py-4 px-8 flex items-center justify-center text-base font-bold text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-100 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md">
-                            BUY NOW
-                        </button>
+                    
                         @endif
                     </form>
                 </div>
@@ -146,12 +155,7 @@
                             <span x-show="expanded" style="display: none;">-</span>
                         </button>
                         <div x-show="expanded" x-collapse style="display: none;" class="pb-4 text-sm text-gray-600 leading-relaxed">
-                            {{ $product->description }}
-                            <ul class="list-disc pl-5 mt-4 space-y-1">
-                                <li>Material: Premium Cotton Combed 24s</li>
-                                <li>Fit: Boxy Fit / Oversized</li>
-                                <li>Print: High Density Plastisol</li>
-                            </ul>
+                            {!! nl2br(e((string) $product->description)) !!}
                         </div>
                     </div>
                     

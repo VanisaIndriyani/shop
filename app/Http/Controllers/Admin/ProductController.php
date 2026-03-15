@@ -32,7 +32,7 @@ class ProductController extends Controller
             'stock' => ['required', 'integer', 'min:0'],
             'description' => ['nullable', 'string'],
             'sizes' => ['nullable', 'array'],
-            'sizes.*' => ['string', 'in:S,M,L,XL'],
+            'sizes.*' => ['string', 'in:S,M,L,XL,39,40,41,42,43'],
             'images' => ['required', 'array', 'size:3'],
             'images.0' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
             'images.1' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
@@ -77,7 +77,7 @@ class ProductController extends Controller
             'stock' => ['required', 'integer', 'min:0'],
             'description' => ['nullable', 'string'],
             'sizes' => ['nullable', 'array'],
-            'sizes.*' => ['string', 'in:S,M,L,XL'],
+            'sizes.*' => ['string', 'in:S,M,L,XL,39,40,41,42,43'],
             'images' => ['nullable', 'array'],
             'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);

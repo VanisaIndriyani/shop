@@ -65,7 +65,7 @@
                 <label class="form-label fw-semibold">Size</label>
                 @php $sizes = old('sizes', []); @endphp
                 <div class="d-flex flex-wrap gap-2">
-                    @foreach(['S','M','L','XL'] as $s)
+                    @foreach(['S','M','L','XL','39','40','41','42','43'] as $s)
                         <label class="btn btn-outline-secondary">
                             <input type="checkbox" name="sizes[]" value="{{ $s }}" class="d-none" {{ in_array($s, $sizes) ? 'checked' : '' }}>
                             <span class="fw-semibold">{{ $s }}</span>

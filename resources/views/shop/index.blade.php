@@ -21,28 +21,14 @@
     .refrens-pill input{display:none}
     .refrens-pill--active{background:#eef2ff;border-color:#4f46e5;color:#1e3a8a}
     .refrens-applybar{position:sticky;bottom:0;background:#fff;padding:14px;border-top:1px solid rgba(0,0,0,.06)}
-    .refrens-radio{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid rgba(0,0,0,.06)}
-    .refrens-radio .form-check-input{margin-top:0}
+    .refrens-radio{display:flex;align-items:center;gap:12px;padding:10px 0}
+    .refrens-radio .form-check-input{margin:0;accent-color:#dc2626}
+    .refrens-radio .refrens-radio__label{font-weight:700;color:#111827}
+    .refrens-radio .form-check-input:checked + .refrens-radio__label{color:#dc2626}
 </style>
 
 <div class="bg-white min-h-screen">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-
-        <div class="relative overflow-hidden rounded-4 mb-5">
-            <div class="grid grid-cols-2">
-                <div class="relative">
-                    <img src="{{ asset('img/slide1.jpeg') }}" alt="Shop" class="w-full h-[260px] sm:h-[320px] object-cover">
-                </div>
-                <div class="relative">
-                    <img src="{{ asset('img/slide2.jpeg') }}" alt="Shop" class="w-full h-[260px] sm:h-[320px] object-cover">
-                </div>
-            </div>
-            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div class="px-5 py-2 rounded-3xl border-2 border-blue-600 bg-white/90 shadow-lg">
-                    <span class="text-blue-700 fw-black" style="font-size:28px;letter-spacing:.2px;">Shop</span>
-                </div>
-            </div>
-        </div>
         
         <!-- Filter & Sort Buttons -->
         <div class="flex gap-4 mb-6 sticky top-16 z-30 bg-white py-2 -mx-4 px-4 shadow-sm sm:static sm:bg-transparent sm:shadow-none sm:py-0 sm:mx-0 sm:px-0">
@@ -139,13 +125,13 @@
                                 @endphp
                                 <div class="border-top pt-2">
                                     <label class="refrens-radio">
-                                        <span class="fw-semibold">Semua Produk</span>
                                         <input class="form-check-input" type="radio" name="type" value="" {{ $currentType === '' ? 'checked' : '' }}>
+                                        <span class="refrens-radio__label">Semua Produk</span>
                                     </label>
                                     @foreach($typeOptions as $t)
                                         <label class="refrens-radio">
-                                            <span class="fw-semibold">{{ $t }}</span>
                                             <input class="form-check-input" type="radio" name="type" value="{{ $t }}" {{ $currentType === $t ? 'checked' : '' }}>
+                                            <span class="refrens-radio__label">{{ $t }}</span>
                                         </label>
                                     @endforeach
                                 </div>
@@ -161,12 +147,12 @@
                                 @php $availability = request('availability', 'all'); @endphp
                                 <div class="border-top pt-2">
                                     <label class="refrens-radio">
-                                        <span class="fw-semibold">Semua</span>
                                         <input class="form-check-input" type="radio" name="availability" value="all" {{ $availability === 'all' ? 'checked' : '' }}>
+                                        <span class="refrens-radio__label">Semua</span>
                                     </label>
                                     <label class="refrens-radio">
-                                        <span class="fw-semibold">Ada Stok</span>
                                         <input class="form-check-input" type="radio" name="availability" value="in" {{ $availability === 'in' ? 'checked' : '' }}>
+                                        <span class="refrens-radio__label">Ada Stok</span>
                                     </label>
                                 </div>
                             </div>
@@ -197,7 +183,7 @@
                             <div class="pt-3">
                                 @php $sizes = request('sizes', []); @endphp
                                 <div class="d-flex flex-wrap gap-2">
-                                    @foreach(['S','M','L','XL'] as $s)
+                                    @foreach(['S','M','L','XL','39','40','41','42','43'] as $s)
                                         @php $checked = in_array($s, $sizes); @endphp
                                         <label class="refrens-pill {{ $checked ? 'refrens-pill--active' : '' }}">
                                             <input type="checkbox" name="sizes[]" value="{{ $s }}" {{ $checked ? 'checked' : '' }}>
