@@ -3,7 +3,7 @@
 @section('content')
 <!-- Hero Section (Slider Style) -->
 <div class="relative bg-white overflow-hidden">
-    <div class="swiper mySwiper" style="height: 80vh;">
+    <div class="swiper mySwiper" style="height: 100svh;">
         <div class="swiper-wrapper">
             <!-- Slide 1 -->
             <div class="swiper-slide relative">
