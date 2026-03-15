@@ -36,6 +36,14 @@ class ProductController extends Controller
             $query->where('price', '<=', $request->max_price);
         }
 
+        if ($request->filled('availability')) {
+            if ($request->availability === 'in') {
+                $query->where('stock', '>', 0);
+            } elseif ($request->availability === 'out') {
+                $query->where('stock', '<=', 0);
+            }
+        }
+
         // Sort
         if ($request->has('sort')) {
             switch ($request->sort) {
