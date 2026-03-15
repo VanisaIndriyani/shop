@@ -4,7 +4,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 @php
-    $hasFilters = request('categories') || request('min_price') || request('max_price') || request('availability') || request('sizes') || request('types');
+    $hasFilters = request('categories') || request('min_price') || request('max_price') || request('availability') || request('sizes') || request('types') || request('type');
     $hasSort = request('sort') && request('sort') !== 'latest';
 @endphp
 
@@ -21,6 +21,8 @@
     .refrens-pill input{display:none}
     .refrens-pill--active{background:#eef2ff;border-color:#4f46e5;color:#1e3a8a}
     .refrens-applybar{position:sticky;bottom:0;background:#fff;padding:14px;border-top:1px solid rgba(0,0,0,.06)}
+    .refrens-radio{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid rgba(0,0,0,.06)}
+    .refrens-radio .form-check-input{margin-top:0}
 </style>
 
 <div class="bg-white min-h-screen">
@@ -66,15 +68,36 @@
                                 <i class="bi bi-chevron-down"></i>
                             </summary>
                             <div class="pt-3">
-                                <div class="d-flex flex-wrap gap-2">
-                                    @foreach($categories as $category)
-                                        @php $checked = in_array($category, request('categories', [])); @endphp
-                                        <label class="refrens-pill {{ $checked ? 'refrens-pill--active' : '' }}">
-                                            <input type="checkbox" name="categories[]" value="{{ $category }}" {{ $checked ? 'checked' : '' }}>
-                                            {{ $category }}
+                                @php
+                                    $categorySelected = request('categories', []);
+                                    $categoryList = $categories instanceof \Illuminate\Support\Collection ? $categories->values() : collect($categories)->values();
+                                    $categoryTop = $categoryList->take(2);
+                                    $categoryMore = $categoryList->slice(2);
+                                @endphp
+                                <div class="d-flex flex-column gap-2">
+                                    @foreach($categoryTop as $category)
+                                        <label class="d-flex align-items-center gap-2">
+                                            <input type="checkbox" name="categories[]" value="{{ $category }}" class="form-check-input m-0" {{ in_array($category, $categorySelected) ? 'checked' : '' }}>
+                                            <span class="fw-semibold">{{ $category }}</span>
                                         </label>
                                     @endforeach
                                 </div>
+                                @if($categoryMore->count() > 0)
+                                    <details class="mt-2">
+                                        <summary class="d-flex align-items-center gap-2 text-muted small fw-semibold" style="list-style:none;cursor:pointer;">
+                                            <span>Lihat lainnya</span>
+                                            <i class="bi bi-chevron-down"></i>
+                                        </summary>
+                                        <div class="d-flex flex-column gap-2 mt-2">
+                                            @foreach($categoryMore as $category)
+                                                <label class="d-flex align-items-center gap-2">
+                                                    <input type="checkbox" name="categories[]" value="{{ $category }}" class="form-check-input m-0" {{ in_array($category, $categorySelected) ? 'checked' : '' }}>
+                                                    <span class="fw-semibold">{{ $category }}</span>
+                                                </label>
+                                            @endforeach
+                                        </div>
+                                    </details>
+                                @endif
                             </div>
                         </details>
 
@@ -85,7 +108,11 @@
                             </summary>
                             <div class="pt-3">
                                 @php
-                                    $types = request('types', []);
+                                    $currentType = request('type');
+                                    if (!$currentType) {
+                                        $types = request('types', []);
+                                        $currentType = is_array($types) && count($types) ? $types[0] : '';
+                                    }
                                     $typeOptions = $productTypes ?? collect();
                                     if (!($typeOptions instanceof \Illuminate\Support\Collection)) {
                                         $typeOptions = collect($typeOptions);
@@ -94,12 +121,15 @@
                                         $typeOptions = collect(['Top', 'Bottom', 'Accessories']);
                                     }
                                 @endphp
-                                <div class="d-flex flex-wrap gap-2">
+                                <div class="border-top pt-2">
+                                    <label class="refrens-radio">
+                                        <span class="fw-semibold">Semua Produk</span>
+                                        <input class="form-check-input" type="radio" name="type" value="" {{ $currentType === '' ? 'checked' : '' }}>
+                                    </label>
                                     @foreach($typeOptions as $t)
-                                        @php $checked = in_array($t, $types); @endphp
-                                        <label class="refrens-pill {{ $checked ? 'refrens-pill--active' : '' }}">
-                                            <input type="checkbox" name="types[]" value="{{ $t }}" {{ $checked ? 'checked' : '' }}>
-                                            {{ $t }}
+                                        <label class="refrens-radio">
+                                            <span class="fw-semibold">{{ $t }}</span>
+                                            <input class="form-check-input" type="radio" name="type" value="{{ $t }}" {{ $currentType === $t ? 'checked' : '' }}>
                                         </label>
                                     @endforeach
                                 </div>
@@ -113,14 +143,15 @@
                             </summary>
                             <div class="pt-3">
                                 @php $availability = request('availability', 'all'); @endphp
-                                <div class="d-flex flex-wrap gap-2">
-                                    @foreach([['all','Semua'],['in','Tersedia'],['out','Habis']] as [$val,$label])
-                                        @php $checked = $availability === $val; @endphp
-                                        <label class="refrens-pill {{ $checked ? 'refrens-pill--active' : '' }}">
-                                            <input type="radio" name="availability" value="{{ $val }}" {{ $checked ? 'checked' : '' }}>
-                                            {{ $label }}
-                                        </label>
-                                    @endforeach
+                                <div class="border-top pt-2">
+                                    <label class="refrens-radio">
+                                        <span class="fw-semibold">Semua</span>
+                                        <input class="form-check-input" type="radio" name="availability" value="all" {{ $availability === 'all' ? 'checked' : '' }}>
+                                    </label>
+                                    <label class="refrens-radio">
+                                        <span class="fw-semibold">Ada Stok</span>
+                                        <input class="form-check-input" type="radio" name="availability" value="in" {{ $availability === 'in' ? 'checked' : '' }}>
+                                    </label>
                                 </div>
                             </div>
                         </details>

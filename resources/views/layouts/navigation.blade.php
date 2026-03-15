@@ -337,7 +337,7 @@
                     <a href="{{ route('shop.index') }}" 
                        class="group flex items-center gap-3 px-6 py-3 text-base font-semibold transition-colors rounded-xl border-l-4 {{ request()->routeIs('shop.*') ? 'border-blue-600 text-blue-600 bg-blue-50' : 'border-transparent text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
                         <svg class="h-5 w-5 {{ request()->routeIs('shop.*') ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h18M3 7h18M5 11h14M7 15h10M9 19h6"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                         </svg>
                         Shop
                     </a>

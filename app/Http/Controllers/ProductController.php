@@ -35,6 +35,10 @@ class ProductController extends Controller
             }
         }
 
+        if ($request->filled('type')) {
+            $query->where('product_type', $request->type);
+        }
+
         if ($request->has('sizes')) {
             $sizes = $request->sizes;
             if (is_array($sizes) && count($sizes)) {
