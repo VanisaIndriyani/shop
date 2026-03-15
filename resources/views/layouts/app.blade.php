@@ -37,6 +37,7 @@
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
+            <div class="pt-16">
 
             @if (session('success'))
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
@@ -70,6 +71,7 @@
 
             @include('layouts.footer')
             @include('layouts.chat')
+            </div>
         </div>
 
         <!-- AOS Animation JS -->
