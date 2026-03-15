@@ -3,7 +3,7 @@
 @section('content')
 <!-- Hero Section (Slider Style) -->
 <div class="relative bg-white overflow-hidden">
-    <div class="swiper mySwiper" style="height: 100svh;">
+    <div class="swiper mySwiper" style="height: 100svh; position: relative; z-index: 1;">
         <div class="swiper-wrapper">
             <!-- Slide 1 -->
             <div class="swiper-slide relative">
@@ -27,6 +27,11 @@
             </div>
         </div>
         <div class="swiper-pagination"></div>
+    </div>
+    <div class="pointer-events-none" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:5;">
+        <div style="padding:10px 22px;border-radius:999px;border:2px solid #2563eb;background:rgba(255,255,255,.92);box-shadow:0 16px 32px rgba(0,0,0,.18);">
+            <span style="color:#1d4ed8;font-weight:800;font-size:34px;letter-spacing:.2px;">Shop</span>
+        </div>
     </div>
 </div>
 
