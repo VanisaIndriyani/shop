@@ -15,10 +15,13 @@ class Product extends Model
         'image', 
         'images',
         'category', 
+        'product_type',
+        'sizes',
         'stock'
     ];
 
     protected $casts = [
         'images' => 'array',
+        'sizes' => 'array',
     ];
 }

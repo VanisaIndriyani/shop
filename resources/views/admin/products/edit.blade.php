@@ -28,6 +28,17 @@
             </div>
 
             <div class="col-12 col-md-4">
+                <label class="form-label fw-semibold">Tipe Produk</label>
+                <select name="product_type" class="form-select @error('product_type') is-invalid @enderror">
+                    <option value="" @selected(!old('product_type', $product->product_type))>Pilih tipe</option>
+                    <option value="Top" @selected(old('product_type', $product->product_type) === 'Top')>Top</option>
+                    <option value="Bottom" @selected(old('product_type', $product->product_type) === 'Bottom')>Bottom</option>
+                    <option value="Accessories" @selected(old('product_type', $product->product_type) === 'Accessories')>Accessories</option>
+                </select>
+                @error('product_type') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="col-12 col-md-4">
                 <label class="form-label fw-semibold">Harga</label>
                 <input type="number" name="price" value="{{ old('price', $product->price) }}" class="form-control @error('price') is-invalid @enderror" required>
                 @error('price') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -49,6 +60,21 @@
                 <label class="form-label fw-semibold">Deskripsi</label>
                 <textarea name="description" rows="4" class="form-control @error('description') is-invalid @enderror">{{ old('description', $product->description) }}</textarea>
                 @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="col-12">
+                <label class="form-label fw-semibold">Size</label>
+                @php $sizes = old('sizes', is_array($product->sizes) ? $product->sizes : []); @endphp
+                <div class="d-flex flex-wrap gap-2">
+                    @foreach(['S','M','L','XL'] as $s)
+                        <label class="btn btn-outline-secondary">
+                            <input type="checkbox" name="sizes[]" value="{{ $s }}" class="d-none" {{ in_array($s, $sizes) ? 'checked' : '' }}>
+                            <span class="fw-semibold">{{ $s }}</span>
+                        </label>
+                    @endforeach
+                </div>
+                @error('sizes') <div class="text-danger small mt-2">{{ $message }}</div> @enderror
+                @error('sizes.*') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
             </div>
 
             <div class="col-12">

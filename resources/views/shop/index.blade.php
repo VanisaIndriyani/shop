@@ -84,9 +84,18 @@
                                 <i class="bi bi-chevron-down"></i>
                             </summary>
                             <div class="pt-3">
-                                @php $types = request('types', []); @endphp
+                                @php
+                                    $types = request('types', []);
+                                    $typeOptions = $productTypes ?? collect();
+                                    if (!($typeOptions instanceof \Illuminate\Support\Collection)) {
+                                        $typeOptions = collect($typeOptions);
+                                    }
+                                    if ($typeOptions->isEmpty()) {
+                                        $typeOptions = collect(['Top', 'Bottom', 'Accessories']);
+                                    }
+                                @endphp
                                 <div class="d-flex flex-wrap gap-2">
-                                    @foreach(['Top','Bottom','Accessories'] as $t)
+                                    @foreach($typeOptions as $t)
                                         @php $checked = in_array($t, $types); @endphp
                                         <label class="refrens-pill {{ $checked ? 'refrens-pill--active' : '' }}">
                                             <input type="checkbox" name="types[]" value="{{ $t }}" {{ $checked ? 'checked' : '' }}>
@@ -94,7 +103,6 @@
                                         </label>
                                     @endforeach
                                 </div>
-                                <div class="text-muted small mt-2">Tipe produk belum dipakai untuk filter di data saat ini.</div>
                             </div>
                         </details>
 
@@ -150,13 +158,12 @@
                                         </label>
                                     @endforeach
                                 </div>
-                                <div class="text-muted small mt-2">Size belum dipakai untuk filter di data saat ini.</div>
                             </div>
                         </details>
                     </div>
 
                     <div class="refrens-applybar">
-                        <button type="submit" class="btn btn-danger w-100 btn-lg rounded-pill fw-bold" style="background:#ef4444;border-color:#ef4444;">
+                        <button type="submit" class="btn btn-primary w-100 btn-lg rounded-pill fw-bold">
                             Aplikasikan
                         </button>
                         <a href="{{ route('shop.index', request()->only('q','sort')) }}" class="btn btn-outline-secondary w-100 mt-2 btn-lg rounded-pill fw-bold">

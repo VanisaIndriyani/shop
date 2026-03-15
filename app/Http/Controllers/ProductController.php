@@ -28,6 +28,24 @@ class ProductController extends Controller
             }
         }
 
+        if ($request->has('types')) {
+            $types = $request->types;
+            if (is_array($types) && count($types)) {
+                $query->whereIn('product_type', $types);
+            }
+        }
+
+        if ($request->has('sizes')) {
+            $sizes = $request->sizes;
+            if (is_array($sizes) && count($sizes)) {
+                $query->where(function ($q) use ($sizes) {
+                    foreach ($sizes as $s) {
+                        $q->orWhereJsonContains('sizes', $s);
+                    }
+                });
+            }
+        }
+
         // Filter by Price Range
         if ($request->filled('min_price')) {
             $query->where('price', '>=', $request->min_price);
@@ -70,9 +88,10 @@ class ProductController extends Controller
         }
 
         $categories = Product::select('category')->distinct()->whereNotNull('category')->pluck('category');
+        $productTypes = Product::select('product_type')->distinct()->whereNotNull('product_type')->pluck('product_type');
         
         $products = $query->paginate(12)->withQueryString();
-        return view('shop.index', compact('products', 'categories'));
+        return view('shop.index', compact('products', 'categories', 'productTypes'));
     }
 
     public function show(Product $product)
