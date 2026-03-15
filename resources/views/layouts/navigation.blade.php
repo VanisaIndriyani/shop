@@ -473,14 +473,17 @@
         if (!nav) return;
 
         function update() {
-            if (window.scrollY > 8) {
+            const y = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+            if (y > 120) {
                 nav.classList.add('refrens-nav--scrolled');
             } else {
                 nav.classList.remove('refrens-nav--scrolled');
             }
         }
 
-        update();
+        requestAnimationFrame(update);
+        window.addEventListener('load', update);
+        window.setTimeout(update, 250);
         window.addEventListener('scroll', update, { passive: true });
     })();
 </script>
