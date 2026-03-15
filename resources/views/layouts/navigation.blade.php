@@ -1,4 +1,8 @@
-<nav x-data="{
+<style>
+    .refrens-nav{background:rgba(255,255,255,0);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid rgba(229,231,235,0);transition:background-color .25s ease,border-color .25s ease,box-shadow .25s ease}
+    .refrens-nav.refrens-nav--scrolled{background:rgba(255,255,255,.95);border-bottom:1px solid rgba(229,231,235,.85);box-shadow:0 8px 24px rgba(0,0,0,.06)}
+</style>
+<nav id="siteNav" x-data="{
         open: false,
         localeOpen: false,
         searchOpen: false,
@@ -120,7 +124,7 @@
         }
     }"
     x-init="init()"
-    class="bg-white/75 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200/60">
+    class="refrens-nav sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
             <!-- Left: Hamburger Menu & Logo -->
@@ -462,3 +466,21 @@
         </div>
     </div>
 </nav>
+
+<script>
+    (function () {
+        const nav = document.getElementById('siteNav');
+        if (!nav) return;
+
+        function update() {
+            if (window.scrollY > 8) {
+                nav.classList.add('refrens-nav--scrolled');
+            } else {
+                nav.classList.remove('refrens-nav--scrolled');
+            }
+        }
+
+        update();
+        window.addEventListener('scroll', update, { passive: true });
+    })();
+</script>
