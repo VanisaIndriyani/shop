@@ -9,6 +9,36 @@ use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
+    public function page()
+    {
+        $messages = Message::where('user_id', Auth::id())
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        Message::where('user_id', Auth::id())
+            ->where('is_from_admin', true)
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
+
+        return view('chat.index', compact('messages'));
+    }
+
+    public function send(Request $request)
+    {
+        $validated = $request->validate([
+            'message' => ['required', 'string', 'max:2000'],
+        ]);
+
+        Message::create([
+            'user_id' => Auth::id(),
+            'message' => $validated['message'],
+            'is_from_admin' => false,
+            'is_read' => false,
+        ]);
+
+        return redirect()->route('chat.index')->with('success', 'Pesan terkirim.');
+    }
+
     public function index()
     {
         if (!Auth::check()) {

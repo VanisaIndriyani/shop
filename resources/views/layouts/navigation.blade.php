@@ -157,6 +157,25 @@
                     @endauth
                 </a>
 
+                <a href="{{ route('chat.index') }}" class="text-gray-900 hover:text-black relative p-1 focus:outline-none">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 8h10M7 12h6m8-1c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                    </svg>
+                    @auth
+                        @php
+                            $unreadChat = \App\Models\Message::where('user_id', Auth::id())
+                                ->where('is_from_admin', true)
+                                ->where('is_read', false)
+                                ->count();
+                        @endphp
+                        @if($unreadChat > 0)
+                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full h-4 min-w-4 px-1 flex items-center justify-center">
+                                {{ $unreadChat > 9 ? '9+' : $unreadChat }}
+                            </span>
+                        @endif
+                    @endauth
+                </a>
+
                 <!-- User Profile Icon -->
                 @auth
                     <div class="relative" x-data="{ userMenuOpen: false }" @click.outside="userMenuOpen = false">
