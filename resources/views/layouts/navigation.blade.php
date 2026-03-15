@@ -162,56 +162,15 @@
                     @endauth
                 </a>
 
-                <a href="{{ route('chat.index') }}" class="text-gray-900 hover:text-black relative p-1 focus:outline-none">
-                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 8h10M7 12h6m8-1c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                    </svg>
-                    @auth
-                        @php
-                            $unreadChat = \App\Models\Message::where('user_id', Auth::id())
-                                ->where('is_from_admin', true)
-                                ->where('is_read', false)
-                                ->count();
-                        @endphp
-                        @if($unreadChat > 0)
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full h-4 min-w-4 px-1 flex items-center justify-center">
-                                {{ $unreadChat > 9 ? '9+' : $unreadChat }}
-                            </span>
-                        @endif
-                    @endauth
-                </a>
-
                 <!-- User Profile Icon -->
                 @auth
-                    <div class="relative" x-data="{ userMenuOpen: false }" @click.outside="userMenuOpen = false">
-                        <button @click="userMenuOpen = ! userMenuOpen" class="text-gray-900 hover:text-black focus:outline-none flex items-center">
+                    <a href="{{ route('account.index') }}" class="text-gray-900 hover:text-black focus:outline-none flex items-center">
                             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                             </svg>
-                        </button>
-                        <div x-show="userMenuOpen" 
-                             class="absolute right-0 mt-3 w-48 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50"
-                             style="display: none;"
-                             x-transition:enter="transition ease-out duration-100"
-                             x-transition:enter-start="transform opacity-0 scale-95"
-                             x-transition:enter-end="transform opacity-100 scale-100">
-                            <div class="px-4 py-2 border-b border-gray-50 mb-1">
-                                <p class="text-xs text-gray-400">Signed in as</p>
-                                <p class="text-sm font-bold text-gray-900 truncate">{{ Auth::user()->name }}</p>
-                            </div>
-                            <a href="{{ route('orders.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                                Riwayat Pesanan
-                            </a>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
-                                    Sign Out
-                                </button>
-                            </form>
-                        </div>
-                    </div>
+                    </a>
                 @else
-                    <a href="{{ route('login') }}" class="text-gray-900 hover:text-black focus:outline-none">
+                    <a href="{{ route('account.index', ['login' => 1]) }}" class="text-gray-900 hover:text-black focus:outline-none">
                         <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                         </svg>
@@ -348,13 +307,13 @@
                     </a>
 
                     @auth
-                        <a href="{{ route('orders.index') }}" class="group flex items-center gap-3 px-6 py-3 text-base font-semibold transition-colors rounded-xl border-l-4 {{ request()->routeIs('orders.*') ? 'border-blue-600 text-blue-600 bg-blue-50' : 'border-transparent text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
-                            <svg class="h-5 w-5 {{ request()->routeIs('orders.*') ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <a href="{{ route('account.index', ['tab' => 'orders']) }}" class="group flex items-center gap-3 px-6 py-3 text-base font-semibold transition-colors rounded-xl border-l-4 {{ request()->routeIs('account.index') ? 'border-blue-600 text-blue-600 bg-blue-50' : 'border-transparent text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
+                            <svg class="h-5 w-5 {{ request()->routeIs('account.index') ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 8h10M7 12h10M7 16h6M5 6a2 2 0 012-2h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6z"/>
                             </svg>
                             My Orders
                         </a>
-                        <form method="POST" action="{{ route('logout') }}">
+                        <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Apakah Anda yakin ingin keluar?')">
                             @csrf
                             <button type="submit" class="group w-full flex items-center gap-3 px-6 py-3 text-base font-semibold transition-colors rounded-xl text-red-600 hover:bg-red-50">
                                 <svg class="h-5 w-5 text-red-500 group-hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -365,7 +324,7 @@
                         </form>
                     @else
                         <div class="px-6 pt-3">
-                            <a href="{{ route('login') }}" class="flex items-center justify-center w-full px-4 py-3 bg-gray-900 text-white font-semibold rounded-xl hover:bg-black transition-colors shadow-lg shadow-gray-200">
+                            <a href="{{ route('account.index', ['login' => 1]) }}" class="flex items-center justify-center w-full px-4 py-3 bg-gray-900 text-white font-semibold rounded-xl hover:bg-black transition-colors shadow-lg shadow-gray-200">
                                 Sign In / Register
                             </a>
                         </div>

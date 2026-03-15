@@ -50,10 +50,6 @@
         <a href="{{ route('orders.index') }}" class="btn btn-outline-secondary rounded-pill">Kembali</a>
     </div>
 
-    @if(session('success'))
-        <div class="alert alert-success order-card px-4 py-3 mb-4">{{ session('success') }}</div>
-    @endif
-
     <div class="row g-4">
         <div class="col-12 col-lg-8">
             <div class="card order-card mb-4">
@@ -188,13 +184,7 @@
                 </div>
             </div>
 
-            <div class="card order-card">
-                <div class="card-body p-4">
-                    <div class="fw-bold fs-5 mb-2"><i class="bi bi-headset me-2 text-primary"></i>Butuh Bantuan?</div>
-                    <div class="text-muted small mb-3">Kalau ada kendala pesanan, chat admin atau hubungi WhatsApp.</div>
-                    <a href="https://wa.me/628123456789" target="_blank" class="btn btn-dark w-100 rounded-pill">Hubungi WhatsApp</a>
-                </div>
-            </div>
+          
         </div>
     </div>
 </div>

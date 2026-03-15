@@ -36,7 +36,12 @@ class ProductController extends Controller
         }
 
         if ($request->filled('type')) {
-            $query->where('product_type', $request->type);
+            $type = (string) $request->type;
+            if (in_array($type, ['featured', 'unggulan', 'Produk Unggulan'], true)) {
+                $query->where('is_featured', true);
+            } else {
+                $query->where('product_type', $type);
+            }
         }
 
         if ($request->has('sizes')) {

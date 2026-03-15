@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="d-flex align-items-center justify-content-between mb-4">
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
     <div>
         <div class="fw-bold fs-4">Detail Pesanan #{{ $order->id }}</div>
         <div class="text-muted">{{ $order->user?->name }} • {{ $order->created_at->format('d M Y H:i') }}</div>

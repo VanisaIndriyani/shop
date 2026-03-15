@@ -29,8 +29,8 @@
         <div class="swiper-pagination"></div>
     </div>
     <div class="pointer-events-none" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:5;">
-        <div style="padding:10px 22px;border-radius:999px;border:2px solid #2563eb;background:rgba(255,255,255,.92);box-shadow:0 16px 32px rgba(0,0,0,.18);">
-            <span style="color:#1d4ed8;font-weight:800;font-size:34px;letter-spacing:.2px;">Shop</span>
+        <div style="padding:8px 16px;border-radius:999px;border:2px solid #2563eb;background:rgba(255,255,255,.92);box-shadow:0 12px 28px rgba(0,0,0,.16);">
+            <span style="color:#1d4ed8;font-weight:900;font-size:clamp(16px,4.2vw,24px);letter-spacing:.6px;text-transform:uppercase;">Shop</span>
         </div>
     </div>
 </div>

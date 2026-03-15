@@ -38,18 +38,18 @@
                     @auth
                         <div class="flex flex-col space-y-2">
                             <div class="text-[11px] text-blue-100 italic">Hi, {{ Auth::user()->name }}</div>
-                            <a href="{{ route('orders.index') }}" class="text-xs text-white hover:text-blue-200 block">Riwayat Pesanan</a>
-                            <form method="POST" action="{{ route('logout') }}">
+                            <a href="{{ route('account.index', ['tab' => 'orders']) }}" class="text-xs text-white hover:text-blue-200 block">Riwayat Pesanan</a>
+                            <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Apakah Anda yakin ingin keluar?')">
                                 @csrf
                                 <button type="submit" class="text-xs text-red-300 hover:text-red-200 block w-full text-left">Logout</button>
                             </form>
                         </div>
                     @else
                         <div class="flex space-x-2 mt-2">
-                            <a href="{{ route('login') }}" class="flex-1 text-center py-2 border border-white rounded-lg text-xs font-bold text-white hover:bg-white hover:text-blue-600 transition-colors">
+                            <a href="{{ route('account.index', ['login' => 1]) }}" class="flex-1 text-center py-2 border border-white rounded-lg text-xs font-bold text-white hover:bg-white hover:text-blue-600 transition-colors">
                                 LOGIN
                             </a>
-                            <a href="{{ route('register') }}" class="flex-1 text-center py-2 bg-white rounded-lg text-xs font-bold text-blue-600 hover:bg-blue-50 transition-colors">
+                            <a href="{{ route('account.index', ['register' => 1]) }}" class="flex-1 text-center py-2 bg-white rounded-lg text-xs font-bold text-blue-600 hover:bg-blue-50 transition-colors">
                                 REGISTER
                             </a>
                         </div>
@@ -98,14 +98,14 @@
                 <h3 class="text-xs font-bold tracking-wider uppercase mb-3">Account</h3>
                 <div class="flex flex-col space-y-1.5 text-xs">
                     @auth
-                        <a href="{{ route('orders.index') }}" class="text-blue-100 hover:text-white transition-colors">Riwayat Pesanan</a>
-                        <form method="POST" action="{{ route('logout') }}">
+                        <a href="{{ route('account.index', ['tab' => 'orders']) }}" class="text-blue-100 hover:text-white transition-colors">Riwayat Pesanan</a>
+                        <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Apakah Anda yakin ingin keluar?')">
                             @csrf
                             <button type="submit" class="text-red-300 hover:text-red-200 text-left uppercase font-bold tracking-tighter">Logout</button>
                         </form>
                     @else
-                        <a href="{{ route('login') }}" class="text-blue-100 hover:text-white transition-colors">Login</a>
-                        <a href="{{ route('register') }}" class="text-blue-100 hover:text-white transition-colors">Register</a>
+                        <a href="{{ route('account.index', ['login' => 1]) }}" class="text-blue-100 hover:text-white transition-colors">Login</a>
+                        <a href="{{ route('account.index', ['register' => 1]) }}" class="text-blue-100 hover:text-white transition-colors">Register</a>
                     @endauth
                 </div>
             </div>

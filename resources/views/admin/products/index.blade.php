@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="d-flex align-items-center justify-content-between mb-4">
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
     <div>
         <div class="fw-bold fs-4">Stok Produk</div>
         <div class="text-muted">Kelola produk dan stok di toko Anda.</div>
@@ -74,4 +74,3 @@
     </div>
 </div>
 @endsection
-

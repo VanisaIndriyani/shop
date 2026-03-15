@@ -6,21 +6,6 @@
     <div class="max-w-7xl mx-auto pt-28 pb-24 px-4 sm:px-6 lg:px-8">
         <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 mb-10 font-sans">      </h1>
        
-
-        @if(session('success'))
-            <div class="mb-8 bg-green-50 border-l-4 border-green-500 p-4" role="alert">
-                <p class="font-bold text-green-700">Success</p>
-                <p class="text-green-600">{{ session('success') }}</p>
-            </div>
-        @endif
-
-        @if(session('error'))
-            <div class="mb-8 bg-red-50 border-l-4 border-red-500 p-4" role="alert">
-                <p class="font-bold text-red-700">Error</p>
-                <p class="text-red-600">{{ session('error') }}</p>
-            </div>
-        @endif
-
         @if($cartItems->isEmpty())
             <div class="text-center py-24 bg-gray-50 rounded-xl">
                 <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

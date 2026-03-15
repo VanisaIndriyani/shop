@@ -10,6 +10,21 @@ use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
+    private function normalizeSizes(Request $request): void
+    {
+        $sizes = $request->input('sizes', []);
+        $sizes = is_array($sizes) ? $sizes : [];
+
+        $sizesText = (string) $request->input('sizes_text', '');
+        $extra = preg_split('/[,\s]+/', $sizesText, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+
+        $merged = array_merge($sizes, $extra);
+        $merged = array_map(static fn ($v) => trim((string) $v), $merged);
+        $merged = array_values(array_unique(array_filter($merged, static fn ($v) => $v !== '')));
+
+        $request->merge(['sizes' => count($merged) ? $merged : null]);
+    }
+
     public function index()
     {
         $products = Product::latest()->paginate(10);
@@ -23,16 +38,20 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        $this->normalizeSizes($request);
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'price' => ['required', 'numeric'],
             'sale_price' => ['nullable', 'numeric'],
             'category' => ['required', 'string', 'max:255'],
             'product_type' => ['nullable', 'string', 'max:50'],
+            'is_featured' => ['nullable', 'boolean'],
             'stock' => ['required', 'integer', 'min:0'],
             'description' => ['nullable', 'string'],
+            'sizes_text' => ['nullable', 'string', 'max:255'],
             'sizes' => ['nullable', 'array'],
-            'sizes.*' => ['string', 'in:S,M,L,XL,39,40,41,42,43'],
+            'sizes.*' => ['string', 'max:10', 'regex:/^[A-Za-z0-9]+$/'],
             'images' => ['required', 'array', 'size:3'],
             'images.0' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
             'images.1' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
@@ -52,6 +71,7 @@ class ProductController extends Controller
             'category' => $validated['category'],
             'product_type' => $validated['product_type'] ?? null,
             'sizes' => $validated['sizes'] ?? null,
+            'is_featured' => (bool) ($validated['is_featured'] ?? false),
             'stock' => $validated['stock'],
             'description' => $validated['description'] ?? null,
             'image' => $images[0] ?? null,
@@ -68,16 +88,20 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
+        $this->normalizeSizes($request);
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'price' => ['required', 'numeric'],
             'sale_price' => ['nullable', 'numeric'],
             'category' => ['required', 'string', 'max:255'],
             'product_type' => ['nullable', 'string', 'max:50'],
+            'is_featured' => ['nullable', 'boolean'],
             'stock' => ['required', 'integer', 'min:0'],
             'description' => ['nullable', 'string'],
+            'sizes_text' => ['nullable', 'string', 'max:255'],
             'sizes' => ['nullable', 'array'],
-            'sizes.*' => ['string', 'in:S,M,L,XL,39,40,41,42,43'],
+            'sizes.*' => ['string', 'max:10', 'regex:/^[A-Za-z0-9]+$/'],
             'images' => ['nullable', 'array'],
             'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
@@ -114,6 +138,7 @@ class ProductController extends Controller
             'category' => $validated['category'],
             'product_type' => $validated['product_type'] ?? null,
             'sizes' => $validated['sizes'] ?? null,
+            'is_featured' => (bool) ($validated['is_featured'] ?? false),
             'stock' => $validated['stock'],
             'description' => $validated['description'] ?? null,
             'image' => $images[0] ?? null,

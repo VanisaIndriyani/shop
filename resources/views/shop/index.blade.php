@@ -6,6 +6,10 @@
 @php
     $hasFilters = request('categories') || request('min_price') || request('max_price') || request('availability') || request('sizes') || request('types') || request('type');
     $hasSort = request('sort') && request('sort') !== 'latest';
+    $wishlistIds = [];
+    if (Auth::check()) {
+        $wishlistIds = \App\Models\Wishlist::where('user_id', Auth::id())->pluck('product_id')->all();
+    }
 @endphp
 
 <style>
@@ -17,8 +21,9 @@
     .refrens-accordion{border-bottom:1px solid rgba(0,0,0,.06);padding:12px 0}
     .refrens-accordion summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-weight:800}
     .refrens-accordion summary::-webkit-details-marker{display:none}
-    .refrens-pill{display:inline-flex;align-items:center;justify-content:center;padding:.5rem .9rem;border:1px solid rgba(0,0,0,.12);border-radius:12px;font-weight:800;font-size:.85rem;background:#fff}
+    .refrens-pill{position:relative;display:inline-flex;align-items:center;justify-content:center;padding:.5rem .9rem;border:1px solid rgba(0,0,0,.12);border-radius:12px;font-weight:800;font-size:.85rem;background:#fff;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
     .refrens-pill input{display:none}
+    .refrens-pill__label{display:inline-flex;align-items:center;justify-content:center}
     .refrens-pill--active{background:#eef2ff;border-color:#4f46e5;color:#1e3a8a}
     .refrens-applybar{position:sticky;bottom:0;background:#fff;padding:14px;border-top:1px solid rgba(0,0,0,.06)}
     .refrens-radio{display:flex;align-items:center;gap:12px;padding:10px 0}
@@ -110,30 +115,17 @@
                             </summary>
                             <div class="pt-3">
                                 @php
-                                    $currentType = request('type');
-                                    if (!$currentType) {
-                                        $types = request('types', []);
-                                        $currentType = is_array($types) && count($types) ? $types[0] : '';
-                                    }
-                                    $typeOptions = $productTypes ?? collect();
-                                    if (!($typeOptions instanceof \Illuminate\Support\Collection)) {
-                                        $typeOptions = collect($typeOptions);
-                                    }
-                                    if ($typeOptions->isEmpty()) {
-                                        $typeOptions = collect(['Top', 'Bottom', 'Accessories']);
-                                    }
+                                    $currentType = request('type') === 'featured' ? 'featured' : '';
                                 @endphp
                                 <div class="border-top pt-2">
                                     <label class="refrens-radio">
                                         <input class="form-check-input" type="radio" name="type" value="" {{ $currentType === '' ? 'checked' : '' }}>
                                         <span class="refrens-radio__label">Semua Produk</span>
                                     </label>
-                                    @foreach($typeOptions as $t)
-                                        <label class="refrens-radio">
-                                            <input class="form-check-input" type="radio" name="type" value="{{ $t }}" {{ $currentType === $t ? 'checked' : '' }}>
-                                            <span class="refrens-radio__label">{{ $t }}</span>
-                                        </label>
-                                    @endforeach
+                                    <label class="refrens-radio">
+                                        <input class="form-check-input" type="radio" name="type" value="featured" {{ $currentType === 'featured' ? 'checked' : '' }}>
+                                        <span class="refrens-radio__label">Produk Unggulan</span>
+                                    </label>
                                 </div>
                             </div>
                         </details>
@@ -187,7 +179,7 @@
                                         @php $checked = in_array($s, $sizes); @endphp
                                         <label class="refrens-pill {{ $checked ? 'refrens-pill--active' : '' }}">
                                             <input type="checkbox" name="sizes[]" value="{{ $s }}" {{ $checked ? 'checked' : '' }}>
-                                            {{ $s }}
+                                            <span class="refrens-pill__label">{{ $s }}</span>
                                         </label>
                                     @endforeach
                                 </div>
@@ -261,6 +253,31 @@
                             @elseif($product->created_at->diffInDays(now()) < 7)
                                 <span class="badge text-bg-primary position-absolute top-0 start-0 m-2 rounded-pill">New</span>
                             @endif
+                            <div class="position-absolute top-0 end-0 m-2">
+                                @auth
+                                    @php $inWishlist = in_array($product->id, $wishlistIds, true); @endphp
+                                    @if($inWishlist)
+                                        <form method="POST" action="{{ route('wishlist.destroy', $product) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-light btn-sm rounded-circle shadow-sm" aria-label="Remove from wishlist">
+                                                <i class="bi bi-heart-fill text-danger"></i>
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form method="POST" action="{{ route('wishlist.store', $product) }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-light btn-sm rounded-circle shadow-sm" aria-label="Add to wishlist">
+                                                <i class="bi bi-heart"></i>
+                                            </button>
+                                        </form>
+                                    @endif
+                                @else
+                                    <a href="{{ route('account.index', ['login' => 1]) }}" class="btn btn-light btn-sm rounded-circle shadow-sm" aria-label="Login">
+                                        <i class="bi bi-heart"></i>
+                                    </a>
+                                @endauth
+                            </div>
                             <a href="{{ route('shop.show', $product->slug) }}" class="d-block">
                                 @if($product->image)
                                     <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="card-img-top" style="aspect-ratio: 4/5; object-fit: cover;">
@@ -297,4 +314,24 @@
         </div>
     </div>
 </div>
+@push('scripts')
+<script>
+    (function () {
+        const pills = document.querySelectorAll('.refrens-pill');
+        pills.forEach((pill) => {
+            const input = pill.querySelector('input[type="checkbox"]');
+            if (!input) return;
+            const sync = () => {
+                if (input.checked) {
+                    pill.classList.add('refrens-pill--active');
+                } else {
+                    pill.classList.remove('refrens-pill--active');
+                }
+            };
+            input.addEventListener('change', sync);
+            sync();
+        });
+    })();
+</script>
+@endpush
 @endsection

@@ -26,7 +26,7 @@ class ProductSeeder extends Seeder
             'price' => 189000,
             'sale_price' => null,
             'image' => null,
-            'category' => 'T-Shirt Boxy',
+            'category' => 'T-Shirt',
             'stock' => 100,
         ]);
 
@@ -37,7 +37,7 @@ class ProductSeeder extends Seeder
             'price' => 189000,
             'sale_price' => null,
             'image' => null,
-            'category' => 'T-Shirt Boxy',
+            'category' => 'T-Shirt',
             'stock' => 100,
         ]);
 
@@ -48,7 +48,7 @@ class ProductSeeder extends Seeder
             'price' => 189000,
             'sale_price' => 169000,
             'image' => null,
-            'category' => 'T-Shirt Boxy',
+            'category' => 'Polo',
             'stock' => 75,
         ]);
 
@@ -59,7 +59,7 @@ class ProductSeeder extends Seeder
             'price' => 189000,
             'sale_price' => null,
             'image' => null,
-            'category' => 'T-Shirt Boxy',
+            'category' => 'Hoodie',
             'stock' => 60,
         ]);
         
@@ -70,7 +70,7 @@ class ProductSeeder extends Seeder
             'price' => 189000,
             'sale_price' => null,
             'image' => null,
-            'category' => 'T-Shirt Boxy',
+            'category' => 'Jacket',
             'stock' => 45,
         ]);
         
@@ -81,8 +81,52 @@ class ProductSeeder extends Seeder
             'price' => 199000,
             'sale_price' => null,
             'image' => null,
-            'category' => 'T-Shirt Boxy',
+            'category' => 'Pants',
             'stock' => 50,
+        ]);
+
+        Product::create([
+            'name' => 'Polo Shirt - Classic Black',
+            'slug' => Str::slug('Polo Shirt Classic Black'),
+            'description' => 'Classic polo shirt with a clean collar and a comfortable regular fit. Easy to dress up or down.',
+            'price' => 219000,
+            'sale_price' => null,
+            'image' => null,
+            'category' => 'Polo',
+            'stock' => 40,
+        ]);
+
+        Product::create([
+            'name' => 'Hoodie - Grey Melange',
+            'slug' => Str::slug('Hoodie Grey Melange'),
+            'description' => 'Soft fleece hoodie with a roomy hood and kangaroo pocket. Perfect for daily wear.',
+            'price' => 329000,
+            'sale_price' => 299000,
+            'image' => null,
+            'category' => 'Hoodie',
+            'stock' => 35,
+        ]);
+
+        Product::create([
+            'name' => 'Jacket - Utility Olive',
+            'slug' => Str::slug('Jacket Utility Olive'),
+            'description' => 'Lightweight utility jacket with multiple pockets and a clean silhouette. Great for layering.',
+            'price' => 389000,
+            'sale_price' => null,
+            'image' => null,
+            'category' => 'Jacket',
+            'stock' => 25,
+        ]);
+
+        Product::create([
+            'name' => 'Pants - Cargo Khaki',
+            'slug' => Str::slug('Pants Cargo Khaki'),
+            'description' => 'Relaxed cargo pants with functional pockets and durable fabric. Built for comfort.',
+            'price' => 349000,
+            'sale_price' => null,
+            'image' => null,
+            'category' => 'Pants',
+            'stock' => 30,
         ]);
     }
 }

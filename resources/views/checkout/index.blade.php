@@ -15,12 +15,24 @@
     .payment-card.active { border-color: rgba(13,110,253,.35); box-shadow: 0 16px 32px rgba(13, 110, 253, 0.12); background: rgba(13,110,253,.04); }
     .thumb { width: 64px; height: 64px; border-radius: 14px; overflow: hidden; background: #f8f9fa; border: 1px solid rgba(0,0,0,.06); flex: 0 0 auto; }
     .thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .checkout-items{max-height:340px;overflow:auto}
+    .checkout-mobilebar{position:fixed;left:0;right:0;bottom:0;z-index:1050;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-top:1px solid rgba(0,0,0,.08)}
+    .checkout-mobilebar__inner{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .checkout-mobilebar__total{line-height:1.1}
+    .checkout-mobilebar__total .label{font-size:12px;color:#6b7280;font-weight:800}
+    .checkout-mobilebar__total .price{font-size:16px;color:#0d6efd;font-weight:900}
+    @media (max-width: 576px){
+        .checkout-page{padding-bottom:92px}
+        .checkout-card{border-radius:16px}
+        .checkout-mobile-title{font-size:22px}
+        .checkout-items{max-height:none;overflow:visible}
+    }
 </style>
 
-<div class="container py-5" x-data="{ paymentMethod: '{{ old('payment_method', 'bank_transfer') }}' }">
-    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+<div class="container py-4 py-lg-5 checkout-page" x-data="{ paymentMethod: '{{ old('payment_method', 'bank_transfer') }}' }">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3 mb-lg-4">
         <div>
-            <div class="fw-bold fs-3">Checkout</div>
+            <div class="fw-bold fs-3 checkout-mobile-title">Checkout</div>
             <div class="text-muted">Selesaikan pembayaran untuk memproses pesanan Anda.</div>
         </div>
         <div class="d-flex align-items-center gap-2">
@@ -28,7 +40,7 @@
         </div>
     </div>
 
-    <div class="d-flex align-items-center gap-2 mb-4">
+    <div class="d-flex align-items-center gap-2 mb-3 mb-lg-4">
         <span class="badge rounded-pill text-bg-primary">2</span>
         <span class="fw-semibold">Checkout</span>
         <span class="text-muted">•</span>
@@ -149,9 +161,13 @@
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <div class="fw-bold fs-5"><i class="bi bi-bag-check me-2 text-primary"></i>Ringkasan Pesanan</div>
+                            <button type="button" class="btn btn-sm btn-light rounded-pill d-lg-none" data-bs-toggle="collapse" data-bs-target="#checkoutItemsCollapse" aria-expanded="false">
+                                Detail
+                            </button>
                         </div>
 
-                        <div class="d-flex flex-column gap-3 mb-3" style="max-height: 340px; overflow: auto;">
+                        <div id="checkoutItemsCollapse" class="collapse d-lg-block">
+                            <div class="d-flex flex-column gap-3 mb-3 checkout-items">
                             @foreach($cartItems as $item)
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="thumb">
@@ -170,6 +186,7 @@
                                     <div class="fw-bold text-primary text-nowrap" data-money-idr="{{ (float) ($item->product->price * $item->quantity) }}">Rp {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }}</div>
                                 </div>
                             @endforeach
+                            </div>
                         </div>
 
                         <hr>
@@ -187,10 +204,20 @@
                             <span class="fw-bold fs-5 text-primary" data-money-idr="{{ (float) $subtotal }}">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100 rounded-pill mt-3 py-3 fw-bold">Konfirmasi Pesanan</button>
-                        <div class="text-muted small text-center mt-2">Dengan mengklik tombol di atas, kamu setuju dengan syarat & ketentuan.</div>
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill mt-3 py-3 fw-bold d-none d-lg-inline-flex justify-content-center">Konfirmasi Pesanan</button>
+                        <div class="text-muted small text-center mt-2 d-none d-lg-block">Dengan mengklik tombol di atas, kamu setuju dengan syarat & ketentuan.</div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="checkout-mobilebar d-lg-none">
+            <div class="checkout-mobilebar__inner">
+                <div class="checkout-mobilebar__total">
+                    <div class="label">Total</div>
+                    <div class="price" data-money-idr="{{ (float) $subtotal }}">Rp {{ number_format($subtotal, 0, ',', '.') }}</div>
+                </div>
+                <button type="submit" class="btn btn-primary rounded-pill px-4 py-3 fw-bold flex-grow-1">Konfirmasi</button>
             </div>
         </div>
     </form>

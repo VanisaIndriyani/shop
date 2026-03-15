@@ -12,28 +12,12 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $statusParam = $request->get('status');
-        $statusMap = [
-            'unpaid' => 'pending',
-            'paid' => 'paid',
-            'processing' => 'processing',
-            'shipped' => 'shipped',
-            'completed' => 'completed',
-            'cancelled' => 'cancelled',
-        ];
-
-        $query = Order::where('user_id', Auth::id())->orderBy('created_at', 'desc');
-        if ($statusParam && isset($statusMap[$statusParam])) {
-            $query->where('status', $statusMap[$statusParam]);
+        $params = ['tab' => 'orders'];
+        if ($statusParam) {
+            $params['status'] = $statusParam;
         }
-        $orders = $query->get();
 
-        $counts = Order::where('user_id', Auth::id())
-            ->selectRaw('status, COUNT(*) as total')
-            ->groupBy('status')
-            ->pluck('total', 'status')
-            ->toArray();
-
-        return view('orders.index', compact('orders', 'statusParam', 'counts'));
+        return redirect()->route('account.index', $params);
     }
 
     // Menampilkan detail pesanan

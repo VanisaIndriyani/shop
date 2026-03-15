@@ -29,6 +29,12 @@
             a, button, input, .card, .btn {
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
+            .refrens-toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top));transform:translateX(-50%);z-index:99999;max-width:min(560px,calc(100vw - 24px))}
+            .refrens-toast__panel{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;box-shadow:0 18px 40px rgba(16,24,40,.14);border:1px solid rgba(0,0,0,.06);background:#fff}
+            .refrens-toast__dot{width:10px;height:10px;border-radius:999px;flex:0 0 auto}
+            .refrens-toast__msg{font-weight:700;font-size:13px;line-height:1.25;color:#111827}
+            .refrens-toast__close{border:0;background:transparent;width:32px;height:32px;border-radius:999px;display:flex;align-items:center;justify-content:center;color:#6b7280}
+            .refrens-toast__close:hover{background:rgba(0,0,0,.06);color:#111827}
         </style>
 
         <!-- Scripts -->
@@ -39,17 +45,21 @@
             @include('layouts.navigation')
             <div class="{{ request()->is('/') ? '' : 'pt-16' }}">
 
-            @if (session('success'))
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-                    <div class="bg-green-50 border border-green-100 text-green-800 rounded-2xl px-5 py-4 font-semibold">
-                        {{ session('success') }}
-                    </div>
-                </div>
-            @endif
-            @if (session('error'))
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-                    <div class="bg-red-50 border border-red-100 text-red-800 rounded-2xl px-5 py-4 font-semibold">
-                        {{ session('error') }}
+            @php
+                $flashSuccess = session('success');
+                $flashError = session('error');
+                $flashMessage = $flashSuccess ?: $flashError;
+                $flashType = $flashSuccess ? 'success' : ($flashError ? 'error' : null);
+            @endphp
+
+            @if($flashMessage)
+                <div id="refrensToast" class="refrens-toast" data-type="{{ $flashType }}">
+                    <div class="refrens-toast__panel">
+                        <span class="refrens-toast__dot" style="background:{{ $flashType === 'success' ? '#16a34a' : '#dc2626' }}"></span>
+                        <div class="refrens-toast__msg">{{ $flashMessage }}</div>
+                        <button type="button" class="refrens-toast__close" aria-label="Close" onclick="(function(){var t=document.getElementById('refrensToast'); if(t) t.remove();})()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                 </div>
             @endif
@@ -69,7 +79,9 @@
                 @yield('content')
             </main>
 
-            @include('layouts.footer')
+            @unless (request()->routeIs('chat.index'))
+                @include('layouts.footer')
+            @endunless
             @include('layouts.chat')
             </div>
         </div>
@@ -190,5 +202,15 @@
         </script>
 
         @stack('scripts')
+
+        <script>
+            (function () {
+                const toast = document.getElementById('refrensToast');
+                if (!toast) return;
+                window.setTimeout(function () {
+                    if (toast && toast.parentNode) toast.remove();
+                }, 2200);
+            })();
+        </script>
     </body>
 </html>

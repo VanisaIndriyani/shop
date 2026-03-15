@@ -10,6 +10,25 @@ use Illuminate\Auth\Events\Registered;
 
 class AuthController extends Controller
 {
+    private function safeRedirectPath(Request $request): ?string
+    {
+        $path = (string) $request->input('redirect_to', '');
+        $path = trim($path);
+        if ($path === '') {
+            return null;
+        }
+        if (!str_starts_with($path, '/')) {
+            return null;
+        }
+        if (str_starts_with($path, '//')) {
+            return null;
+        }
+        if (str_contains($path, "\n") || str_contains($path, "\r")) {
+            return null;
+        }
+        return $path;
+    }
+
     // Login
     public function showLogin()
     {
@@ -39,7 +58,12 @@ class AuthController extends Controller
                 return redirect()->intended('/admin/dashboard')->with('success', 'Login berhasil.');
             }
 
-            return redirect()->intended('/shop')->with('success', 'Login berhasil.');
+            $redirectTo = $this->safeRedirectPath($request);
+            if ($redirectTo) {
+                return redirect($redirectTo)->with('success', 'Login berhasil.');
+            }
+
+            return redirect()->intended('/')->with('success', 'Login berhasil.');
         }
 
         return back()->withErrors([
@@ -75,7 +99,12 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect('/shop');
+        $redirectTo = $this->safeRedirectPath($request);
+        if ($redirectTo) {
+            return redirect($redirectTo);
+        }
+
+        return redirect('/');
     }
 
     // Logout

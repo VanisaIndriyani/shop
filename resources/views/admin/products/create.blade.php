@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="d-flex align-items-center justify-content-between mb-4">
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
     <div>
         <div class="fw-bold fs-4">Tambah Produk</div>
         <div class="text-muted">Masukkan detail produk baru.</div>
@@ -50,6 +50,15 @@
             </div>
 
             <div class="col-12 col-md-4">
+                <label class="form-label fw-semibold">Produk Unggulan</label>
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" name="is_featured" value="1" id="is_featured" {{ old('is_featured') ? 'checked' : '' }}>
+                    <label class="form-check-label" for="is_featured">Tampilkan di Produk Unggulan</label>
+                </div>
+                @error('is_featured') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="col-12 col-md-4">
                 <label class="form-label fw-semibold">Stok</label>
                 <input type="number" name="stock" value="{{ old('stock', 0) }}" class="form-control @error('stock') is-invalid @enderror" required>
                 @error('stock') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -71,6 +80,10 @@
                             <span class="fw-semibold">{{ $s }}</span>
                         </label>
                     @endforeach
+                </div>
+                <div class="mt-2">
+                    <input type="text" name="sizes_text" value="{{ old('sizes_text') }}" class="form-control @error('sizes_text') is-invalid @enderror" placeholder="Ketik size manual, pisahkan koma. Contoh: S,M,L,XL,39,40">
+                    @error('sizes_text') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
                 @error('sizes') <div class="text-danger small mt-2">{{ $message }}</div> @enderror
                 @error('sizes.*') <div class="text-danger small mt-1">{{ $message }}</div> @enderror

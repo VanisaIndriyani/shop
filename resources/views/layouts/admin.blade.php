@@ -11,27 +11,35 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
     <style>
+        html, body { height: 100%; }
         body { background: #f6f7fb; overflow: hidden; }
-        .admin-shell { height: 100vh; overflow: hidden; }
-        .admin-brand { height: 64px; }
-        .admin-sidebar { width: 260px; height: 100vh; overflow-y: auto; background: linear-gradient(180deg, #2f6fb4 0%, #2b66a8 35%, #255c9a 100%); }
+        .admin-shell { height: 100svh; overflow: hidden; }
+        .admin-brand { height: 88px; }
+        .admin-sidebar { width: 280px; min-width: 280px; flex: 0 0 280px; height: 100%; overflow-y: auto; background: linear-gradient(180deg, #2f6fb4 0%, #2b66a8 35%, #255c9a 100%); }
         .admin-sidebar .nav-link { color: rgba(255,255,255,.92); border-radius: 14px; padding: 12px 14px; font-weight: 600; }
         .admin-sidebar .nav-link:hover { background: rgba(255,255,255,.12); color: #fff; }
         .admin-sidebar .nav-link.active { background: rgba(255,255,255,.18); box-shadow: 0 10px 24px rgba(0,0,0,.08); color: #fff; }
         .admin-sidebar .nav-link .bi { width: 22px; margin-right: 10px; font-size: 18px; }
-        .admin-topbar { height: 64px; }
-        .admin-main { flex: 1 1 auto; overflow-y: auto; }
+        .admin-topbar { height: 64px; position: sticky; top: 0; z-index: 1020; }
+        .admin-main { flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch; }
         .content-card { border: 0; border-radius: 18px; box-shadow: 0 12px 30px rgba(16, 24, 40, 0.06); }
+        .admin-mobile { background: linear-gradient(180deg, #2f6fb4 0%, #2b66a8 35%, #255c9a 100%); color: #fff; }
+        .admin-mobile .admin-mobile-link { color: rgba(255,255,255,.92); border-radius: 14px; padding: 12px 14px; font-weight: 700; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .admin-mobile .admin-mobile-link:hover { background: rgba(255,255,255,.12); color: #fff; }
+        .admin-mobile .admin-mobile-link.active { background: rgba(255,255,255,.18); box-shadow: 0 10px 24px rgba(0,0,0,.08); color: #fff; }
+        .admin-mobile .admin-mobile-link .bi { font-size: 18px; width: 22px; }
+        .admin-logo{display:flex;align-items:center;justify-content:center;height:100%}
+        .admin-logo img{width:160px;max-width:100%;height:auto;filter:drop-shadow(0 12px 22px rgba(0,0,0,.18))}
+        @media (min-width: 1200px){ .admin-sidebar { width: 300px; min-width: 300px; flex-basis: 300px; } }
     </style>
 </head>
 <body>
 <div class="admin-shell d-flex">
     <aside class="admin-sidebar text-white d-none d-lg-flex flex-column p-3">
-        <div class="admin-brand d-flex align-items-center gap-2 px-2 mb-3">
-            <div class="bg-white rounded-3 p-1">
-                <img src="{{ asset('img/logo.jpeg') }}" alt="Logo" style="height:32px;width:auto;">
+        <div class="admin-brand px-2 mb-3">
+            <div class="admin-logo">
+                <img src="{{ asset('img/logo.png') }}" alt="Logo">
             </div>
-            <div class="fw-bold fs-5">REFRENS</div>
         </div>
 
         <nav class="nav nav-pills flex-column gap-2">
@@ -50,6 +58,9 @@
             <a class="nav-link {{ request()->routeIs('admin.messages.*') ? 'active' : '' }}" href="{{ route('admin.messages.index') }}">
                 <i class="bi bi-chat-dots"></i> Pesan
             </a>
+            <a class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}" href="{{ route('admin.settings.edit') }}">
+                <i class="bi bi-gear"></i> Pengaturan
+            </a>
         </nav>
 
         <div class="mt-auto pt-4">
@@ -61,7 +72,7 @@
                     <div class="fw-semibold text-truncate">{{ Auth::user()->name }}</div>
                     <div class="small opacity-75">Administrator</div>
                 </div>
-                <form method="POST" action="{{ route('logout') }}">
+                <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Apakah Anda yakin ingin keluar?')">
                     @csrf
                     <button class="btn btn-sm btn-light" type="submit">
                         <i class="bi bi-box-arrow-right"></i>
@@ -80,7 +91,7 @@
                     </button>
                     <div class="fw-bold text-primary">Admin Panel</div>
                 </div>
-                <a href="{{ route('shop.index') }}" class="btn btn-sm btn-outline-secondary">Kembali ke Toko</a>
+             
             </div>
         </header>
 
@@ -97,28 +108,50 @@
 </div>
 
 <div class="offcanvas offcanvas-start" tabindex="-1" id="adminSidebar" aria-labelledby="adminSidebarLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="adminSidebarLabel">REFRENS</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <div class="offcanvas-header admin-mobile border-bottom border-white border-opacity-10">
+        <div class="w-100 d-flex justify-content-center">
+            <img src="{{ asset('img/logo.png') }}" alt="Logo" style="height:36px;width:auto;">
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
-    <div class="offcanvas-body p-3">
-        <div class="d-flex align-items-center gap-2 mb-3">
-            <div class="bg-light rounded-3 p-1">
-                <img src="{{ asset('img/logo.jpeg') }}" alt="Logo" style="height:32px;width:auto;">
+    <div class="offcanvas-body admin-mobile p-3">
+        <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width:44px;height:44px;">
+                <span>{{ substr(Auth::user()->name, 0, 1) }}</span>
             </div>
-            <div class="fw-bold">Menu</div>
+            <div class="flex-grow-1">
+                <div class="fw-bold text-truncate">{{ Auth::user()->name }}</div>
+                <div class="small opacity-75">Administrator</div>
+            </div>
         </div>
-        <div class="list-group list-group-flush">
-            <a class="list-group-item list-group-item-action {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Dashboard</a>
-            <a class="list-group-item list-group-item-action {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}" href="{{ route('admin.orders.index') }}">Pesanan</a>
-            <a class="list-group-item list-group-item-action {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}" href="{{ route('admin.reports.index') }}">Laporan</a>
-            <a class="list-group-item list-group-item-action {{ request()->routeIs('admin.products.*') ? 'active' : '' }}" href="{{ route('admin.products.index') }}">Stok Produk</a>
-            <a class="list-group-item list-group-item-action {{ request()->routeIs('admin.messages.*') ? 'active' : '' }}" href="{{ route('admin.messages.index') }}">Pesan</a>
+
+        <div class="d-flex flex-column gap-2">
+            <a class="admin-mobile-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+                <i class="bi bi-house"></i> Dashboard
+            </a>
+            <a class="admin-mobile-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}" href="{{ route('admin.orders.index') }}">
+                <i class="bi bi-cart3"></i> Pesanan
+            </a>
+            <a class="admin-mobile-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}" href="{{ route('admin.reports.index') }}">
+                <i class="bi bi-file-earmark-text"></i> Laporan
+            </a>
+            <a class="admin-mobile-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}" href="{{ route('admin.products.index') }}">
+                <i class="bi bi-box-seam"></i> Stok Produk
+            </a>
+            <a class="admin-mobile-link {{ request()->routeIs('admin.messages.*') ? 'active' : '' }}" href="{{ route('admin.messages.index') }}">
+                <i class="bi bi-chat-dots"></i> Pesan
+            </a>
+            <a class="admin-mobile-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}" href="{{ route('admin.settings.edit') }}">
+                <i class="bi bi-gear"></i> Pengaturan
+            </a>
         </div>
-        <div class="mt-4">
-            <form method="POST" action="{{ route('logout') }}">
+
+        <div class="mt-4 pt-3 border-top border-white border-opacity-10">
+            <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Apakah Anda yakin ingin keluar?')">
                 @csrf
-                <button class="btn btn-danger w-100" type="submit">Logout</button>
+                <button class="btn btn-light w-100 fw-bold" type="submit">
+                    <i class="bi bi-box-arrow-right me-2"></i> Logout
+                </button>
             </form>
         </div>
     </div>

@@ -67,7 +67,36 @@
             <!-- Right: Product Info -->
             <div class="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0" x-data="{ size: '', quantity: 1, showSizeGuide: false }">
                 <div class="border-b border-gray-200 pb-6">
-                    <h1 class="text-3xl font-bold tracking-tight text-gray-900 mb-2">{{ $product->name }}</h1>
+                    <div class="d-flex align-items-start justify-content-between gap-3">
+                        <h1 class="text-3xl font-bold tracking-tight text-gray-900 mb-2">{{ $product->name }}</h1>
+                        <div class="mt-1">
+                            @auth
+                                @php
+                                    $inWishlist = \App\Models\Wishlist::where('user_id', Auth::id())->where('product_id', $product->id)->exists();
+                                @endphp
+                                @if($inWishlist)
+                                    <form method="POST" action="{{ route('wishlist.destroy', $product) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-light rounded-circle shadow-sm" aria-label="Remove from wishlist">
+                                            <i class="bi bi-heart-fill text-danger"></i>
+                                        </button>
+                                    </form>
+                                @else
+                                    <form method="POST" action="{{ route('wishlist.store', $product) }}">
+                                        @csrf
+                                        <button type="submit" class="btn btn-light rounded-circle shadow-sm" aria-label="Add to wishlist">
+                                            <i class="bi bi-heart"></i>
+                                        </button>
+                                    </form>
+                                @endif
+                            @else
+                                <a href="{{ route('account.index', ['login' => 1]) }}" class="btn btn-light rounded-circle shadow-sm" aria-label="Login">
+                                    <i class="bi bi-heart"></i>
+                                </a>
+                            @endauth
+                        </div>
+                    </div>
                     <p class="text-2xl font-bold text-red-600" data-money-idr="{{ (float) $product->price }}">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
                 </div>
 

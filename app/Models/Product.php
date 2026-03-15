@@ -17,11 +17,13 @@ class Product extends Model
         'category', 
         'product_type',
         'sizes',
+        'is_featured',
         'stock'
     ];
 
     protected $casts = [
         'images' => 'array',
         'sizes' => 'array',
+        'is_featured' => 'boolean',
     ];
 }
