@@ -1,8 +1,7 @@
 <style>
-    .refrens-nav{background:rgba(255,255,255,0);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid rgba(229,231,235,0);transition:background-color .25s ease,border-color .25s ease,box-shadow .25s ease}
-    .refrens-nav.refrens-nav--scrolled{background:rgba(255,255,255,.95);border-bottom:1px solid rgba(229,231,235,.85);box-shadow:0 8px 24px rgba(0,0,0,.06)}
+    .refrens-logo{background:transparent;mix-blend-mode:multiply}
 </style>
-<nav id="siteNav" x-data="{
+<nav x-data="{
         open: false,
         localeOpen: false,
         searchOpen: false,
@@ -124,7 +123,7 @@
         }
     }"
     x-init="init()"
-    class="refrens-nav fixed top-0 inset-x-0 z-50">
+    class="bg-white sticky top-0 z-50 border-b border-gray-200/60">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
             <!-- Left: Hamburger Menu & Logo -->
@@ -136,7 +135,7 @@
                     </svg>
                 </button>
                 <a href="{{ url('/') }}" class="flex-shrink-0">
-                    <img class="h-16 w-auto object-contain" src="{{ asset('img/logo.jpeg') }}" alt="REFRENS">
+                    <img class="refrens-logo h-16 w-auto object-contain" src="{{ asset('img/logo.jpeg') }}" alt="REFRENS">
                 </a>
             </div>
 
@@ -466,24 +465,3 @@
         </div>
     </div>
 </nav>
-
-<script>
-    (function () {
-        const nav = document.getElementById('siteNav');
-        if (!nav) return;
-
-        function update() {
-            const y = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-            if (y > 120) {
-                nav.classList.add('refrens-nav--scrolled');
-            } else {
-                nav.classList.remove('refrens-nav--scrolled');
-            }
-        }
-
-        requestAnimationFrame(update);
-        window.addEventListener('load', update);
-        window.setTimeout(update, 250);
-        window.addEventListener('scroll', update, { passive: true });
-    })();
-</script>
