@@ -1,6 +1,6 @@
 <style>
     .refrens-logo{background:transparent;mix-blend-mode:multiply}
-    .refrens-nav{background:rgba(255,255,255,0);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid rgba(229,231,235,0);transition:background-color .2s ease,border-color .2s ease,box-shadow .2s ease}
+    .refrens-nav{background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom:1px solid rgba(229,231,235,0);transition:background-color .2s ease,border-color .2s ease,box-shadow .2s ease}
     .refrens-nav.refrens-nav--scrolled{background:rgba(255,255,255,.95);border-bottom:1px solid rgba(229,231,235,.85);box-shadow:0 8px 24px rgba(0,0,0,.06)}
 </style>
 <nav id="siteNav" x-data="{
@@ -137,7 +137,7 @@
                     </svg>
                 </button>
                 <a href="{{ url('/') }}" class="flex-shrink-0">
-                    <img class="refrens-logo h-16 w-auto object-contain" src="{{ asset('img/logo.jpeg') }}" alt="REFRENS">
+                    <img class="refrens-logo h-16 w-auto object-contain" src="{{ asset('img/logo.png') }}" alt="REFRENS">
                 </a>
             </div>
 

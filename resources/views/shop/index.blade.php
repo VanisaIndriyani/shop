@@ -27,6 +27,22 @@
 
 <div class="bg-white min-h-screen">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <div class="relative overflow-hidden rounded-4 mb-5">
+            <div class="grid grid-cols-2">
+                <div class="relative">
+                    <img src="{{ asset('img/slide1.jpeg') }}" alt="Shop" class="w-full h-[260px] sm:h-[320px] object-cover">
+                </div>
+                <div class="relative">
+                    <img src="{{ asset('img/slide2.jpeg') }}" alt="Shop" class="w-full h-[260px] sm:h-[320px] object-cover">
+                </div>
+            </div>
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div class="px-5 py-2 rounded-3xl border-2 border-blue-600 bg-white/90 shadow-lg">
+                    <span class="text-blue-700 fw-black" style="font-size:28px;letter-spacing:.2px;">Shop</span>
+                </div>
+            </div>
+        </div>
         
         <!-- Filter & Sort Buttons -->
         <div class="flex gap-4 mb-6 sticky top-16 z-30 bg-white py-2 -mx-4 px-4 shadow-sm sm:static sm:bg-transparent sm:shadow-none sm:py-0 sm:mx-0 sm:px-0">
