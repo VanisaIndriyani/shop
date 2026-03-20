@@ -16,6 +16,9 @@ class WishlistController extends Controller
             'product_id' => $product->id,
         ]);
 
+        if ($request->has('open_drawer')) {
+            return back()->with('cart_drawer', true);
+        }
         return back()->with('success', 'Produk ditambahkan ke wishlist.');
     }
 
@@ -25,7 +28,9 @@ class WishlistController extends Controller
             ->where('product_id', $product->id)
             ->delete();
 
+        if (request()->has('open_drawer')) {
+            return back()->with('cart_drawer', true);
+        }
         return back()->with('success', 'Produk dihapus dari wishlist.');
     }
 }
-

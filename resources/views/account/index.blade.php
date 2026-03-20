@@ -13,7 +13,7 @@
 
     $hasLoginErrors = $errors->has('login') || ($errors->has('password') && old('login'));
 
-    $openLogin = request()->boolean('login') || $hasLoginErrors;
+    $openLogin = (isset($forceLoginOpen) ? (bool) $forceLoginOpen : false) || request()->boolean('login') || $hasLoginErrors;
     $openRegister = request()->boolean('register') || $hasRegisterErrors;
 
     $orders = $orders ?? collect();
@@ -39,16 +39,16 @@
 <style>
     :root{--refrens-accent:#2563eb;--refrens-accent-dark:#1d4ed8}
     .refrens-account{min-height:calc(100svh - 64px);background:#f3f4f6}
-    .refrens-card{border:0;border-radius:18px;box-shadow:0 12px 30px rgba(16,24,40,.06)}
+    .refrens-card{border:0;border-radius:16px;box-shadow:0 12px 30px rgba(16,24,40,.06)}
     .refrens-sheet{position:fixed;inset:0;z-index:1200;display:none}
     .refrens-sheet.refrens-sheet--open{display:block}
     .refrens-sheet__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.45)}
     .refrens-sheet__panel{position:absolute;left:0;right:0;bottom:0;background:#fff;border-top-left-radius:22px;border-top-right-radius:22px;max-height:86svh;overflow:auto;box-shadow:0 -18px 48px rgba(0,0,0,.18);transform:translateY(16px);opacity:0;transition:transform .18s ease,opacity .18s ease}
     .refrens-sheet.refrens-sheet--open .refrens-sheet__panel{transform:translateY(0);opacity:1}
     .refrens-sheet__handle{width:56px;height:6px;border-radius:999px;background:#e5efff;margin:10px auto}
-    .refrens-pilltab{display:flex;gap:10px;border-bottom:1px solid rgba(0,0,0,.06)}
-    .refrens-pilltab button{flex:1;border:0;background:transparent;padding:12px 10px;font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:.3px;color:#6b7280;border-bottom:2px solid transparent}
-    .refrens-pilltab button.active{color:var(--refrens-accent);border-bottom-color:var(--refrens-accent)}
+    .refrens-pilltab{display:flex;gap:0;border-bottom:1px solid rgba(0,0,0,.10);background:#fff}
+    .refrens-pilltab button{flex:1;border:0;background:transparent;padding:14px 10px;font-weight:900;font-size:13px;color:#111827;border-bottom:2px solid transparent}
+    .refrens-pilltab button.active{border-bottom-color:#111827}
     .refrens-scrolltabs{display:flex;gap:10px;overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;padding-bottom:6px;margin-bottom:-6px;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;scrollbar-width:none}
     .refrens-scrolltabs::-webkit-scrollbar{display:none}
     .refrens-scrolltabs .btn{flex:0 0 auto;white-space:nowrap;scroll-snap-align:start}
@@ -68,38 +68,34 @@
     .refrens-ordercard__bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px}
     .refrens-ordercard__total .label{font-size:12px;color:#6b7280;font-weight:800}
     .refrens-ordercard__total .price{font-weight:900;color:#2563eb}
+    .refrens-hero{background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:16px;padding:14px}
+    .refrens-hero .title{font-weight:900;font-size:14px;color:#111827}
+    .refrens-hero .desc{margin-top:8px;font-size:12px;line-height:1.4;color:#6b7280;font-weight:600}
+    .refrens-hero .actions{margin-top:12px;display:flex;gap:10px}
+    .refrens-hero .actions .btn{height:40px;border-radius:12px;font-weight:900;padding:0 18px}
+    .refrens-filterrow{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-top:6px}
+    .refrens-filterrow .h{font-size:18px;font-weight:900;color:#111827;margin:0}
+    .refrens-filterrow .h small{font-size:16px;font-weight:900;color:#111827}
+    .refrens-select{appearance:none;-webkit-appearance:none;-moz-appearance:none;background:#fff;border:1px solid rgba(0,0,0,.20);border-radius:14px;padding:12px 40px 12px 14px;font-size:13px;font-weight:800;color:#111827;min-width:200px}
+    .refrens-selectwrap{position:relative}
+    .refrens-selectwrap i{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#111827;font-size:14px;pointer-events:none}
+    .refrens-emptystate{padding:44px 10px;text-align:center}
+    .refrens-emptystate .icon{width:92px;height:92px;margin:0 auto 10px;color:#9ca3af}
+    .refrens-emptystate .t{font-size:16px;font-weight:900;color:#111827}
+    .refrens-emptystate .d{margin-top:6px;font-size:12px;font-weight:700;color:#6b7280}
 </style>
 
 <div class="refrens-account py-4">
     <div class="container" x-data="{ tab: '{{ $initialTab }}', loginOpen: {{ $openLogin ? 'true' : 'false' }}, registerOpen: {{ $openRegister ? 'true' : 'false' }}, settingsOpen: {{ $hasSettingsErrors ? 'true' : 'false' }} }">
-        <div class="d-flex align-items-center justify-content-between mb-3">
-            <div>
-                <div class="fw-bold fs-4">Akun Saya</div>
-                @auth
-                    <div class="text-muted small">Halo, {{ Auth::user()->name }}</div>
-                @endauth
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                @auth
-                    <button type="button" class="btn btn-outline-primary btn-sm rounded-pill" @click="settingsOpen = true">Pengaturan</button>
-                    <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Apakah Anda yakin ingin keluar?')">
-                        @csrf
-                        <button type="submit" class="btn btn-outline-secondary btn-sm rounded-pill">Keluar</button>
-                    </form>
-                @endauth
-                <a href="{{ route('shop.index') }}" class="btn btn-outline-secondary btn-sm rounded-pill">Kembali</a>
-            </div>
-        </div>
-
         @guest
-            <div class="card refrens-card p-3 mb-3">
-                <div class="fw-bold">Nikmati Diskon Spesial dan Pantau Pesanan Kamu</div>
-                <div class="text-muted small mt-1">
+            <div class="refrens-hero mb-3">
+                <div class="title">Nikmati Diskon Spesial dan Pantau Pesanan Kamu</div>
+                <div class="desc">
                     Dapatkan diskon eksklusif sambil melacak pesanan dan percakapan kamu dengan mudah. Tetap terhubung dengan kami dan selalu tahu perkembangan pembelian kamu, semua dalam satu platform.
                 </div>
-                <div class="d-flex gap-2 mt-3">
-                    <button type="button" class="btn btn-outline-primary rounded-pill px-3" @click="loginOpen = true">Login</button>
-                    <button type="button" class="btn btn-primary rounded-pill px-3" @click="registerOpen = true">Daftar</button>
+                <div class="actions">
+                    <button type="button" class="btn btn-outline-primary" @click="loginOpen = true">Login</button>
+                    <button type="button" class="btn btn-primary" @click="registerOpen = true">Daftar</button>
                 </div>
             </div>
         @endguest
@@ -126,55 +122,41 @@
                 @endguest
                 @auth
                     @php
-                        $tabs = [
-                            ['key' => null, 'label' => 'Semua'],
-                            ['key' => 'unpaid', 'label' => 'Belum Bayar'],
-                            ['key' => 'processing', 'label' => 'Diproses'],
+                        $statusOptions = [
+                            ['key' => null, 'label' => 'Semua status'],
+                            ['key' => 'unpaid', 'label' => 'Belum Dibayar'],
+                            ['key' => 'processing', 'label' => 'Dikemas'],
                             ['key' => 'shipped', 'label' => 'Dikirim'],
                             ['key' => 'completed', 'label' => 'Selesai'],
                             ['key' => 'cancelled', 'label' => 'Dibatalkan'],
                         ];
-                        $totalAll = array_sum($counts ?? []);
-                        $countsByKey = [
-                            'unpaid' => $counts['pending'] ?? 0,
-                            'processing' => $counts['processing'] ?? 0,
-                            'shipped' => $counts['shipped'] ?? 0,
-                            'completed' => $counts['completed'] ?? 0,
-                            'cancelled' => $counts['cancelled'] ?? 0,
-                        ];
                     @endphp
 
-                    <div class="d-flex align-items-center justify-content-between mb-3">
-                        <div class="fw-bold">Riwayat Pesanan</div>
-                        <div class="text-muted small">{{ $orderCount }} pesanan</div>
-                    </div>
-
-                    <div class="mb-3">
-                        <div class="refrens-scrolltabs">
-                            @foreach($tabs as $tabOpt)
-                                @php
-                                    $isActive = ($statusParam ?? null) === ($tabOpt['key'] ?? null);
-                                    $badgeCount = $tabOpt['key'] ? ($countsByKey[$tabOpt['key']] ?? 0) : $totalAll;
-                                    $url = route('account.index', array_filter(['tab' => 'orders', 'status' => $tabOpt['key']]));
-                                @endphp
-                                <a href="{{ $url }}" class="btn btn-sm rounded-pill {{ $isActive ? 'btn-primary' : 'btn-outline-secondary' }}">
-                                    {{ $tabOpt['label'] }}
-                                    <span class="badge text-bg-light ms-2">{{ $badgeCount }}</span>
-                                </a>
-                            @endforeach
+                    <div class="refrens-filterrow mb-2">
+                        <div class="h">Order Saya <small>({{ $orderCount }})</small></div>
+                        <div class="refrens-selectwrap">
+                            <select class="refrens-select" onchange="window.location.href=this.value">
+                                @foreach($statusOptions as $opt)
+                                    @php
+                                        $isSelected = ($statusParam ?? null) === ($opt['key'] ?? null);
+                                        $url = route('account.index', array_filter(['tab' => 'orders', 'status' => $opt['key']]));
+                                    @endphp
+                                    <option value="{{ $url }}" {{ $isSelected ? 'selected' : '' }}>{{ $opt['label'] }}</option>
+                                @endforeach
+                            </select>
+                            <i class="bi bi-chevron-down"></i>
                         </div>
                     </div>
 
                     @if($orders->isEmpty())
-                        <div class="text-center py-5 text-muted">
-                            <div class="mb-2">
-                                <i class="bi bi-box-seam fs-1"></i>
-                            </div>
-                            <div class="fw-bold text-dark">Belum ada pesanan</div>
-                            <div class="small">Yuk belanja dulu biar muncul di sini.</div>
-                            <div class="mt-3">
-                                <a href="{{ route('shop.index') }}" class="btn btn-primary rounded-pill px-4">Mulai Belanja</a>
-                            </div>
+                        <div class="refrens-emptystate">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 8l-9-5-9 5v10l9 5 9-5V8z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l9 5 9-5"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 13v10"/>
+                            </svg>
+                            <div class="t">Tidak ada pesanan</div>
+                            <div class="d">Silakan buat pesanan untuk melihatnya disini.</div>
                         </div>
                     @else
                         <div class="row g-3">

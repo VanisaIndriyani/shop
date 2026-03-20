@@ -9,218 +9,253 @@
 @endphp
 
 <style>
-    .checkout-card { border: 0; border-radius: 18px; box-shadow: 0 12px 30px rgba(16, 24, 40, 0.08); }
-    .payment-card { border: 1px solid #eef2ff; border-radius: 18px; padding: 16px; cursor: pointer; transition: all .2s ease; background: #fff; }
-    .payment-card:hover { transform: translateY(-1px); box-shadow: 0 12px 30px rgba(16, 24, 40, 0.08); }
-    .payment-card.active { border-color: rgba(13,110,253,.35); box-shadow: 0 16px 32px rgba(13, 110, 253, 0.12); background: rgba(13,110,253,.04); }
-    .thumb { width: 64px; height: 64px; border-radius: 14px; overflow: hidden; background: #f8f9fa; border: 1px solid rgba(0,0,0,.06); flex: 0 0 auto; }
-    .thumb img { width: 100%; height: 100%; object-fit: cover; }
-    .checkout-items{max-height:340px;overflow:auto}
-    .checkout-mobilebar{position:fixed;left:0;right:0;bottom:0;z-index:1050;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-top:1px solid rgba(0,0,0,.08)}
-    .checkout-mobilebar__inner{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .checkout-mobilebar__total{line-height:1.1}
-    .checkout-mobilebar__total .label{font-size:12px;color:#6b7280;font-weight:800}
-    .checkout-mobilebar__total .price{font-size:16px;color:#0d6efd;font-weight:900}
-    @media (max-width: 576px){
-        .checkout-page{padding-bottom:92px}
-        .checkout-card{border-radius:16px}
-        .checkout-mobile-title{font-size:22px}
-        .checkout-items{max-height:none;overflow:visible}
-    }
+    footer{display:none !important}
+    .refrens-chat-fab{display:none !important}
+    body{background:#f6f7fb}
+    .checkout-wrap{padding:14px 12px 22px}
+    .checkout-card{max-width:420px;margin:0 auto;background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:16px;overflow:hidden}
+    .checkout-body{padding:14px 14px 18px}
+    .checkout-h1{font-size:18px;font-weight:900;margin:0 0 6px;color:#111827}
+    .checkout-sub{font-size:12px;color:#6b7280;font-weight:600;margin:0 0 12px}
+    .checkout-sub a{color:#dc2626;font-weight:800;text-decoration:none}
+    .checkout-sub a:hover{text-decoration:underline}
+    .checkout-label{font-size:12px;font-weight:800;color:#111827;margin-bottom:6px}
+    .checkout-input{border-radius:12px;border:1px solid rgba(0,0,0,.10);padding:12px 12px;font-size:12px;font-weight:600}
+    .checkout-input:focus{border-color:rgba(37,99,235,.6);box-shadow:0 0 0 4px rgba(37,99,235,.12)}
+    .checkout-row{display:flex;flex-direction:column;gap:10px}
+    .checkout-box{border:1px solid rgba(0,0,0,.06);border-radius:12px;background:rgba(0,0,0,.02);padding:12px;font-size:12px;font-weight:700;color:#6b7280}
+    .checkout-section{margin-top:18px}
+    .checkout-section__title{font-size:15px;font-weight:900;color:#111827;margin:0 0 10px}
+    .checkout-payrow{border:1px solid rgba(0,0,0,.10);border-radius:12px;background:#fff;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .checkout-payleft{display:flex;align-items:center;gap:10px}
+    .checkout-payleft .tag{font-size:12px;font-weight:900;color:#111827}
+    .checkout-payright{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:900;color:#111827}
+    .checkout-payright i{color:rgba(17,24,39,.55)}
+    .checkout-qris{margin-top:10px;border:1px solid rgba(0,0,0,.10);border-radius:14px;background:#fff;padding:12px;display:flex;align-items:center;justify-content:center}
+    .checkout-qris img{width:220px;height:220px;object-fit:contain}
+
+    .checkout-sheet{position:fixed;inset:0;z-index:1300;display:none}
+    .checkout-sheet.is-open{display:block}
+    .checkout-sheet__backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(2px)}
+    .checkout-sheet__panel{position:fixed;left:0;right:0;bottom:0;max-height:70svh;background:#fff;border-top-left-radius:22px;border-top-right-radius:22px;overflow:auto;box-shadow:0 -18px 48px rgba(0,0,0,.18)}
+    .checkout-sheet__handle{width:56px;height:6px;border-radius:999px;background:#e5efff;margin:10px auto}
+    .checkout-sheet__title{font-size:14px;font-weight:900;color:#111827}
+    .checkout-sheet__item{border:1px solid rgba(0,0,0,.10);border-radius:14px;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff}
+    .checkout-sheet__item + .checkout-sheet__item{margin-top:10px}
+    .checkout-sheet__item .l{font-size:12px;font-weight:900;color:#111827}
+    .checkout-sheet__item .s{font-size:11px;font-weight:700;color:#6b7280;margin-top:4px}
+
+    .checkout-summary{margin-top:18px}
+    .checkout-item{display:flex;align-items:center;gap:12px}
+    .checkout-item + .checkout-item{margin-top:12px}
+    .checkout-item__thumb{width:42px;height:42px;border-radius:12px;overflow:hidden;background:#f3f4f6;border:1px solid rgba(0,0,0,.06);flex:0 0 auto}
+    .checkout-item__thumb img{width:100%;height:100%;object-fit:cover}
+    .checkout-item__meta{flex:1 1 auto;min-width:0}
+    .checkout-item__name{font-size:12px;font-weight:900;color:#111827;line-height:1.2}
+    .checkout-item__qty{font-size:11px;font-weight:700;color:#6b7280;margin-top:4px}
+    .checkout-item__price{font-size:12px;font-weight:900;color:#dc2626;white-space:nowrap}
+    .checkout-rowbtn{border:1px solid rgba(0,0,0,.10);border-radius:12px;background:#fff;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;font-weight:800;color:#6b7280}
+    .checkout-rowbtn .l{display:flex;align-items:center;gap:10px}
+    .checkout-rowbtn i{color:rgba(17,24,39,.55)}
+    .checkout-msgsheet{position:fixed;inset:0;z-index:1400;display:none}
+    .checkout-msgsheet.is-open{display:block}
+    .checkout-msgsheet__backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(2px)}
+    .checkout-msgsheet__panel{position:fixed;left:0;right:0;bottom:0;max-height:70svh;background:#fff;border-top-left-radius:22px;border-top-right-radius:22px;overflow:auto;box-shadow:0 -18px 48px rgba(0,0,0,.18)}
+    .checkout-msgsheet__handle{width:56px;height:6px;border-radius:999px;background:#e5efff;margin:10px auto}
+    .checkout-msgsheet__title{font-size:14px;font-weight:900;color:#111827}
+    .checkout-msgopt{border:1px solid rgba(0,0,0,.10);border-radius:14px;padding:12px;display:flex;align-items:flex-start;gap:10px;background:#fff}
+    .checkout-msgopt + .checkout-msgopt{margin-top:10px}
+    .checkout-msgopt input{margin-top:2px}
+    .checkout-msgopt .t{font-size:12px;font-weight:900;color:#111827}
+    .checkout-msgopt .d{font-size:11px;font-weight:700;color:#6b7280;margin-top:4px}
+    .checkout-msginput{margin-top:10px}
+    .checkout-msginput input{width:100%;border:1px solid rgba(0,0,0,.10);border-radius:12px;padding:12px 12px;font-size:12px;font-weight:700}
+    .checkout-msgbtn{width:100%;height:44px;border-radius:12px;border:0;background:#2563eb;color:#fff;font-weight:900;margin-top:14px}
+    .checkout-lines{margin-top:14px}
+    .checkout-line{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:800;color:#111827}
+    .checkout-line + .checkout-line{margin-top:10px}
+    .checkout-line .muted{color:#6b7280}
+    .checkout-total{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid rgba(0,0,0,.10);font-size:12px;font-weight:900;color:#111827}
+    .checkout-total .price{font-size:14px}
+    .checkout-safe{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;font-size:11px;font-weight:800;color:#6b7280}
+    .checkout-safe i{color:rgba(17,24,39,.55)}
+    .checkout-note{margin-top:12px;border-radius:12px;background:rgba(37,99,235,.10);padding:10px 12px;font-size:11px;font-weight:800;color:#374151}
+    .checkout-orderbtn{width:100%;height:46px;border-radius:12px;border:0;background:#2563eb;color:#fff;font-weight:900;margin-top:14px}
+    .checkout-terms{margin-top:10px;text-align:center;font-size:11px;font-weight:700;color:#6b7280}
+    .checkout-terms a{color:#dc2626;font-weight:900;text-decoration:none}
 </style>
 
-<div class="container py-4 py-lg-5 checkout-page" x-data="{ paymentMethod: '{{ old('payment_method', 'bank_transfer') }}' }">
-    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3 mb-lg-4">
-        <div>
-            <div class="fw-bold fs-3 checkout-mobile-title">Checkout</div>
-            <div class="text-muted">Selesaikan pembayaran untuk memproses pesanan Anda.</div>
-        </div>
-        <div class="d-flex align-items-center gap-2">
-            <a href="{{ route('cart.index') }}" class="btn btn-outline-secondary rounded-pill">Kembali</a>
+<div class="checkout-wrap" x-data="{ paymentMethod: '{{ old('payment_method', 'bank_transfer') }}', paymentOpen: false, msgOpen: false, msgMode: 'front', msgText: '' }">
+    <div class="checkout-card">
+        <div class="checkout-body">
+            <div class="checkout-h1">Detail Alamat</div>
+
+            <form action="{{ route('checkout.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="checkout-row">
+                    <div>
+                        <div class="checkout-label">Alamat Lengkap</div>
+                        <textarea class="form-control checkout-input @error('address') is-invalid @enderror" name="address" rows="6" placeholder="Nama penerima, No HP, Jalan, RT/RW, Kelurahan, Kecamatan, Kota, Provinsi, Kode Pos" required>{{ old('address', Auth::user()->address ?? '') }}</textarea>
+                        @error('address') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                    </div>
+                </div>
+
+                <div class="checkout-section">
+                    <div class="checkout-section__title">Metode Pengiriman</div>
+                    <div class="checkout-box">Lengkapi rincian alamat untuk melihat metode pengiriman yang tersedia.</div>
+                </div>
+
+                <div class="checkout-section">
+                    <div class="checkout-section__title">Metode Pembayaran</div>
+                    <input type="hidden" name="payment_method" x-model="paymentMethod">
+                    <button type="button" class="w-100 checkout-payrow" @click="paymentOpen = true">
+                        <div class="checkout-payleft">
+                            <div class="tag">QRIS</div>
+                        </div>
+                        <div class="checkout-payright">
+                            <span x-text="paymentMethod === 'bank_transfer' ? 'QRIS' : 'COD'"></span>
+                            <i class="bi bi-chevron-right"></i>
+                        </div>
+                    </button>
+                    @error('payment_method') <div class="text-danger small mt-2">{{ $message }}</div> @enderror
+                    <div class="mt-3" x-show="paymentMethod === 'bank_transfer'">
+                        <div class="checkout-label">QRIS</div>
+                        <div class="checkout-qris">
+                            <img src="{{ asset('img/qr.jpeg') }}" alt="QRIS">
+                        </div>
+                        <div class="checkout-label">Upload Bukti Pembayaran</div>
+                        <input type="file" name="payment_proof" class="form-control checkout-input @error('payment_proof') is-invalid @enderror" accept="image/*">
+                        @error('payment_proof') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                    </div>
+                </div>
+
+                <div class="checkout-summary">
+                    <div class="checkout-section__title">Ringkasan Pesanan</div>
+                    <div>
+                        @foreach($cartItems as $item)
+                            <div class="checkout-item">
+                                <div class="checkout-item__thumb">
+                                    @if($item->product->image)
+                                        <img src="{{ asset('storage/' . $item->product->image) }}" alt="{{ $item->product->name }}">
+                                    @else
+                                        <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted"><i class="bi bi-image"></i></div>
+                                    @endif
+                                </div>
+                                <div class="checkout-item__meta">
+                                    <div class="checkout-item__name">{{ $item->product->name }}</div>
+                                    <div class="checkout-item__qty">Jumlah: {{ $item->quantity }}</div>
+                                </div>
+                                <div class="checkout-item__price" data-money-idr="{{ (float) ($item->product->price * $item->quantity) }}">Rp {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }}</div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="mt-3 d-flex flex-column gap-2">
+                        <button type="button" class="checkout-rowbtn" @click="msgOpen = true">
+                            <div class="l">Tinggalkan pesan pengiriman (opsional)</div>
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    @php $qtyAll = (int) $cartItems->sum('quantity'); @endphp
+                    <div class="checkout-lines">
+                        <div class="checkout-line">
+                            <div class="muted">Subtotal • {{ $qtyAll }} barang</div>
+                            <div class="checkout-item__price" data-money-idr="{{ (float) $subtotal }}">Rp {{ number_format($subtotal, 0, ',', '.') }}</div>
+                        </div>
+                        <div class="checkout-line">
+                            <div class="muted">Pengiriman</div>
+                            <div class="muted">-</div>
+                        </div>
+                    </div>
+                    <div class="checkout-total">
+                        <div>Total Pembayaran</div>
+                        <div class="price" data-money-idr="{{ (float) $subtotal }}">Rp {{ number_format($subtotal, 0, ',', '.') }}</div>
+                    </div>
+                    <div class="checkout-safe">
+                        <i class="bi bi-lock"></i>
+                        <div>Transaksi Aman | Pembayaran telah terenkripsi.</div>
+                    </div>
+                    <div class="checkout-note">
+                        Bea atau pajak impor mungkin dikenakan tergantung negara tujuan pengiriman.
+                    </div>
+
+                    <button type="submit" class="checkout-orderbtn">Order Sekarang</button>
+                    <div class="checkout-terms">
+                        Dengan melakukan pesanan, telah setuju dengan <a href="javascript:void(0)">Syarat &amp; Ketentuan</a>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
-    <div class="d-flex align-items-center gap-2 mb-3 mb-lg-4">
-        <span class="badge rounded-pill text-bg-primary">2</span>
-        <span class="fw-semibold">Checkout</span>
-        <span class="text-muted">•</span>
-        <span class="text-muted small">Langkah 2 dari 3</span>
+<div class="checkout-msgsheet" :class="msgOpen ? 'is-open' : ''" x-cloak>
+    <div class="checkout-msgsheet__backdrop" @click="msgOpen = false"></div>
+    <div class="checkout-msgsheet__panel">
+        <div class="px-3">
+            <div class="checkout-msgsheet__handle"></div>
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="checkout-msgsheet__title">Pesan Permintaan Pengiriman</div>
+                <button type="button" class="btn btn-sm btn-light rounded-circle" @click="msgOpen = false"><i class="bi bi-x-lg"></i></button>
+            </div>
+
+            <label class="checkout-msgopt w-100">
+                <input type="radio" name="shipping_note_mode" value="front" x-model="msgMode">
+                <div>
+                    <div class="t">Tinggalkan paket di depan rumah</div>
+                </div>
+            </label>
+            <label class="checkout-msgopt w-100">
+                <input type="radio" name="shipping_note_mode" value="lobby" x-model="msgMode">
+                <div>
+                    <div class="t">Tinggalkan paket di lobby/satpam</div>
+                </div>
+            </label>
+            <label class="checkout-msgopt w-100">
+                <input type="radio" name="shipping_note_mode" value="custom" x-model="msgMode">
+                <div>
+                    <div class="t">Sesuaikan pesan</div>
+                </div>
+            </label>
+
+            <div class="checkout-msginput" x-show="msgMode === 'custom'">
+                <input type="text" name="shipping_note" placeholder="Tinggalkan pesan pengiriman" x-model="msgText">
+            </div>
+
+            <button type="button" class="checkout-msgbtn" @click="msgOpen = false">Konfirmasi</button>
+            <div class="pb-3"></div>
+        </div>
     </div>
+</div>
 
-    <form action="{{ route('checkout.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-
-        <div class="row g-4">
-            <div class="col-12 col-lg-7">
-                <div class="card checkout-card mb-4">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <div class="fw-bold fs-5"><i class="bi bi-geo-alt me-2 text-primary"></i>Informasi Pengiriman</div>
-                        </div>
-
-                        <label for="address" class="form-label fw-semibold">Alamat Lengkap</label>
-                        <textarea id="address" name="address" rows="4" class="form-control @error('address') is-invalid @enderror" placeholder="Jalan, No Rumah, RT/RW, Kelurahan, Kecamatan, Kota, Kode Pos" required>{{ old('address', Auth::user()->address) }}</textarea>
-                        @error('address') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        <div class="form-text">Pastikan alamat sudah benar supaya pengiriman lancar.</div>
-                    </div>
-                </div>
-
-                <div class="card checkout-card">
-                    <div class="card-body p-4">
-                        <div class="fw-bold fs-5 mb-3"><i class="bi bi-credit-card me-2 text-primary"></i>Metode Pembayaran</div>
-
-                        <div class="row g-3">
-                            <div class="col-12 col-md-6">
-                                <label class="payment-card w-100" :class="paymentMethod === 'bank_transfer' ? 'active' : ''">
-                                    <input class="d-none" type="radio" name="payment_method" value="bank_transfer" x-model="paymentMethod">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white" style="width:44px;height:44px;background:#0d6efd;">
-                                                <i class="bi bi-qr-code-scan fs-5"></i>
-                                            </div>
-                                            <div>
-                                                <div class="fw-bold">Transfer / QRIS</div>
-                                                <div class="text-muted small">Upload bukti pembayaran</div>
-                                            </div>
-                                        </div>
-                                        <i class="bi bi-check-circle-fill text-primary" x-show="paymentMethod === 'bank_transfer'"></i>
-                                    </div>
-                                </label>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <label class="payment-card w-100" :class="paymentMethod === 'cod' ? 'active' : ''">
-                                    <input class="d-none" type="radio" name="payment_method" value="cod" x-model="paymentMethod">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white" style="width:44px;height:44px;background:#198754;">
-                                                <i class="bi bi-cash-coin fs-5"></i>
-                                            </div>
-                                            <div>
-                                                <div class="fw-bold">COD</div>
-                                                <div class="text-muted small">Bayar saat barang sampai</div>
-                                            </div>
-                                        </div>
-                                        <i class="bi bi-check-circle-fill text-success" x-show="paymentMethod === 'cod'"></i>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-                        @error('payment_method') <div class="text-danger small mt-2">{{ $message }}</div> @enderror
-
-                        <div class="mt-4" x-show="paymentMethod === 'bank_transfer'">
-                            <div class="alert alert-primary border-0 rounded-4 mb-3" style="background: rgba(13,110,253,.08);">
-                                <div class="fw-bold mb-1">Instruksi Pembayaran</div>
-                                <div class="text-muted small">Scan QRIS atau transfer ke rekening di bawah, lalu upload bukti pembayaran (opsional).</div>
-                            </div>
-
-                            <div class="row g-3 align-items-center">
-                                <div class="col-12 col-md-7">
-                                    <div class="card border-0 rounded-4" style="background:#f8fafc;">
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between small text-muted">
-                                                <span>Bank</span><span class="fw-bold text-dark">BCA</span>
-                                            </div>
-                                            <hr class="my-2">
-                                            <div class="d-flex justify-content-between small text-muted">
-                                                <span>No Rekening</span><span class="fw-bold text-dark">7655 2980 45</span>
-                                            </div>
-                                            <hr class="my-2">
-                                            <div class="d-flex justify-content-between small text-muted">
-                                                <span>Nama</span><span class="fw-bold text-dark">YUDHA FEBRIANSYAH</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-5 text-center">
-                                    <div class="bg-white rounded-4 p-3 shadow-sm border">
-                                        <img src="{{ asset('img/qr.jpeg') }}" alt="QRIS Payment" style="width: 180px; height: 180px; object-fit: contain;">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mt-3">
-                                <label for="payment_proof" class="form-label fw-semibold">Upload Bukti Pembayaran</label>
-                                <input type="file" name="payment_proof" id="payment_proof" class="form-control @error('payment_proof') is-invalid @enderror" accept="image/*">
-                                @error('payment_proof') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                <div class="form-text">Format: JPG/PNG/JPEG/GIF. Maks 2MB.</div>
-                            </div>
-                        </div>
-
-                        <div class="mt-4" x-show="paymentMethod === 'cod'">
-                            <div class="alert alert-warning border-0 rounded-4 mb-0" style="background: rgba(255,193,7,.12);">
-                                <div class="fw-bold mb-1">Info COD</div>
-                                <div class="text-muted small">Siapkan uang tunai sesuai total pembayaran. Pastikan nomor HP aktif untuk kurir.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<div class="checkout-sheet" :class="paymentOpen ? 'is-open' : ''" x-cloak>
+    <div class="checkout-sheet__backdrop" @click="paymentOpen = false"></div>
+    <div class="checkout-sheet__panel">
+        <div class="px-3">
+            <div class="checkout-sheet__handle"></div>
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="checkout-sheet__title">Metode Pembayaran</div>
+                <button type="button" class="btn btn-sm btn-light rounded-circle" @click="paymentOpen = false"><i class="bi bi-x-lg"></i></button>
             </div>
-
-            <div class="col-12 col-lg-5">
-                <div class="card checkout-card position-sticky" style="top: 96px;">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <div class="fw-bold fs-5"><i class="bi bi-bag-check me-2 text-primary"></i>Ringkasan Pesanan</div>
-                            <button type="button" class="btn btn-sm btn-light rounded-pill d-lg-none" data-bs-toggle="collapse" data-bs-target="#checkoutItemsCollapse" aria-expanded="false">
-                                Detail
-                            </button>
-                        </div>
-
-                        <div id="checkoutItemsCollapse" class="collapse d-lg-block">
-                            <div class="d-flex flex-column gap-3 mb-3 checkout-items">
-                            @foreach($cartItems as $item)
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="thumb">
-                                        @if($item->product->image)
-                                            <img src="{{ asset('storage/' . $item->product->image) }}" alt="{{ $item->product->name }}">
-                                        @else
-                                            <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted">
-                                                <i class="bi bi-image"></i>
-                                            </div>
-                                        @endif
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <div class="fw-semibold text-truncate">{{ $item->product->name }}</div>
-                                        <div class="text-muted small">Ukuran: {{ $item->size ?? 'M' }} • Qty: {{ $item->quantity }}</div>
-                                    </div>
-                                    <div class="fw-bold text-primary text-nowrap" data-money-idr="{{ (float) ($item->product->price * $item->quantity) }}">Rp {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }}</div>
-                                </div>
-                            @endforeach
-                            </div>
-                        </div>
-
-                        <hr>
-
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="text-muted">Subtotal</span>
-                            <span class="fw-semibold" data-money-idr="{{ (float) $subtotal }}">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
-                        </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="text-muted">Pengiriman</span>
-                            <span class="fw-semibold text-success">GRATIS</span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
-                            <span class="fw-bold">Total</span>
-                            <span class="fw-bold fs-5 text-primary" data-money-idr="{{ (float) $subtotal }}">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100 rounded-pill mt-3 py-3 fw-bold d-none d-lg-inline-flex justify-content-center">Konfirmasi Pesanan</button>
-                        <div class="text-muted small text-center mt-2 d-none d-lg-block">Dengan mengklik tombol di atas, kamu setuju dengan syarat & ketentuan.</div>
-                    </div>
+            <button type="button" class="w-100 checkout-sheet__item" @click="paymentMethod='bank_transfer'; paymentOpen=false">
+                <div>
+                    <div class="l">QRIS</div>
+                    <div class="s">Transfer / QRIS</div>
                 </div>
-            </div>
+                <i class="bi bi-check-circle-fill text-primary" x-show="paymentMethod === 'bank_transfer'"></i>
+            </button>
+            <button type="button" class="w-100 checkout-sheet__item" @click="paymentMethod='cod'; paymentOpen=false">
+                <div>
+                    <div class="l">COD</div>
+                    <div class="s">Bayar saat barang sampai</div>
+                </div>
+                <i class="bi bi-check-circle-fill text-primary" x-show="paymentMethod === 'cod'"></i>
+            </button>
+            <div class="pb-3"></div>
         </div>
+    </div>
+</div>
 
-        <div class="checkout-mobilebar d-lg-none">
-            <div class="checkout-mobilebar__inner">
-                <div class="checkout-mobilebar__total">
-                    <div class="label">Total</div>
-                    <div class="price" data-money-idr="{{ (float) $subtotal }}">Rp {{ number_format($subtotal, 0, ',', '.') }}</div>
-                </div>
-                <button type="submit" class="btn btn-primary rounded-pill px-4 py-3 fw-bold flex-grow-1">Konfirmasi</button>
-            </div>
-        </div>
-    </form>
 </div>
 
 @push('scripts')

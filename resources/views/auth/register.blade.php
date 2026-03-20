@@ -29,7 +29,7 @@
                             <div class="d-flex align-items-center justify-content-between mb-4">
                                 <div>
                                     <div class="fw-bold fs-4">Daftar</div>
-                                    <div class="text-muted">Sudah punya akun? <a href="{{ route('login') }}" class="text-decoration-none fw-semibold">Masuk</a></div>
+                                    <div class="text-muted">Sudah punya akun? <a href="{{ route('account.index', ['login' => 1]) }}" class="text-decoration-none fw-semibold">Masuk</a></div>
                                 </div>
                                 <a href="{{ route('shop.index') }}" class="btn btn-outline-secondary btn-sm rounded-pill">Kembali</a>
                             </div>

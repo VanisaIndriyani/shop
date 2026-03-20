@@ -32,7 +32,12 @@ class AuthController extends Controller
     // Login
     public function showLogin()
     {
-        return view('auth.login');
+        // Render Account page with login modal open for consistency
+        return view('account.index', [
+            'forceLoginOpen' => true,
+            'orders' => collect(),
+            'counts' => [],
+        ]);
     }
 
     public function login(Request $request)

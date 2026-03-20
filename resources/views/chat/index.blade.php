@@ -17,11 +17,17 @@
     .refrens-msg{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
     .refrens-msg--admin{align-items:flex-start}
     .refrens-msg--me{align-items:flex-end}
-    .refrens-bubble{max-width:min(78%,520px);padding:10px 12px;border-radius:18px;line-height:1.35;font-weight:600;word-break:break-word;white-space:pre-wrap}
-    .refrens-msg--admin .refrens-bubble{background:#fff;border:1px solid rgba(0,0,0,.08);color:#111827;border-top-left-radius:8px}
-    .refrens-msg--me .refrens-bubble{background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;border-top-right-radius:8px}
-    .refrens-time{font-size:11px;color:#6b7280}
-    .refrens-msg--me .refrens-time{color:rgba(255,255,255,.7)}
+    .refrens-msgrow{display:flex;align-items:flex-end;gap:10px}
+    .refrens-msgavatar{width:30px;height:30px;border-radius:999px;background:linear-gradient(135deg,rgba(37,99,235,.16),rgba(79,70,229,.12));border:1px solid rgba(37,99,235,.18);display:flex;align-items:center;justify-content:center;color:#1d4ed8;font-weight:900;flex:0 0 auto}
+    .refrens-msgcol{display:flex;flex-direction:column;gap:4px}
+    .refrens-sender{font-size:11px;font-weight:900;color:#334155;margin-left:2px}
+    .refrens-bubble{max-width:min(78%,520px);padding:10px 12px;border-radius:18px;line-height:1.45;font-weight:650;word-break:break-word;white-space:pre-wrap;position:relative}
+    .refrens-msg--admin .refrens-bubble{background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);border:1px solid rgba(37,99,235,.14);color:#0f172a;border-top-left-radius:12px;box-shadow:0 10px 24px rgba(15,23,42,.06)}
+    .refrens-msg--admin .refrens-bubble::before{content:'';position:absolute;left:-6px;bottom:10px;width:12px;height:12px;background:inherit;border-left:1px solid rgba(37,99,235,.14);border-bottom:1px solid rgba(37,99,235,.14);transform:rotate(45deg);border-bottom-left-radius:4px}
+    .refrens-msg--me .refrens-bubble{background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;border-top-right-radius:12px;box-shadow:0 12px 26px rgba(37,99,235,.20)}
+    .refrens-msg--me .refrens-bubble::before{content:'';position:absolute;right:-6px;bottom:10px;width:12px;height:12px;background:inherit;border-right:0;border-top:0;transform:rotate(45deg);border-bottom-right-radius:4px}
+    .refrens-time{font-size:11px;color:#64748b;font-weight:650}
+    .refrens-msg--me .refrens-time{color:rgba(255,255,255,.72)}
     .refrens-chat-footer{position:sticky;bottom:0;z-index:5;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:1px solid rgba(0,0,0,.06);padding:12px 12px calc(12px + env(safe-area-inset-bottom))}
     .refrens-chat-input{border-radius:999px}
     .refrens-chat-send{border-radius:999px}
@@ -52,10 +58,23 @@
 
         <div id="chatScroll" class="refrens-chat-body">
             @forelse($messages as $msg)
-                <div class="refrens-msg {{ $msg->is_from_admin ? 'refrens-msg--admin' : 'refrens-msg--me' }}">
-                    <div class="refrens-bubble">{!! nl2br(e((string) $msg->message)) !!}</div>
-                    <div class="refrens-time {{ $msg->is_from_admin ? '' : 'text-white-50' }}">{{ $msg->created_at?->format('d M Y, H:i') }}</div>
-                </div>
+                @if($msg->is_from_admin)
+                    <div class="refrens-msg refrens-msg--admin">
+                        <div class="refrens-msgrow">
+                            <div class="refrens-msgavatar">A</div>
+                            <div class="refrens-msgcol">
+                                <div class="refrens-sender">Admin</div>
+                                <div class="refrens-bubble">{!! nl2br(e((string) $msg->message)) !!}</div>
+                                <div class="refrens-time">{{ $msg->created_at?->format('d M Y, H:i') }}</div>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <div class="refrens-msg refrens-msg--me">
+                        <div class="refrens-bubble">{!! nl2br(e((string) $msg->message)) !!}</div>
+                        <div class="refrens-time">{{ $msg->created_at?->format('d M Y, H:i') }}</div>
+                    </div>
+                @endif
             @empty
                 <div class="text-center text-muted py-5">
                     Belum ada pesan. Tulis pesan pertama kamu ke admin.

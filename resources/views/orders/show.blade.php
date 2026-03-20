@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
 @php
@@ -26,171 +25,194 @@
 @endphp
 
 <style>
-    .order-card { border: 0; border-radius: 18px; box-shadow: 0 12px 30px rgba(16, 24, 40, 0.08); }
-    .thumb { width: 72px; height: 72px; border-radius: 16px; overflow: hidden; background: #f8f9fa; border: 1px solid rgba(0,0,0,.06); flex: 0 0 auto; }
-    .thumb img { width: 100%; height: 100%; object-fit: cover; }
-    .step-dot { width: 34px; height: 34px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
-    .step-line { height: 4px; border-radius: 999px; background: rgba(13,110,253,.15); overflow: hidden; }
-    .step-line > div { height: 100%; background: #0d6efd; border-radius: 999px; }
+    body{background:#f6f7fb}
+    .order-wrap{padding:14px 12px 22px}
+    .order-card{max-width:520px;margin:0 auto;background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:16px;overflow:hidden}
+    .order-top{display:flex;align-items:center;gap:10px;padding:12px 12px;border-bottom:1px solid rgba(0,0,0,.06)}
+    .order-back{width:40px;height:40px;border:0;background:transparent;border-radius:999px;display:flex;align-items:center;justify-content:center;color:#111827;text-decoration:none}
+    .order-body{padding:14px 14px 18px}
+    .order-h1{font-size:18px;font-weight:900;margin:0;color:#111827}
+    .order-sub{font-size:12px;color:#6b7280;font-weight:700;margin-top:6px}
+    .order-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;font-size:12px;font-weight:900;border:1px solid rgba(0,0,0,.10)}
+    .order-badge.primary{background:rgba(37,99,235,.10);color:#2563eb}
+    .order-badge.warning{background:rgba(245,158,11,.12);color:#b45309}
+    .order-badge.info{background:rgba(14,165,233,.12);color:#0369a1}
+    .order-badge.success{background:rgba(34,197,94,.12);color:#15803d}
+    .order-badge.danger{background:rgba(239,68,68,.12);color:#b91c1c}
+    .order-badge.secondary{background:rgba(107,114,128,.12);color:#374151}
+    .order-section{margin-top:16px}
+    .order-title{font-size:14px;font-weight:900;color:#111827;margin:0 0 10px}
+    .order-stepbar{height:6px;border-radius:999px;background:rgba(37,99,235,.15);overflow:hidden}
+    .order-stepbar > div{height:100%;background:#2563eb;border-radius:999px}
+    .order-steps{display:flex;justify-content:space-between;margin-top:10px}
+    .order-step{width:20%;text-align:center}
+    .order-dot{width:28px;height:28px;border-radius:999px;margin:0 auto;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;border:1px solid rgba(0,0,0,.10);background:#fff;color:#6b7280}
+    .order-dot.done{background:#2563eb;border-color:#2563eb;color:#fff}
+    .order-step .lbl{margin-top:6px;font-size:11px;font-weight:800;color:#6b7280}
+    .order-step .lbl.done{color:#111827}
+    .order-alert{border:1px solid rgba(239,68,68,.18);background:rgba(239,68,68,.10);color:#991b1b;border-radius:12px;padding:10px 12px;font-size:12px;font-weight:800}
+    .order-item{display:flex;gap:12px;padding:12px 0;border-top:1px solid rgba(0,0,0,.06)}
+    .order-item:first-child{border-top:0;padding-top:0}
+    .order-thumb{width:62px;height:78px;border-radius:14px;overflow:hidden;background:#f3f4f6;border:1px solid rgba(0,0,0,.06);flex:0 0 auto}
+    .order-thumb img{width:100%;height:100%;object-fit:cover}
+    .order-meta{flex:1 1 auto;min-width:0}
+    .order-name{font-size:12px;font-weight:900;color:#111827;line-height:1.2}
+    .order-mini{font-size:11px;font-weight:700;color:#6b7280;margin-top:6px}
+    .order-price{font-size:12px;font-weight:900;color:#111827;white-space:nowrap}
+    .order-total{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid rgba(0,0,0,.10)}
+    .order-total .l{font-size:12px;font-weight:900;color:#111827}
+    .order-total .v{font-size:15px;font-weight:900;color:#111827}
+    .order-box{border:1px solid rgba(0,0,0,.10);border-radius:14px;background:#fff;padding:12px}
+    .order-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .order-row + .order-row{margin-top:10px}
+    .order-k{font-size:11px;font-weight:900;color:#6b7280}
+    .order-val{font-size:12px;font-weight:900;color:#111827;text-align:right}
+    .order-copy{border:1px solid rgba(0,0,0,.10);background:#fff;border-radius:999px;padding:7px 10px;font-size:11px;font-weight:900;color:#111827}
+    .order-copy:active{transform:scale(.98)}
+    .order-feedback{margin-top:8px;font-size:11px;font-weight:900;color:#15803d}
+    .order-qris{margin-top:10px;border:1px solid rgba(0,0,0,.10);border-radius:14px;background:#fff;padding:12px;display:flex;justify-content:center}
+    .order-qris img{width:220px;height:220px;object-fit:contain}
+    .order-proof img{width:100%;border-radius:14px;border:1px solid rgba(0,0,0,.10);max-height:320px;object-fit:cover}
 </style>
 
-<div class="container py-5">
-    <div class="d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
-        <div>
-            <nav aria-label="breadcrumb" class="mb-2">
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="{{ route('shop.index') }}" class="text-decoration-none">Shop</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('orders.index') }}" class="text-decoration-none">Orders</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">#{{ $order->id }}</li>
-                </ol>
-            </nav>
-            <div class="fw-bold fs-3">Detail Pesanan</div>
-            <div class="text-muted">Order #{{ $order->id }} • {{ $order->created_at->format('d M Y, H:i') }}</div>
+<div class="order-wrap">
+    <div class="order-card" x-data>
+        <div class="order-top">
+            <a class="order-back" href="{{ route('orders.index') }}" aria-label="Back">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <div style="font-weight:900;color:#111827">Pesanan</div>
         </div>
-        <a href="{{ route('orders.index') }}" class="btn btn-outline-secondary rounded-pill">Kembali</a>
-    </div>
-
-    <div class="row g-4">
-        <div class="col-12 col-lg-8">
-            <div class="card order-card mb-4">
-                <div class="card-body p-4">
-                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                        <div class="fw-bold fs-5"><i class="bi bi-receipt-cutoff me-2 text-primary"></i>Status Pesanan</div>
-                        <span class="badge rounded-pill text-bg-{{ $ui['color'] }} px-3 py-2">{{ $ui['label'] }}</span>
-                    </div>
-
-                    @if($order->status === 'cancelled')
-                        <div class="alert alert-danger border-0 rounded-4 mt-3 mb-0" style="background: rgba(220,53,69,.10);">
-                            Pesanan dibatalkan.
-                        </div>
-                    @else
-                        <div class="mt-3">
-                            <div class="step-line">
-                                <div style="width: {{ $progressPercent }}%"></div>
-                            </div>
-                            <div class="d-flex justify-content-between mt-3">
-                                @foreach($steps as $index => $step)
-                                    @php
-                                        $isDone = $activeStep >= $index;
-                                        $isActive = $activeStep === $index;
-                                    @endphp
-                                    <div class="text-center" style="width: 20%;">
-                                        <div class="mx-auto step-dot {{ $isDone ? 'bg-primary text-white' : 'bg-light text-muted' }}" style="{{ $isActive ? 'box-shadow: 0 10px 24px rgba(13,110,253,.25);' : '' }}">
-                                            @if($isDone)
-                                                <i class="bi bi-check2"></i>
-                                            @else
-                                                <span class="small">{{ $index + 1 }}</span>
-                                            @endif
-                                        </div>
-                                        <div class="small fw-semibold mt-2 {{ $isDone ? 'text-dark' : 'text-muted' }}">{{ $step['title'] }}</div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
+        <div class="order-body">
+            <div class="order-row">
+                <div>
+                    <div class="order-h1">Order #{{ $order->id }}</div>
+                    <div class="order-sub">{{ $order->created_at->format('d M Y, H:i') }}</div>
                 </div>
+                <div class="order-badge {{ $ui['color'] }}">{{ $ui['label'] }}</div>
             </div>
 
-            <div class="card order-card">
-                <div class="card-body p-4">
-                    <div class="fw-bold fs-5 mb-3"><i class="bi bi-bag me-2 text-primary"></i>Daftar Produk</div>
-                    <div class="d-flex flex-column gap-3">
-                        @foreach($order->items as $item)
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="thumb">
-                                    @if($item->product?->image)
-                                        <img src="{{ asset('storage/' . $item->product->image) }}" alt="{{ $item->product->name }}">
+            <div class="order-section">
+                <div class="order-title">Status Pesanan</div>
+                @if($order->status === 'cancelled')
+                    <div class="order-alert">Pesanan dibatalkan.</div>
+                @else
+                    <div class="order-stepbar"><div style="width: {{ $progressPercent }}%"></div></div>
+                    <div class="order-steps">
+                        @foreach($steps as $index => $step)
+                            @php $isDone = $activeStep >= $index; @endphp
+                            <div class="order-step">
+                                <div class="order-dot {{ $isDone ? 'done' : '' }}">
+                                    @if($isDone)
+                                        <i class="bi bi-check2"></i>
                                     @else
-                                        <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted">
-                                            <i class="bi bi-image"></i>
-                                        </div>
+                                        {{ $index + 1 }}
                                     @endif
                                 </div>
-                                <div class="flex-grow-1">
-                                    <div class="fw-bold text-truncate">{{ $item->product?->name }}</div>
-                                    <div class="text-muted small">Qty: {{ $item->quantity }} • <span data-money-idr="{{ (float) $item->price }}">Rp {{ number_format($item->price, 0, ',', '.') }}</span></div>
-                                </div>
-                                <div class="fw-bold text-primary text-nowrap" data-money-idr="{{ (float) ($item->price * $item->quantity) }}">Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</div>
+                                <div class="lbl {{ $isDone ? 'done' : '' }}">{{ $step['title'] }}</div>
                             </div>
                         @endforeach
                     </div>
-
-                    <hr class="my-4">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="text-muted fw-semibold">Total Pembayaran</div>
-                        <div class="fw-bold fs-4 text-primary" data-money-idr="{{ (float) $order->total_price }}">Rp {{ number_format($order->total_price, 0, ',', '.') }}</div>
-                    </div>
-                </div>
+                @endif
             </div>
-        </div>
 
-        <div class="col-12 col-lg-4">
-            <div class="card order-card mb-4">
-                <div class="card-body p-4">
-                    <div class="fw-bold fs-5 mb-3"><i class="bi bi-geo-alt me-2 text-primary"></i>Pengiriman</div>
-                    <div class="text-muted small mb-1">Alamat</div>
-                    <div class="fw-semibold">{{ $order->shipping_address }}</div>
-                    <hr>
-                    @if($order->shipping_courier || $order->tracking_number || $order->shipping_note)
-                        <div class="text-muted small mb-1">Kurir</div>
-                        <div class="fw-semibold">{{ $order->shipping_courier ? strtoupper($order->shipping_courier) : '-' }}</div>
-                        <div class="mt-2 text-muted small mb-1">No Resi</div>
-                        <div class="d-flex align-items-center justify-content-between gap-2">
-                            <div class="fw-bold text-primary text-truncate">{{ $order->tracking_number ?: '-' }}</div>
-                            @if($order->tracking_number)
-                                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill flex-shrink-0" data-copy-resi="{{ $order->tracking_number }}">
-                                    <i class="bi bi-clipboard me-1"></i>Copy
-                                </button>
+            <div class="order-section">
+                <div class="order-title">Daftar Produk</div>
+                @foreach($order->items as $item)
+                    <div class="order-item">
+                        <div class="order-thumb">
+                            @if($item->product?->image)
+                                <img src="{{ asset('storage/' . $item->product->image) }}" alt="">
+                            @else
+                                <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted"><i class="bi bi-image"></i></div>
                             @endif
                         </div>
+                        <div class="order-meta">
+                            <div class="order-name">{{ $item->product?->name ?? 'Produk dihapus' }}</div>
+                            <div class="order-mini">Qty: {{ (int) $item->quantity }} • <span data-money-idr="{{ (float) $item->price }}">Rp {{ number_format($item->price, 0, ',', '.') }}</span></div>
+                        </div>
+                        <div class="order-price" data-money-idr="{{ (float) ($item->price * $item->quantity) }}">Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</div>
+                    </div>
+                @endforeach
+                <div class="order-total">
+                    <div class="l">Total Pembayaran</div>
+                    <div class="v" data-money-idr="{{ (float) $order->total_price }}">Rp {{ number_format($order->total_price, 0, ',', '.') }}</div>
+                </div>
+            </div>
+
+            <div class="order-section">
+                <div class="order-title">Pengiriman</div>
+                <div class="order-box">
+                    <div class="order-row">
+                        <div class="order-k">Alamat</div>
+                        <div class="order-val" style="text-align:right">{{ $order->shipping_address }}</div>
+                    </div>
+                    @if($order->shipping_courier || $order->tracking_number)
+                        <div class="order-row">
+                            <div class="order-k">Kurir</div>
+                            <div class="order-val">{{ $order->shipping_courier ? strtoupper($order->shipping_courier) : '-' }}</div>
+                        </div>
+                        <div class="order-row">
+                            <div class="order-k">No Resi</div>
+                            <div class="order-val" style="display:flex;align-items:center;gap:10px;justify-content:flex-end">
+                                <span style="color:#111827">{{ $order->tracking_number ?: '-' }}</span>
+                                @if($order->tracking_number)
+                                    <button type="button" class="order-copy" data-copy-resi="{{ $order->tracking_number }}">Copy</button>
+                                @endif
+                            </div>
+                        </div>
                         @if($order->tracking_number)
-                            <div class="text-success small fw-semibold mt-2 d-none" id="copyResiFeedback">Resi tersalin</div>
+                            <div class="order-feedback d-none" id="copyResiFeedback">Resi tersalin</div>
                         @endif
-                        @if($order->shipping_note)
-                            <div class="mt-2 text-muted small mb-1">Catatan</div>
-                            <div class="fw-semibold">{{ $order->shipping_note }}</div>
-                        @endif
-                        <hr>
                     @endif
-                    <div class="text-muted small mb-1">Tanggal Pesanan</div>
-                    <div class="fw-semibold">{{ $order->created_at->format('d F Y, H:i') }}</div>
+                    @if($order->shipping_note)
+                        <div class="order-row">
+                            <div class="order-k">Catatan</div>
+                            <div class="order-val">{{ $order->shipping_note }}</div>
+                        </div>
+                    @endif
+                    <div class="order-row">
+                        <div class="order-k">Tanggal Pesanan</div>
+                        <div class="order-val">{{ $order->created_at->format('d F Y, H:i') }}</div>
+                    </div>
                     @if($order->shipped_at)
-                        <div class="mt-2 text-muted small mb-1">Tanggal Dikirim</div>
-                        <div class="fw-semibold">{{ $order->shipped_at->format('d F Y, H:i') }}</div>
+                        <div class="order-row">
+                            <div class="order-k">Tanggal Dikirim</div>
+                            <div class="order-val">{{ $order->shipped_at->format('d F Y, H:i') }}</div>
+                        </div>
                     @endif
                 </div>
             </div>
 
-            <div class="card order-card mb-4">
-                <div class="card-body p-4">
-                    <div class="fw-bold fs-5 mb-3"><i class="bi bi-credit-card me-2 text-primary"></i>Pembayaran</div>
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="text-muted small">Metode</div>
-                        <span class="badge rounded-pill text-bg-light border">{{ $order->payment_method == 'bank_transfer' ? 'TRANSFER / QRIS' : strtoupper($order->payment_method) }}</span>
+            <div class="order-section">
+                <div class="order-title">Pembayaran</div>
+                <div class="order-box">
+                    <div class="order-row">
+                        <div class="order-k">Metode</div>
+                        <div class="order-val">{{ $order->payment_method == 'bank_transfer' ? 'TRANSFER / QRIS' : strtoupper($order->payment_method) }}</div>
                     </div>
 
-                    @if($order->payment_proof)
-                        <div class="mt-3">
-                            <div class="text-muted small mb-2">Bukti Pembayaran</div>
-                            <a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank" class="d-block">
-                                <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Bukti Pembayaran" class="w-100 rounded-4 border" style="max-height: 280px; object-fit: cover;">
-                            </a>
+                    @if($order->payment_method == 'bank_transfer' && !$order->payment_proof)
+                        <div class="order-qris">
+                            <img src="{{ asset('img/qr.jpeg') }}" alt="QRIS">
                         </div>
-                    @elseif($order->payment_method == 'bank_transfer')
-                        <div class="alert alert-warning border-0 rounded-4 mt-3 mb-0" style="background: rgba(255,193,7,.12);">
-                            Menunggu verifikasi bukti transfer oleh admin.
+                        <div class="order-sub" style="margin-top:10px">Upload bukti pembayaran supaya admin bisa verifikasi.</div>
+                    @endif
+
+                    @if($order->payment_proof)
+                        <div class="order-proof" style="margin-top:10px">
+                            <a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank" class="d-block">
+                                <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Bukti Pembayaran">
+                            </a>
                         </div>
                     @endif
                 </div>
             </div>
-
-          
         </div>
     </div>
 </div>
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     (function () {
         const btn = document.querySelector('[data-copy-resi]');

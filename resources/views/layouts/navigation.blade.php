@@ -120,6 +120,27 @@
             this.currency = 'IDR - Indonesian Rupiah';
             this.saveLocale();
         },
+        isEnglish() {
+            return String(this.language || '').toLowerCase().includes('english');
+        },
+        t(key) {
+            const en = this.isEnglish();
+            const map = {
+                title: en ? 'Settings' : 'Pengaturan',
+                subtitle: en ? 'Country, language, and currency' : 'Negara, bahasa, dan mata uang',
+                shipTo: en ? 'Ship to' : 'Dikirim ke',
+                language: en ? 'Language' : 'Bahasa',
+                currency: en ? 'Currency' : 'Mata Uang',
+                reset: en ? 'Reset' : 'Reset',
+                save: en ? 'Save' : 'Simpan',
+                navHome: en ? 'Home' : 'Beranda',
+                navShop: en ? 'Shop' : 'Toko',
+                navOrders: en ? 'My Orders' : 'Pesanan Saya',
+                navSignOut: en ? 'Sign Out' : 'Keluar',
+                navSignInRegister: en ? 'Sign In / Register' : 'Masuk / Daftar',
+            };
+            return map[key] || key;
+        },
         currencyCode() {
             return (this.currency || '').split(' - ')[0] || 'IDR';
         }
@@ -127,17 +148,24 @@
     x-init="init()"
     class="refrens-nav fixed top-0 inset-x-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16 items-center">
-            <!-- Left: Hamburger Menu & Logo -->
+        <div class="flex justify-between h-20 md:h-16 items-center">
             <div class="flex items-center gap-2">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-900 hover:text-black focus:outline-none transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+                @if(request()->routeIs('shop.show') || request()->routeIs('account.*') || request()->routeIs('orders.show') || request()->routeIs('checkout.*'))
+                    <a href="{{ route('shop.index') }}" class="inline-flex items-center justify-center p-2 rounded-md text-gray-900 hover:text-black focus:outline-none transition duration-150 ease-in-out" aria-label="Back">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                    </a>
+                @else
+                    <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-900 hover:text-black focus:outline-none transition duration-150 ease-in-out">
+                        <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                            <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                @endif
                 <a href="{{ url('/') }}" class="flex-shrink-0">
-                    <img class="refrens-logo h-16 w-auto object-contain" src="{{ asset('img/logo.png') }}" alt="REFRENS">
+                    <img class="refrens-logo h-20 md:h-16 w-auto object-contain" src="{{ asset('img/logoo.png') }}" alt="REFRENS">
                 </a>
             </div>
 
@@ -282,7 +310,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                         </svg>
                     </button>
-                    <span class="text-xl font-bold tracking-tight text-gray-900">REFRENS</span>
+                   
                     <button @click="open = false" class="text-gray-400 hover:text-gray-600 transition-colors">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -292,26 +320,26 @@
 
                 <div class="flex-1 py-3 space-y-1">
                     <a href="{{ url('/') }}" 
-                       class="group flex items-center gap-3 px-6 py-3 text-base font-semibold transition-colors rounded-xl border-l-4 {{ request()->is('/') ? 'border-blue-600 text-blue-600 bg-blue-50' : 'border-transparent text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
-                        <svg class="h-5 w-5 {{ request()->is('/') ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       class="group flex items-center gap-3 px-6 py-3 text-base font-semibold transition-colors rounded-xl {{ (request()->is('/') || request()->is('')) ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
+                        <svg class="h-5 w-5 {{ (request()->is('/') || request()->is('')) ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                         </svg>
-                        Home
+                        <span x-text="t('navHome')"></span>
                     </a>
                     <a href="{{ route('shop.index') }}" 
-                       class="group flex items-center gap-3 px-6 py-3 text-base font-semibold transition-colors rounded-xl border-l-4 {{ request()->routeIs('shop.*') ? 'border-blue-600 text-blue-600 bg-blue-50' : 'border-transparent text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
+                       class="group flex items-center gap-3 px-6 py-3 text-base font-semibold transition-colors rounded-xl {{ request()->routeIs('shop.*') ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
                         <svg class="h-5 w-5 {{ request()->routeIs('shop.*') ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                         </svg>
-                        Shop
+                        <span x-text="t('navShop')"></span>
                     </a>
 
                     @auth
-                        <a href="{{ route('account.index', ['tab' => 'orders']) }}" class="group flex items-center gap-3 px-6 py-3 text-base font-semibold transition-colors rounded-xl border-l-4 {{ request()->routeIs('account.index') ? 'border-blue-600 text-blue-600 bg-blue-50' : 'border-transparent text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
+                        <a href="{{ route('account.index', ['tab' => 'orders']) }}" class="group flex items-center gap-3 px-6 py-3 text-base font-semibold transition-colors rounded-xl {{ request()->routeIs('account.index') ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
                             <svg class="h-5 w-5 {{ request()->routeIs('account.index') ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 8h10M7 12h10M7 16h6M5 6a2 2 0 012-2h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6z"/>
                             </svg>
-                            My Orders
+                            <span x-text="t('navOrders')"></span>
                         </a>
                         <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Apakah Anda yakin ingin keluar?')">
                             @csrf
@@ -319,13 +347,13 @@
                                 <svg class="h-5 w-5 text-red-500 group-hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 11-4 0v-1m0-10V5a2 2 0 114 0v1"/>
                                 </svg>
-                                Sign Out
+                                <span x-text="t('navSignOut')"></span>
                             </button>
                         </form>
                     @else
                         <div class="px-6 pt-3">
                             <a href="{{ route('account.index', ['login' => 1]) }}" class="flex items-center justify-center w-full px-4 py-3 bg-gray-900 text-white font-semibold rounded-xl hover:bg-black transition-colors shadow-lg shadow-gray-200">
-                                Sign In / Register
+                                <span x-text="t('navSignInRegister')"></span>
                             </a>
                         </div>
                     @endauth
@@ -365,18 +393,18 @@
 
     <div x-show="localeOpen" x-cloak class="fixed inset-0 z-[80]" @keydown.escape.window="closeLocale()">
         <div class="fixed inset-0 bg-black/40" @click="closeLocale()"></div>
-        <div class="fixed inset-x-0 bottom-0 bg-white rounded-t-3xl shadow-2xl overflow-hidden">
-            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-5 text-white">
+        <div class="fixed inset-x-0 bottom-0 bg-white rounded-t-3xl shadow-2xl overflow-hidden max-h-[78svh]">
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-4 text-white">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-2xl bg-white/15 flex items-center justify-center">
+                        <div class="w-9 h-9 rounded-2xl bg-white/15 flex items-center justify-center">
                             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3a9 9 0 100 18 9 9 0 000-18zM3.6 9h16.8M3.6 15h16.8M12 3c2.4 2.25 3.6 5.25 3.6 9s-1.2 6.75-3.6 9c-2.4-2.25-3.6-5.25-3.6-9s1.2-6.75 3.6-9z" />
                             </svg>
                         </div>
                         <div>
-                            <div class="text-sm font-black tracking-wide">Pengaturan</div>
-                            <div class="text-xs text-blue-100">Negara, bahasa, dan mata uang</div>
+                            <div class="text-sm font-black tracking-wide" x-text="t('title')"></div>
+                            <div class="text-xs text-blue-100" x-text="t('subtitle')"></div>
                         </div>
                     </div>
                     <button type="button" @click="closeLocale()" class="text-white/90 hover:text-white transition-colors">
@@ -387,39 +415,40 @@
                 </div>
             </div>
 
-            <div class="p-6 space-y-5">
-                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-                    <div class="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Dikirim ke</div>
-                    <select x-model="shippingCountry" class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-900 focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
+            <div class="p-4 space-y-4 overflow-y-auto">
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-3">
+                    <div class="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-1" x-text="t('shipTo')"></div>
+                    <select x-model="shippingCountry" class="w-full rounded-2xl border border-gray-200 bg-white px-3 py-2.5 text-sm font-semibold text-gray-900 focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
                         <option value="Indonesia">Indonesia</option>
                         <option value="Malaysia">Malaysia</option>
                         <option value="Singapore">Singapore</option>
                     </select>
                 </div>
 
-                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-                    <div class="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Language</div>
-                    <select x-model="language" class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-900 focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-3">
+                    <div class="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-1" x-text="t('language')"></div>
+                    <select x-model="language" class="w-full rounded-2xl border border-gray-200 bg-white px-3 py-2.5 text-sm font-semibold text-gray-900 focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
                         <option value="Bahasa">Bahasa</option>
                         <option value="English">English</option>
                     </select>
                 </div>
 
-                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-                    <div class="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Mata Uang</div>
-                    <select x-model="currency" class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-900 focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-3">
+                    <div class="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-1" x-text="t('currency')"></div>
+                    <select x-model="currency" class="w-full rounded-2xl border border-gray-200 bg-white px-3 py-2.5 text-sm font-semibold text-gray-900 focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
                         <option value="IDR - Indonesian Rupiah">IDR - Indonesian Rupiah</option>
+                        <option value="USD - United States Dollar">USD - United States Dollar</option>
                         <option value="MYR - Malaysian Ringgit">MYR - Malaysian Ringgit</option>
                         <option value="SGD - Singapore Dollar">SGD - Singapore Dollar</option>
+                        <option value="THB - Thai Baht">THB - Thai Baht</option>
+                        <option value="EUR - Euro">EUR - Euro</option>
                     </select>
                 </div>
 
                 <div class="flex gap-3">
-                    <button type="button" @click="resetLocale()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-4 rounded-2xl transition-colors">
-                        Reset
+                    <button type="button" @click="resetLocale()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-3 rounded-2xl transition-colors" x-text="t('reset')">
                     </button>
-                    <button type="button" @click="saveLocale()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl transition-colors">
-                        Simpan
+                    <button type="button" @click="saveLocale()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-2xl transition-colors" x-text="t('save')">
                     </button>
                 </div>
             </div>

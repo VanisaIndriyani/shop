@@ -7,12 +7,16 @@
 
     <title>{{ config('app.name', 'Laravel') }} - Admin</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
     <style>
         html, body { height: 100%; }
-        body { background: #f6f7fb; overflow: hidden; }
+        body { background: #f6f7fb; overflow: hidden; font-family: 'Poppins', sans-serif; }
         .admin-shell { height: 100svh; overflow: hidden; }
         .admin-brand { height: 88px; }
         .admin-sidebar { width: 280px; min-width: 280px; flex: 0 0 280px; height: 100%; overflow-y: auto; background: linear-gradient(180deg, #2f6fb4 0%, #2b66a8 35%, #255c9a 100%); }
@@ -34,11 +38,16 @@
     </style>
 </head>
 <body>
+@php
+    $adminUnreadMessages = \App\Models\Message::where('is_from_admin', false)
+        ->where('is_read', false)
+        ->count();
+@endphp
 <div class="admin-shell d-flex">
     <aside class="admin-sidebar text-white d-none d-lg-flex flex-column p-3">
         <div class="admin-brand px-2 mb-3">
             <div class="admin-logo">
-                <img src="{{ asset('img/logo.png') }}" alt="Logo">
+                <img src="{{ asset('img/logoo.png') }}" alt="Logo">
             </div>
         </div>
 
@@ -55,8 +64,13 @@
             <a class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}" href="{{ route('admin.products.index') }}">
                 <i class="bi bi-box-seam"></i> Stok Produk
             </a>
-            <a class="nav-link {{ request()->routeIs('admin.messages.*') ? 'active' : '' }}" href="{{ route('admin.messages.index') }}">
-                <i class="bi bi-chat-dots"></i> Pesan
+            <a class="nav-link d-flex align-items-center justify-content-between {{ request()->routeIs('admin.messages.*') ? 'active' : '' }}" href="{{ route('admin.messages.index') }}">
+                <span class="d-flex align-items-center">
+                    <i class="bi bi-chat-dots"></i> Pesan
+                </span>
+                @if($adminUnreadMessages > 0)
+                    <span class="badge rounded-pill text-bg-danger">{{ $adminUnreadMessages > 99 ? '99+' : $adminUnreadMessages }}</span>
+                @endif
             </a>
             <a class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}" href="{{ route('admin.settings.edit') }}">
                 <i class="bi bi-gear"></i> Pengaturan
@@ -138,8 +152,13 @@
             <a class="admin-mobile-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}" href="{{ route('admin.products.index') }}">
                 <i class="bi bi-box-seam"></i> Stok Produk
             </a>
-            <a class="admin-mobile-link {{ request()->routeIs('admin.messages.*') ? 'active' : '' }}" href="{{ route('admin.messages.index') }}">
-                <i class="bi bi-chat-dots"></i> Pesan
+            <a class="admin-mobile-link justify-content-between {{ request()->routeIs('admin.messages.*') ? 'active' : '' }}" href="{{ route('admin.messages.index') }}">
+                <span class="d-flex align-items-center gap-2">
+                    <i class="bi bi-chat-dots"></i> Pesan
+                </span>
+                @if($adminUnreadMessages > 0)
+                    <span class="badge rounded-pill text-bg-danger">{{ $adminUnreadMessages > 99 ? '99+' : $adminUnreadMessages }}</span>
+                @endif
             </a>
             <a class="admin-mobile-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}" href="{{ route('admin.settings.edit') }}">
                 <i class="bi bi-gear"></i> Pengaturan

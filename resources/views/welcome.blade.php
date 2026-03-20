@@ -3,7 +3,10 @@
 @section('content')
 <!-- Hero Section (Slider Style) -->
 <div class="relative bg-white overflow-hidden">
-    <div class="swiper mySwiper" style="height: 100svh; position: relative; z-index: 1;">
+    <style>
+        .mySwiper { direction: ltr; }
+    </style>
+    <div class="swiper mySwiper" dir="ltr" style="height: 100svh; position: relative; z-index: 1;">
         <div class="swiper-wrapper">
             <!-- Slide 1 -->
             <div class="swiper-slide relative">
@@ -29,9 +32,7 @@
         <div class="swiper-pagination"></div>
     </div>
     <div class="pointer-events-none" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:5;">
-        <div style="padding:8px 16px;border-radius:999px;border:2px solid #2563eb;background:rgba(255,255,255,.92);box-shadow:0 12px 28px rgba(0,0,0,.16);">
-            <span style="color:#1d4ed8;font-weight:900;font-size:clamp(16px,4.2vw,24px);letter-spacing:.6px;text-transform:uppercase;">Shop</span>
-        </div>
+      
     </div>
 </div>
 
@@ -42,9 +43,13 @@
             spaceBetween: 0,
             centeredSlides: true,
             loop: true,
+            speed: 850,
+            touchRatio: 1,
+            followFinger: true,
+            threshold: 10,
             autoplay: {
-                delay: 2500,
-                disableOnInteraction: false,
+                delay: 4500,
+                disableOnInteraction: true,
             },
             pagination: {
                 el: ".swiper-pagination",

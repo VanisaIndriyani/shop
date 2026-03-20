@@ -17,6 +17,9 @@ class CartController extends Controller
 
     public function addToCart(Request $request, Product $product)
     {
+        if (!Auth::check()) {
+            return redirect()->route('account.index', ['login' => 1]);
+        }
         $request->validate([
             'quantity' => 'required|integer|min:1',
             'size' => 'nullable|string'
@@ -45,6 +48,9 @@ class CartController extends Controller
             return redirect()->route('checkout.index');
         }
 
+        if ($request->has('open_drawer')) {
+            return redirect()->route('shop.show', $product->slug)->with('cart_drawer', true);
+        }
         return redirect()->route('cart.index')->with('success', 'Product added to cart!');
     }
 
@@ -60,6 +66,9 @@ class CartController extends Controller
 
         $cart->update(['quantity' => $request->quantity]);
 
+        if ($request->has('open_drawer')) {
+            return back()->with('cart_drawer', true);
+        }
         return redirect()->route('cart.index')->with('success', 'Cart updated!');
     }
 
@@ -71,6 +80,9 @@ class CartController extends Controller
 
         $cart->delete();
 
+        if (request()->has('open_drawer')) {
+            return back()->with('cart_drawer', true);
+        }
         return redirect()->route('cart.index')->with('success', 'Product removed from cart!');
     }
 }

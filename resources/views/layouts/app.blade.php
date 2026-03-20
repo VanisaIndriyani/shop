@@ -10,7 +10,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
         
         <!-- AOS Animation CSS -->
         <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
@@ -21,9 +21,16 @@
             html {
                 scroll-behavior: auto;
             }
-            body {
-                font-family: 'Plus Jakarta Sans', sans-serif;
+            :root{
+                --bs-primary:#2563eb;
+                --bs-primary-rgb:37,99,235;
+                --bs-link-color:#2563eb;
+                --bs-link-hover-color:#1d4ed8;
             }
+            body {
+                font-family: 'Poppins', sans-serif;
+            }
+            .font-sans{font-family:'Poppins',sans-serif !important}
             [x-cloak] { display: none !important; }
             /* Smooth transitions for interactive elements */
             a, button, input, .card, .btn {
@@ -121,6 +128,9 @@
 
                 function getCurrencyMeta(currencyValue) {
                     const code = String(currencyValue || '').split(' - ')[0] || 'IDR';
+                    if (code === 'USD') return { code: 'USD', locale: 'en-US', symbol: '$', rateFromIdr: 1 / 16000 };
+                    if (code === 'EUR') return { code: 'EUR', locale: 'de-DE', symbol: '€', rateFromIdr: 1 / 17500 };
+                    if (code === 'THB') return { code: 'THB', locale: 'th-TH', symbol: '฿', rateFromIdr: 1 / 450 };
                     if (code === 'MYR') return { code: 'MYR', locale: 'ms-MY', symbol: 'RM', rateFromIdr: 1 / 3300 };
                     if (code === 'SGD') return { code: 'SGD', locale: 'en-SG', symbol: 'S$', rateFromIdr: 1 / 11500 };
                     return { code: 'IDR', locale: 'id-ID', symbol: 'Rp', rateFromIdr: 1 };

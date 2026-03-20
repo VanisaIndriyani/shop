@@ -1,5 +1,42 @@
 <!-- Accordion Footer Section (Preface Style) -->
-<footer class="bg-blue-600 text-white py-4 w-full z-40 relative">
+<footer class="bg-blue-600 text-white py-4 w-full z-40 relative" x-data="{
+    language: 'Bahasa',
+    init() {
+        try {
+            const saved = localStorage.getItem('refrens_locale');
+            if (saved) {
+                const data = JSON.parse(saved);
+                if (data && data.language) this.language = data.language;
+            }
+        } catch (e) {}
+        window.addEventListener('refrens:locale-updated', () => {
+            try {
+                const saved = localStorage.getItem('refrens_locale');
+                if (!saved) return;
+                const data = JSON.parse(saved);
+                if (data && data.language) this.language = data.language;
+            } catch (e) {}
+        });
+    },
+    isEnglish() {
+        return String(this.language || '').toLowerCase().includes('english');
+    },
+    t(key) {
+        const en = this.isEnglish();
+        const map = {
+            about: en ? 'About Us' : 'Tentang Kami',
+            account: en ? 'Account' : 'Akun',
+            payment: en ? 'Payment' : 'Pembayaran',
+            shipping: en ? 'Shipping' : 'Pengiriman',
+            hi: en ? 'Hi,' : 'Hi,',
+            orderHistory: en ? 'Order History' : 'Riwayat Pesanan',
+            login: en ? 'Login' : 'Login',
+            register: en ? 'Register' : 'Daftar',
+            logout: en ? 'Logout' : 'Keluar',
+        };
+        return map[key] || key;
+    }
+}" x-init="init()">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <!-- MOBILE: Accordion (Hidden on Desktop) -->
@@ -7,7 +44,7 @@
             <!-- ABOUT US -->
             <div x-data="{ open: false }" class="border-b border-blue-500/50">
                 <button @click="open = !open" class="flex justify-between items-center w-full py-3 text-left font-bold text-xs tracking-wider uppercase focus:outline-none">
-                    <span>About Us</span>
+                    <span x-text="t('about')"></span>
                     <svg :class="{'rotate-180': open}" class="h-3 w-3 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
@@ -29,7 +66,7 @@
             <!-- ACCOUNT -->
             <div x-data="{ open: false }" class="border-b border-blue-500/50">
                 <button @click="open = !open" class="flex justify-between items-center w-full py-3 text-left font-bold text-xs tracking-wider uppercase focus:outline-none">
-                    <span>Account</span>
+                    <span x-text="t('account')"></span>
                     <svg :class="{'rotate-180': open}" class="h-3 w-3 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
@@ -37,20 +74,20 @@
                 <div x-show="open" x-collapse class="pb-3 space-y-2">
                     @auth
                         <div class="flex flex-col space-y-2">
-                            <div class="text-[11px] text-blue-100 italic">Hi, {{ Auth::user()->name }}</div>
-                            <a href="{{ route('account.index', ['tab' => 'orders']) }}" class="text-xs text-white hover:text-blue-200 block">Riwayat Pesanan</a>
+                            <div class="text-[11px] text-blue-100 italic"><span x-text="t('hi')"></span> {{ Auth::user()->name }}</div>
+                            <a href="{{ route('account.index', ['tab' => 'orders']) }}" class="text-xs text-white hover:text-blue-200 block"><span x-text="t('orderHistory')"></span></a>
                             <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Apakah Anda yakin ingin keluar?')">
                                 @csrf
-                                <button type="submit" class="text-xs text-red-300 hover:text-red-200 block w-full text-left">Logout</button>
+                                <button type="submit" class="text-xs text-red-300 hover:text-red-200 block w-full text-left" x-text="t('logout')"></button>
                             </form>
                         </div>
                     @else
                         <div class="flex space-x-2 mt-2">
                             <a href="{{ route('account.index', ['login' => 1]) }}" class="flex-1 text-center py-2 border border-white rounded-lg text-xs font-bold text-white hover:bg-white hover:text-blue-600 transition-colors">
-                                LOGIN
+                                <span x-text="t('login')"></span>
                             </a>
                             <a href="{{ route('account.index', ['register' => 1]) }}" class="flex-1 text-center py-2 bg-white rounded-lg text-xs font-bold text-blue-600 hover:bg-blue-50 transition-colors">
-                                REGISTER
+                                <span x-text="t('register')"></span>
                             </a>
                         </div>
                     @endauth
@@ -60,7 +97,7 @@
             <!-- Metode Pembayaran -->
             <div x-data="{ open: false }" class="border-b border-blue-500/50">
                 <button @click="open = !open" class="flex justify-between items-center w-full py-3 text-left font-bold text-xs tracking-wider uppercase focus:outline-none">
-                    <span>Payment</span>
+                    <span x-text="t('payment')"></span>
                     <svg :class="{'rotate-180': open}" class="h-3 w-3 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
@@ -84,7 +121,7 @@
         <div class="hidden md:grid md:grid-cols-4 gap-8 py-4">
             <!-- ABOUT US -->
             <div>
-                <h3 class="text-xs font-bold tracking-wider uppercase mb-3">About Us</h3>
+                <h3 class="text-xs font-bold tracking-wider uppercase mb-3" x-text="t('about')"></h3>
                 <div class="flex space-x-4">
                     <a href="https://www.instagram.com/refrens.co" target="_blank" class="text-white hover:text-blue-200 transition-colors">
                         <span class="sr-only">Instagram</span>
@@ -95,24 +132,24 @@
 
             <!-- ACCOUNT -->
             <div>
-                <h3 class="text-xs font-bold tracking-wider uppercase mb-3">Account</h3>
+                <h3 class="text-xs font-bold tracking-wider uppercase mb-3" x-text="t('account')"></h3>
                 <div class="flex flex-col space-y-1.5 text-xs">
                     @auth
-                        <a href="{{ route('account.index', ['tab' => 'orders']) }}" class="text-blue-100 hover:text-white transition-colors">Riwayat Pesanan</a>
+                        <a href="{{ route('account.index', ['tab' => 'orders']) }}" class="text-blue-100 hover:text-white transition-colors"><span x-text="t('orderHistory')"></span></a>
                         <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Apakah Anda yakin ingin keluar?')">
                             @csrf
-                            <button type="submit" class="text-red-300 hover:text-red-200 text-left uppercase font-bold tracking-tighter">Logout</button>
+                            <button type="submit" class="text-red-300 hover:text-red-200 text-left uppercase font-bold tracking-tighter" x-text="t('logout')"></button>
                         </form>
                     @else
-                        <a href="{{ route('account.index', ['login' => 1]) }}" class="text-blue-100 hover:text-white transition-colors">Login</a>
-                        <a href="{{ route('account.index', ['register' => 1]) }}" class="text-blue-100 hover:text-white transition-colors">Register</a>
+                        <a href="{{ route('account.index', ['login' => 1]) }}" class="text-blue-100 hover:text-white transition-colors"><span x-text="t('login')"></span></a>
+                        <a href="{{ route('account.index', ['register' => 1]) }}" class="text-blue-100 hover:text-white transition-colors"><span x-text="t('register')"></span></a>
                     @endauth
                 </div>
             </div>
 
             <!-- PAYMENT -->
             <div>
-                <h3 class="text-xs font-bold tracking-wider uppercase mb-3">Payment</h3>
+                <h3 class="text-xs font-bold tracking-wider uppercase mb-3" x-text="t('payment')"></h3>
                 <ul class="space-y-1.5 text-xs text-blue-100">
                     <li class="flex items-center gap-2">
                         <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
@@ -123,7 +160,7 @@
 
             <!-- SHIPPING -->
             <div>
-                <h3 class="text-xs font-bold tracking-wider uppercase mb-3">Shipping</h3>
+                <h3 class="text-xs font-bold tracking-wider uppercase mb-3" x-text="t('shipping')"></h3>
                 <ul class="space-y-1.5 text-xs text-blue-100">
                     <li class="flex items-center gap-2">
                         <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v3.28a1 1 0 00.684.948l6 1.928m5.632 6.648c.84-.236 1.636-.56 2.368-.948V8l-6-2.5" /></svg>
