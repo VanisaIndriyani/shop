@@ -3,10 +3,7 @@
 @section('content')
 <!-- Hero Section (Slider Style) -->
 <div class="relative bg-white overflow-hidden">
-    <style>
-        .mySwiper { direction: ltr; }
-    </style>
-    <div class="swiper mySwiper" dir="ltr" style="height: 100svh; position: relative; z-index: 1;">
+    <div class="swiper mySwiper" style="height: 100svh; position: relative; z-index: 1;">
         <div class="swiper-wrapper">
             <!-- Slide 1 -->
             <div class="swiper-slide relative">
@@ -40,6 +37,8 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var swiper = new Swiper(".mySwiper", {
+            direction: 'horizontal',
+            rtl: false,
             spaceBetween: 0,
             centeredSlides: true,
             loop: true,

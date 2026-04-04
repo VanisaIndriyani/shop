@@ -102,7 +102,7 @@
                 @endphp
                 <div class="position-relative -mx-4 sm:mx-0">
                     @if(!empty($gallery))
-                        <div class="swiper refrens-productswiper refrens-productswiper--main" dir="ltr">
+                        <div class="swiper refrens-productswiper refrens-productswiper--main">
                             <div class="swiper-wrapper refrens-productframe">
                                 @foreach($gallery as $img)
                                     <div class="swiper-slide">
@@ -651,6 +651,7 @@
         const pager = document.querySelector('[data-product-pagination]');
         const swiper = new Swiper(el, {
             direction: 'horizontal',
+            rtl: false,
             loop: slideCount > 1,
             speed: 650,
             threshold: 8,
