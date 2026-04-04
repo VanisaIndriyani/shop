@@ -93,12 +93,6 @@
                     if (empty($gallery) && $product->image) {
                         $gallery = [$product->image];
                     }
-                    if (count($gallery) < 3 && count($gallery) > 0) {
-                        $first = $gallery[0];
-                        while (count($gallery) < 3) {
-                            $gallery[] = $first;
-                        }
-                    }
                 @endphp
                 <div class="position-relative -mx-4 sm:mx-0">
                     @if(!empty($gallery))
@@ -653,8 +647,13 @@
             direction: 'horizontal',
             rtl: false,
             loop: slideCount > 1,
-            speed: 650,
-            threshold: 8,
+            speed: 500,
+            slidesPerView: 1,
+            spaceBetween: 0,
+            grabCursor: true,
+            resistance: true,
+            resistanceRatio: 0.85,
+            touchAngle: 45,
             pagination: pager ? { el: pager, clickable: true } : undefined,
         });
 
