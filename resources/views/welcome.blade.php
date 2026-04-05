@@ -1,6 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    .mySwiper .swiper-wrapper {
+        transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1) !important;
+    }
+    .mySwiper .swiper-slide {
+        transform: translate3d(0,0,0);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+    }
+</style>
 <!-- Hero Section (Slider Style) -->
 <div class="relative bg-white overflow-hidden">
     <div class="swiper mySwiper" style="height: 100svh; position: relative; z-index: 1;">
@@ -38,17 +48,16 @@
     document.addEventListener('DOMContentLoaded', function () {
         var swiper = new Swiper(".mySwiper", {
             direction: 'horizontal',
-            rtl: false,
-            spaceBetween: 0,
-            centeredSlides: true,
             loop: true,
-            speed: 850,
-            touchRatio: 1,
-            followFinger: true,
+            speed: 600, // Lebih smooth
+            roundLengths: true,
+            touchRatio: 0.8, // Tidak terlalu liar
             threshold: 10,
+            followFinger: true,
+            resistanceRatio: 0.85,
             autoplay: {
-                delay: 4500,
-                disableOnInteraction: true,
+                delay: 4000,
+                disableOnInteraction: false, // Tetap autoplay walau disentuh
             },
             pagination: {
                 el: ".swiper-pagination",
