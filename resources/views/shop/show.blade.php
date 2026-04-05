@@ -646,18 +646,8 @@
         const swiper = new Swiper(el, {
             direction: 'horizontal',
             loop: false,
-            speed: 600, // Kecepatan yang lebih pas (tidak terlalu lambat/cepat)
             slidesPerView: 1,
-            spaceBetween: 12, // Berikan sedikit jarak antar slide agar terlihat pemisahnya saat digeser
-            grabCursor: true,
-            resistance: true,
-            resistanceRatio: 0.6, // Tahanan di ujung lebih kuat agar terasa batasnya
-            threshold: 5, // Lebih responsif (tidak butuh tarikan panjang untuk mulai bergerak)
-            touchRatio: 1.2, // Mengikuti jari lebih responsif (sedikit lebih cepat dari gerakan jari)
-            touchAngle: 45,
-            followFinger: true,
-            preventInteractionOnTransition: true,
-            watchSlidesProgress: true,
+            spaceBetween: 0,
             pagination: pager ? { el: pager, clickable: true } : undefined,
         });
 
