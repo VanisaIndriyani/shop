@@ -106,7 +106,7 @@
                             <div class="swiper-wrapper refrens-productframe">
                                 @foreach($gallery as $img)
                                     <div class="swiper-slide">
-                                        <img src="{{ asset('storage/' . $img) }}" alt="{{ $product->name }}" class="d-block w-100 h-100" style="object-fit: cover;" loading="lazy">
+                                        <img src="{{ asset('storage/' . $img) }}" alt="{{ $product->name }}" class="d-block w-100 h-100" style="object-fit: cover;">
                                     </div>
                                 @endforeach
                             </div>
@@ -664,6 +664,8 @@
             effect: 'slide',
             grabCursor: true,
             watchSlidesProgress: true,
+            preloadImages: true,
+            updateOnImagesReady: true,
             pagination: pager ? { el: pager, clickable: true } : undefined,
         });
 
