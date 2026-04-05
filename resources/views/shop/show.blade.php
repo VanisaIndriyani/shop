@@ -678,16 +678,14 @@
             direction: 'horizontal',
             loop: false,
             slidesPerView: 1,
-            slidesPerGroup: 1, // Memastikan 1 swipe = 1 slide (ga bisa skip)
+            slidesPerGroup: 1,
             spaceBetween: 0,
-            speed: 450,
-            followFinger: true,
-            touchRatio: 0.6, // lebih kecil = ga liar
-            threshold: 20, // harus geser agak jauh baru pindah
-            longSwipesRatio: 0.5, // HARUS 50% baru pindah
-            longSwipesMs: 300, // minimal durasi swipe
-            shortSwipes: false, // penting! biar ga lompat2
-            resistanceRatio: 0.6,
+            speed: 300, // Kecepatan standar biar enak di mata
+            autoplay: false, // MATIKAN geser otomatis (autoplay) secara eksplisit
+            followFinger: true, // Gambar harus nempel sama jari
+            touchRatio: 1, // 1:1 gerakan jari dan gambar
+            threshold: 5, // Biar langsung kerasa gesernya (responsif)
+            resistanceRatio: 0.85, // Tahanan standar di ujung
             touchAngle: 45,
             simulateTouch: true,
             allowTouchMove: true,
