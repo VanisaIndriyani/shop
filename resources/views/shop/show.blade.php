@@ -4,7 +4,18 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <style>
-    .refrens-productswiper{border-radius:16px;overflow:hidden;touch-action: pan-y;}
+    .refrens-productswiper{border-radius:16px;overflow:hidden;touch-action: pan-y;position:relative}
+    .refrens-productswiper .swiper-button-next,
+    .refrens-productswiper .swiper-button-prev{width:32px;height:32px;background:rgba(255,255,255,0.7);backdrop-filter:blur(4px);border-radius:50%;color:#111827;transition:all 0.2s}
+    .refrens-productswiper .swiper-button-next:after,
+    .refrens-productswiper .swiper-button-prev:after{font-size:14px;font-weight:bold}
+    .refrens-productswiper .swiper-button-next:hover,
+    .refrens-productswiper .swiper-button-prev:hover{background:#fff;color:#2563eb}
+    .refrens-productswiper .swiper-button-disabled{opacity:0;pointer-events:none}
+    @media (max-width: 767px){
+        .refrens-productswiper .swiper-button-next,
+        .refrens-productswiper .swiper-button-prev{display:none} /* Sembunyikan panah di mobile biar ga ganggu swipe */
+    }
     .refrens-productpager{display:flex;justify-content:center;gap:6px;padding:10px 0}
     .refrens-productpager .swiper-pagination-bullet{width:7px;height:7px;border-radius:999px;background:rgba(17,24,39,.28);opacity:1}
     .refrens-productpager .swiper-pagination-bullet-active{background:#111827}
@@ -119,6 +130,9 @@
                                     </div>
                                 @endforeach
                             </div>
+                            <!-- Add Arrows -->
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
                         </div>
                     @else
                         <div class="refrens-productframe d-flex align-items-center justify-content-center bg-light text-muted rounded-2">
@@ -679,6 +693,10 @@
             watchSlidesProgress: true,
             preloadImages: true,
             updateOnImagesReady: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
             pagination: pager ? { el: pager, clickable: true } : undefined,
         });
 
