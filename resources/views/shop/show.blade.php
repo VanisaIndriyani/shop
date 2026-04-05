@@ -71,12 +71,13 @@
     .refrens-grid .refrens-mini{width:auto}
     .refrens-sold{position:absolute;left:8px;bottom:8px;background:rgba(0,0,0,.55);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px}
     .swiper-wrapper {
-        transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1) !important;
+        transition-timing-function: ease-out !important; /* Ganti ke ease-out agar lebih natural di akhir gerakan */
     }
     .swiper-slide {
         transform: translate3d(0,0,0);
-        background: #f3f4f6; /* Warna netral agar tidak ada flash putih */
+        background: #f3f4f6;
         backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
     }
     .swiper-slide img {
         display: block;
@@ -662,11 +663,13 @@
             loop: false,
             slidesPerView: 1,
             spaceBetween: 0,
-            speed: 400,
-            roundLengths: true, // ⬅️ Ini kunci biar ga ada gap putih 1px di sela slide
-            touchRatio: 1,
-            threshold: 5,
-            resistanceRatio: 0.6,
+            speed: 600, // Kecepatan diperlambat sedikit biar ga nyentak
+            roundLengths: true,
+            touchRatio: 0.85, // Kurangi dikit sensitivitas jari agar tidak terlalu liar
+            threshold: 10, // Butuh tarikan lebih mantap agar tidak gampang kegeser
+            resistanceRatio: 0.85, // Efek elastic yang standar
+            touchAngle: 45, // Mencegah geser saat scroll ke bawah
+            longSwipesRatio: 0.3, // Harus ditarik 30% lebar gambar baru pindah slide
             grabCursor: true,
             watchSlidesProgress: true,
             preloadImages: true,
