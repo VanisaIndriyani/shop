@@ -686,17 +686,19 @@
             slidesPerView: 1,
             slidesPerGroup: 1,
             spaceBetween: 0,
-            speed: 400, // Sedikit diperlambat agar smooth
+            speed: 500, // Kecepatan transisi yang lebih tenang
             autoplay: false,
             followFinger: true,
-            touchRatio: 1,
-            threshold: 5,
-            roundLengths: true, // ⬅️ Ini kunci biar ga ada gap putih 1px di sela slide
-            resistanceRatio: 0.85,
+            touchRatio: 0.8, // Sedikit lebih lambat dari jari agar tidak "liar"
             touchAngle: 45,
+            threshold: 15, // Butuh tarikan lebih mantap baru bergeser
+            shortSwipes: false, // Matikan swipe pendek agar tidak gampang loncat
+            longSwipesRatio: 0.5, // Harus ditarik 50% baru pindah
+            resistanceRatio: 0.7, // Tahanan di ujung lebih kuat
             simulateTouch: true,
             allowTouchMove: true,
             grabCursor: true,
+            roundLengths: true,
             preloadImages: true,
             updateOnImagesReady: true,
             observer: true,
