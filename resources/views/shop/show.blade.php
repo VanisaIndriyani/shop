@@ -89,6 +89,12 @@
     .swiper-slide {
         transform: translate3d(0,0,0);
         background: #f3f4f6;
+        height: 100% !important;
+        width: 100% !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
         backface-visibility: hidden;
         -webkit-backface-visibility: hidden;
     }
@@ -124,8 +130,8 @@
                 @endphp
                 <div class="position-relative -mx-4 sm:mx-0">
                     @if(!empty($gallery))
-                        <div class="swiper refrens-productswiper refrens-productswiper--main">
-                            <div class="swiper-wrapper refrens-productframe">
+                        <div class="swiper refrens-productswiper refrens-productswiper--main refrens-productframe">
+                            <div class="swiper-wrapper">
                                 @foreach($gallery as $img)
                                     <div class="swiper-slide">
                                         <img src="{{ asset('storage/' . $img) }}" alt="{{ $product->name }}">
@@ -680,19 +686,21 @@
             slidesPerView: 1,
             slidesPerGroup: 1,
             spaceBetween: 0,
-            speed: 300, // Kecepatan standar biar enak di mata
-            autoplay: false, // MATIKAN geser otomatis (autoplay) secara eksplisit
-            followFinger: true, // Gambar harus nempel sama jari
-            touchRatio: 1, // 1:1 gerakan jari dan gambar
-            threshold: 5, // Biar langsung kerasa gesernya (responsif)
-            resistanceRatio: 0.85, // Tahanan standar di ujung
+            speed: 400, // Sedikit diperlambat agar smooth
+            autoplay: false,
+            followFinger: true,
+            touchRatio: 1,
+            threshold: 5,
+            roundLengths: true, // ⬅️ Ini kunci biar ga ada gap putih 1px di sela slide
+            resistanceRatio: 0.85,
             touchAngle: 45,
             simulateTouch: true,
             allowTouchMove: true,
             grabCursor: true,
-            watchSlidesProgress: true,
             preloadImages: true,
             updateOnImagesReady: true,
+            observer: true,
+            observeParents: true,
             navigation: {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
