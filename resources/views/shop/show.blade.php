@@ -70,6 +70,12 @@
     .refrens-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
     .refrens-grid .refrens-mini{width:auto}
     .refrens-sold{position:absolute;left:8px;bottom:8px;background:rgba(0,0,0,.55);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px}
+    .swiper-wrapper {
+        transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1) !important;
+    }
+    .swiper-slide {
+        transform: translate3d(0,0,0);
+    }
     @media (min-width: 768px){
         .refrens-strip{overflow:visible;padding-bottom:0}
         .refrens-mini{width:180px}
@@ -100,7 +106,7 @@
                             <div class="swiper-wrapper refrens-productframe">
                                 @foreach($gallery as $img)
                                     <div class="swiper-slide">
-                                        <img src="{{ asset('storage/' . $img) }}" alt="{{ $product->name }}" class="d-block w-100 h-100" style="object-fit: cover;">
+                                        <img src="{{ asset('storage/' . $img) }}" alt="{{ $product->name }}" class="d-block w-100 h-100" style="object-fit: cover;" loading="lazy">
                                     </div>
                                 @endforeach
                             </div>
@@ -648,11 +654,16 @@
             loop: false,
             slidesPerView: 1,
             spaceBetween: 0,
-            speed: 600, 
-            touchRatio: 0.8,
-            threshold: 10,
-            resistanceRatio: 0.85,
+            speed: 450,
+            freeMode: false,
+            followFinger: true,
+            touchReleaseOnEdges: true,
+            touchRatio: 1,
+            threshold: 5,
+            resistanceRatio: 0.6,
+            effect: 'slide',
             grabCursor: true,
+            watchSlidesProgress: true,
             pagination: pager ? { el: pager, clickable: true } : undefined,
         });
 
