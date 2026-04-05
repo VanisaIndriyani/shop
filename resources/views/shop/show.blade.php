@@ -71,10 +71,18 @@
     .refrens-grid .refrens-mini{width:auto}
     .refrens-sold{position:absolute;left:8px;bottom:8px;background:rgba(0,0,0,.55);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px}
     .swiper-wrapper {
-        transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1) !important;
+        transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1) !important;
     }
     .swiper-slide {
         transform: translate3d(0,0,0);
+        background: #f3f4f6; /* Warna netral agar tidak ada flash putih */
+        backface-visibility: hidden;
+    }
+    .swiper-slide img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
     @media (min-width: 768px){
         .refrens-strip{overflow:visible;padding-bottom:0}
@@ -106,7 +114,7 @@
                             <div class="swiper-wrapper refrens-productframe">
                                 @foreach($gallery as $img)
                                     <div class="swiper-slide">
-                                        <img src="{{ asset('storage/' . $img) }}" alt="{{ $product->name }}" class="d-block w-100 h-100" style="object-fit: cover;">
+                                        <img src="{{ asset('storage/' . $img) }}" alt="{{ $product->name }}">
                                     </div>
                                 @endforeach
                             </div>
@@ -654,14 +662,11 @@
             loop: false,
             slidesPerView: 1,
             spaceBetween: 0,
-            speed: 450,
-            freeMode: false,
-            followFinger: true,
-            touchReleaseOnEdges: true,
+            speed: 400,
+            roundLengths: true, // ⬅️ Ini kunci biar ga ada gap putih 1px di sela slide
             touchRatio: 1,
             threshold: 5,
             resistanceRatio: 0.6,
-            effect: 'slide',
             grabCursor: true,
             watchSlidesProgress: true,
             preloadImages: true,
