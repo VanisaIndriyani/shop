@@ -645,15 +645,18 @@
         const pager = document.querySelector('[data-product-pagination]');
         const swiper = new Swiper(el, {
             direction: 'horizontal',
-            loop: false, // Matikan loop agar tidak membingungkan arah gesernya
-            speed: 700, // Lebih lambat agar lebih smooth
+            loop: false,
+            speed: 600, // Kecepatan yang lebih pas (tidak terlalu lambat/cepat)
             slidesPerView: 1,
-            spaceBetween: 0,
+            spaceBetween: 12, // Berikan sedikit jarak antar slide agar terlihat pemisahnya saat digeser
             grabCursor: true,
             resistance: true,
-            resistanceRatio: 0.7, // Lebih banyak tahanan di ujung
-            threshold: 15, // Membutuhkan tarikan lebih panjang untuk mulai bergeser
+            resistanceRatio: 0.6, // Tahanan di ujung lebih kuat agar terasa batasnya
+            threshold: 5, // Lebih responsif (tidak butuh tarikan panjang untuk mulai bergerak)
+            touchRatio: 1.2, // Mengikuti jari lebih responsif (sedikit lebih cepat dari gerakan jari)
             touchAngle: 45,
+            followFinger: true,
+            preventInteractionOnTransition: true,
             watchSlidesProgress: true,
             pagination: pager ? { el: pager, clickable: true } : undefined,
         });
