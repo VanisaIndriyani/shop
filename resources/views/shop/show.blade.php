@@ -4,7 +4,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <style>
-    .refrens-productswiper{border-radius:16px;overflow:hidden}
+    .refrens-productswiper{border-radius:16px;overflow:hidden;touch-action: pan-y;}
     .refrens-productpager{display:flex;justify-content:center;gap:6px;padding:10px 0}
     .refrens-productpager .swiper-pagination-bullet{width:7px;height:7px;border-radius:999px;background:rgba(17,24,39,.28);opacity:1}
     .refrens-productpager .swiper-pagination-bullet-active{background:#111827}
@@ -662,14 +662,19 @@
             direction: 'horizontal',
             loop: false,
             slidesPerView: 1,
+            slidesPerGroup: 1, // Memastikan 1 swipe = 1 slide (ga bisa skip)
             spaceBetween: 0,
-            speed: 600, // Kecepatan diperlambat sedikit biar ga nyentak
-            roundLengths: true,
-            touchRatio: 0.85, // Kurangi dikit sensitivitas jari agar tidak terlalu liar
-            threshold: 10, // Butuh tarikan lebih mantap agar tidak gampang kegeser
-            resistanceRatio: 0.85, // Efek elastic yang standar
-            touchAngle: 45, // Mencegah geser saat scroll ke bawah
-            longSwipesRatio: 0.3, // Harus ditarik 30% lebar gambar baru pindah slide
+            speed: 450,
+            followFinger: true,
+            touchRatio: 0.6, // lebih kecil = ga liar
+            threshold: 20, // harus geser agak jauh baru pindah
+            longSwipesRatio: 0.5, // HARUS 50% baru pindah
+            longSwipesMs: 300, // minimal durasi swipe
+            shortSwipes: false, // penting! biar ga lompat2
+            resistanceRatio: 0.6,
+            touchAngle: 45,
+            simulateTouch: true,
+            allowTouchMove: true,
             grabCursor: true,
             watchSlidesProgress: true,
             preloadImages: true,
