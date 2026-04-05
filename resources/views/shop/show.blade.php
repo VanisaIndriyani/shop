@@ -6,21 +6,17 @@
 <style>
     .refrens-productswiper{border-radius:16px;overflow:hidden;touch-action: pan-y;position:relative}
     .refrens-productswiper .swiper-button-next,
-    .refrens-productswiper .swiper-button-prev{width:32px;height:32px;background:rgba(255,255,255,0.7);backdrop-filter:blur(4px);border-radius:50%;color:#111827;transition:all 0.2s;z-index:10;margin-top: -16px;}
+    .refrens-productswiper .swiper-button-prev{width:32px;height:32px;color:#111827;transition:all 0.2s;z-index:10;margin-top:-16px}
     .refrens-productswiper .swiper-button-next:after,
-    .refrens-productswiper .swiper-button-prev:after{font-size:12px;font-weight:900}
-    .refrens-productswiper .swiper-button-next{right: 12px}
-    .refrens-productswiper .swiper-button-prev{left: 12px}
-    .refrens-productswiper .swiper-button-next:hover,
-    .refrens-productswiper .swiper-button-prev:hover{background:#fff;color:#2563eb;transform:scale(1.05)}
+    .refrens-productswiper .swiper-button-prev:after{font-size:16px;font-weight:900}
+    .refrens-productswiper .swiper-button-next{right:4px}
+    .refrens-productswiper .swiper-button-prev{left:4px}
     .refrens-productswiper .swiper-button-disabled{opacity:0 !important;pointer-events:none}
     @media (max-width: 767px){
         .refrens-productswiper .swiper-button-next,
-        .refrens-productswiper .swiper-button-prev{display:flex !important; width: 28px; height: 28px;}
+        .refrens-productswiper .swiper-button-prev{display:flex !important;width:24px;height:24px}
         .refrens-productswiper .swiper-button-next:after,
-        .refrens-productswiper .swiper-button-prev:after{font-size:10px}
-        .refrens-productswiper .swiper-button-next{right:8px}
-        .refrens-productswiper .swiper-button-prev{left:8px}
+        .refrens-productswiper .swiper-button-prev:after{font-size:14px}
     }
     .refrens-productpager{display:flex;justify-content:center;gap:6px;padding:10px 0}
     .refrens-productpager .swiper-pagination-bullet{width:7px;height:7px;border-radius:999px;background:rgba(17,24,39,.28);opacity:1}
