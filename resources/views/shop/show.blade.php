@@ -645,15 +645,16 @@
         const pager = document.querySelector('[data-product-pagination]');
         const swiper = new Swiper(el, {
             direction: 'horizontal',
-            rtl: false,
-            loop: slideCount > 1,
-            speed: 500,
+            loop: false, // Matikan loop agar tidak membingungkan arah gesernya
+            speed: 700, // Lebih lambat agar lebih smooth
             slidesPerView: 1,
             spaceBetween: 0,
             grabCursor: true,
             resistance: true,
-            resistanceRatio: 0.85,
+            resistanceRatio: 0.7, // Lebih banyak tahanan di ujung
+            threshold: 15, // Membutuhkan tarikan lebih panjang untuk mulai bergeser
             touchAngle: 45,
+            watchSlidesProgress: true,
             pagination: pager ? { el: pager, clickable: true } : undefined,
         });
 
@@ -667,15 +668,11 @@
         thumbs.forEach((t) => {
             t.addEventListener('click', () => {
                 const idx = Number(t.getAttribute('data-thumb-index') || 0);
-                if (swiper.params.loop) {
-                    swiper.slideToLoop(idx);
-                } else {
-                    swiper.slideTo(idx);
-                }
+                swiper.slideTo(idx);
             });
         });
         swiper.on('slideChange', () => {
-            const idx = swiper.realIndex || 0;
+            const idx = swiper.activeIndex || 0;
             syncThumbs(idx);
         });
         syncThumbs(0);
