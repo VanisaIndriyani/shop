@@ -215,6 +215,21 @@
 
         <script>
             (function () {
+                const nav = document.getElementById('siteNav');
+                if (nav) {
+                    window.addEventListener('scroll', function() {
+                        if (window.scrollY > 20) {
+                            nav.classList.add('refrens-nav--scrolled');
+                        } else {
+                            nav.classList.remove('refrens-nav--scrolled');
+                        }
+                    });
+                }
+            })();
+        </script>
+
+        <script>
+            (function () {
                 const toast = document.getElementById('refrensToast');
                 if (!toast) return;
                 window.setTimeout(function () {

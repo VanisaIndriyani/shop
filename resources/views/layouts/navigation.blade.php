@@ -1,7 +1,7 @@
 <style>
     .refrens-logo{background:transparent;mix-blend-mode:multiply}
-    .refrens-nav{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom:0;transition:background-color .2s ease,border-color .2s ease,box-shadow .2s ease}
-    .refrens-nav.refrens-nav--scrolled{background:rgba(255,255,255,.95);border-bottom:0;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+    .refrens-nav{background:{{ request()->is('/') ? 'transparent' : '#fff' }};-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom:0;transition:all .3s ease}
+    .refrens-nav.refrens-nav--scrolled{background:rgba(255,255,255,.95) !important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:0;box-shadow:0 8px 24px rgba(0,0,0,.06)}
 </style>
 <nav id="siteNav" x-data="{
         open: false,
