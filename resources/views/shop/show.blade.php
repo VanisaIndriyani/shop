@@ -6,17 +6,28 @@
 <style>
     .refrens-productswiper{border-radius:16px;overflow:hidden;touch-action: pan-y;position:relative}
     .refrens-productswiper .swiper-button-next,
-    .refrens-productswiper .swiper-button-prev{width:32px;height:32px;color:#111827;transition:all 0.2s;z-index:10;margin-top:-16px}
+    .refrens-productswiper .swiper-button-prev {
+        width: 32px !important;
+        height: 32px !important;
+        color: #fff !important; /* Gunakan warna putih agar kontras di gambar gelap */
+        text-shadow: 0 0 8px rgba(0,0,0,0.5); /* Shadow agar kelihatan di gambar terang juga */
+        z-index: 100 !important; /* Pastikan di paling atas */
+        margin-top: -16px !important;
+        display: flex !important; /* Paksa muncul */
+    }
     .refrens-productswiper .swiper-button-next:after,
-    .refrens-productswiper .swiper-button-prev:after{font-size:16px;font-weight:900}
-    .refrens-productswiper .swiper-button-next{right:4px}
-    .refrens-productswiper .swiper-button-prev{left:4px}
-    .refrens-productswiper .swiper-button-disabled{opacity:0 !important;pointer-events:none}
+    .refrens-productswiper .swiper-button-prev:after {
+        font-size: 18px !important;
+        font-weight: 900 !important;
+    }
+    .refrens-productswiper .swiper-button-next { right: 8px !important; }
+    .refrens-productswiper .swiper-button-prev { left: 8px !important; }
+    .refrens-productswiper .swiper-button-disabled { opacity: 0 !important; pointer-events: none; }
     @media (max-width: 767px){
         .refrens-productswiper .swiper-button-next,
-        .refrens-productswiper .swiper-button-prev{display:flex !important;width:24px;height:24px}
+        .refrens-productswiper .swiper-button-prev { width: 28px !important; height: 28px !important; }
         .refrens-productswiper .swiper-button-next:after,
-        .refrens-productswiper .swiper-button-prev:after{font-size:14px}
+        .refrens-productswiper .swiper-button-prev:after { font-size: 14px !important; }
     }
     .refrens-productpager{display:flex;justify-content:center;gap:6px;padding:10px 0}
     .refrens-productpager .swiper-pagination-bullet{width:7px;height:7px;border-radius:999px;background:rgba(17,24,39,.28);opacity:1}
