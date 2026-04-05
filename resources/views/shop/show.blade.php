@@ -648,6 +648,9 @@
             loop: false,
             slidesPerView: 1,
             spaceBetween: 0,
+            speed: 1000, // Perpindahan sangat lambat dan halus
+            touchRatio: 0.5, // Slider terasa "berat", harus ditarik lebih kuat baru bergeser
+            threshold: 20, // Tidak gampang tergeser kalau cuma kesenggol sedikit
             pagination: pager ? { el: pager, clickable: true } : undefined,
         });
 
