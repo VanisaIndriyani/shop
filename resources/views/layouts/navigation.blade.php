@@ -1,8 +1,8 @@
 <style>
     .refrens-logo{background:transparent;mix-blend-mode:multiply}
-    .refrens-nav{background:{{ request()->is('/') ? 'transparent' : '#fff' }};-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom:0;transition:all .3s ease}
+    .refrens-nav{background:{{ request()->is('/') ? 'transparent' : '#fff' }};-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom:0;transition:all .3s ease;z-index:100}
     .refrens-nav.refrens-nav--scrolled,
-    .refrens-nav.refrens-nav--active {background:rgba(255,255,255,.98) !important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:0;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+    .refrens-nav.refrens-nav--active {background:#fff !important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:0;box-shadow:0 8px 24px rgba(0,0,0,.06);z-index:101}
 </style>
 <nav id="siteNav" 
     x-data="{ 
@@ -155,9 +155,10 @@
         </div>
     </div>
 
-    <div x-show="searchOpen" x-cloak class="fixed inset-0 z-[90]" @keydown.escape.window="closeSearch()">
+    <!-- Search Overlay -->
+    <div x-show="searchOpen" x-cloak class="fixed inset-0 z-[110]" @keydown.escape.window="closeSearch()">
         <div class="fixed inset-0 bg-black/40 backdrop-blur-[2px]" @click="closeSearch()"></div>
-        <div class="fixed inset-x-0 top-0 bg-white shadow-2xl">
+        <div class="fixed inset-x-0 top-0 bg-white shadow-2xl z-[111]">
             <div class="max-w-3xl mx-auto px-4 py-4">
                 <div class="flex items-center gap-3">
                     <button type="button" @click="closeSearch()" class="text-gray-500 hover:text-gray-900">
@@ -233,7 +234,7 @@
 
     <!-- Mobile Sidebar / Overlay -->
     <div x-show="open" 
-         class="fixed inset-0 z-[60]" 
+         class="fixed inset-0 z-[120]" 
          style="display: none;">
         <!-- Backdrop -->
         <div class="fixed inset-0 bg-black/30 backdrop-blur-[2px]" @click="open = false"
@@ -246,7 +247,7 @@
              x-transition:leave-end="opacity-0"></div>
         
         <!-- Sidebar Content -->
-        <div class="fixed inset-y-0 left-0 w-[280px] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out"
+        <div class="fixed inset-y-0 left-0 w-[280px] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-[121]"
              :class="open ? 'translate-x-0' : '-translate-x-full'"
              @click.stop>
 
