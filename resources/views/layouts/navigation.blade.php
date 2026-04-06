@@ -15,11 +15,15 @@
         shippingCountry: 'Indonesia', 
         language: 'Bahasa', 
         currency: 'IDR - Indonesian Rupiah', 
-        scrolled: false, 
-        init() { 
-            window.addEventListener('scroll', () => { 
-                this.scrolled = window.pageYOffset > 10; 
-            }); 
+        scrolled: false,
+        init() {
+            window.addEventListener('scroll', () => {
+                this.scrolled = window.pageYOffset > 10;
+            });
+            this.$watch('open || searchOpen || localeOpen', val => {
+                if (val) document.body.classList.add('overflow-hidden');
+                else document.body.classList.remove('overflow-hidden');
+            });
         }, 
         openSearch() { 
             this.open = false; 
@@ -151,8 +155,7 @@
         </div>
     </div>
 
-    <div x-show="searchOpen" x-cloak class="fixed inset-0 z-[90]" @keydown.escape.window="closeSearch()"
-         x-init="$watch('searchOpen', val => { if(val) document.body.classList.add('overflow-hidden'); else if(!open) document.body.classList.remove('overflow-hidden'); })">
+    <div x-show="searchOpen" x-cloak class="fixed inset-0 z-[90]" @keydown.escape.window="closeSearch()">
         <div class="fixed inset-0 bg-black/40 backdrop-blur-[2px]" @click="closeSearch()"></div>
         <div class="fixed inset-x-0 top-0 bg-white shadow-2xl">
             <div class="max-w-3xl mx-auto px-4 py-4">
@@ -231,8 +234,7 @@
     <!-- Mobile Sidebar / Overlay -->
     <div x-show="open" 
          class="fixed inset-0 z-[60]" 
-         style="display: none;"
-         x-init="$watch('open', val => { if(val) document.body.classList.add('overflow-hidden'); else document.body.classList.remove('overflow-hidden'); })">
+         style="display: none;">
         <!-- Backdrop -->
         <div class="fixed inset-0 bg-black/30 backdrop-blur-[2px]" @click="open = false"
              x-show="open"
