@@ -1,152 +1,95 @@
 <style>
     .refrens-logo{background:transparent;mix-blend-mode:multiply}
     .refrens-nav{background:{{ request()->is('/') ? 'transparent' : '#fff' }};-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom:0;transition:all .3s ease}
-    .refrens-nav.refrens-nav--scrolled{background:rgba(255,255,255,.95) !important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:0;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+    .refrens-nav.refrens-nav--scrolled,
+    .refrens-nav.refrens-nav--active {background:rgba(255,255,255,.98) !important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:0;box-shadow:0 8px 24px rgba(0,0,0,.06)}
 </style>
-<nav id="siteNav" x-data="{
-        open: false,
-        localeOpen: false,
-        searchOpen: false,
-        searchQuery: '',
-        searchLoading: false,
-        searchResults: [],
-        recentSearches: [],
-        searchDebounce: null,
-        shippingCountry: 'Indonesia',
-        language: 'Bahasa',
-        currency: 'IDR - Indonesian Rupiah',
-        init() {
-            const saved = localStorage.getItem('refrens_locale');
-            if (saved) {
-                try {
-                    const data = JSON.parse(saved);
-                    if (data.shippingCountry) this.shippingCountry = data.shippingCountry;
-                    if (data.language) this.language = data.language;
-                    if (data.currency) this.currency = data.currency;
-                } catch (e) {}
-            }
-
-            this.loadRecentSearches();
-            this.$watch('searchQuery', (val) => {
-                const v = String(val || '').trim();
-                if (this.searchDebounce) clearTimeout(this.searchDebounce);
-                if (!this.searchOpen) return;
-                if (v.length === 0) {
-                    this.searchResults = [];
-                    return;
-                }
-                this.searchDebounce = setTimeout(() => {
-                    this.fetchSearch(v);
-                }, 250);
-            });
-        },
-        openSearch() {
-            this.open = false;
-            this.localeOpen = false;
-            this.searchOpen = true;
-            this.searchQuery = '';
-            this.searchResults = [];
-            this.loadRecentSearches();
-            this.$nextTick(() => {
-                if (this.$refs?.searchInput) this.$refs.searchInput.focus();
-            });
-        },
-        closeSearch() {
-            this.searchOpen = false;
-            this.searchQuery = '';
-            this.searchResults = [];
-            this.searchLoading = false;
-        },
-        clearSearch() {
-            this.searchQuery = '';
-            this.searchResults = [];
-            this.$nextTick(() => {
-                if (this.$refs?.searchInput) this.$refs.searchInput.focus();
-            });
-        },
-        loadRecentSearches() {
-            try {
-                const raw = localStorage.getItem('refrens_recent_searches');
-                this.recentSearches = raw ? JSON.parse(raw) : [];
-                if (!Array.isArray(this.recentSearches)) this.recentSearches = [];
-            } catch (e) {
-                this.recentSearches = [];
-            }
-        },
-        saveRecentSearch(q) {
-            const v = String(q || '').trim();
-            if (!v) return;
-            const list = [v, ...(this.recentSearches || [])].filter((x, i, arr) => x && arr.indexOf(x) === i).slice(0, 8);
-            this.recentSearches = list;
-            localStorage.setItem('refrens_recent_searches', JSON.stringify(list));
-        },
-        goSearch(q) {
-            const v = String(q || this.searchQuery || '').trim();
-            if (!v) return;
-            this.saveRecentSearch(v);
-            window.location.href = `{{ route('shop.index') }}?q=${encodeURIComponent(v)}`;
-        },
-        async fetchSearch(q) {
-            this.searchLoading = true;
-            try {
-                const res = await fetch(`{{ route('shop.search') }}?q=${encodeURIComponent(q)}`, { headers: { 'Accept': 'application/json' } });
-                const data = await res.json();
-                this.searchResults = Array.isArray(data.results) ? data.results : [];
-                window.dispatchEvent(new CustomEvent('refrens:ui-refresh'));
-            } catch (e) {
-                this.searchResults = [];
-            } finally {
-                this.searchLoading = false;
-            }
-        },
-        openLocale() {
-            this.localeOpen = true;
-        },
-        closeLocale() {
-            this.localeOpen = false;
-        },
-        saveLocale() {
-            localStorage.setItem('refrens_locale', JSON.stringify({
-                shippingCountry: this.shippingCountry,
-                language: this.language,
-                currency: this.currency
-            }));
-            window.dispatchEvent(new CustomEvent('refrens:locale-updated'));
-            this.closeLocale();
-        },
-        resetLocale() {
-            this.shippingCountry = 'Indonesia';
-            this.language = 'Bahasa';
-            this.currency = 'IDR - Indonesian Rupiah';
-            this.saveLocale();
-        },
-        isEnglish() {
-            return String(this.language || '').toLowerCase().includes('english');
-        },
-        t(key) {
-            const en = this.isEnglish();
-            const map = {
-                title: en ? 'Settings' : 'Pengaturan',
-                subtitle: en ? 'Country, language, and currency' : 'Negara, bahasa, dan mata uang',
-                shipTo: en ? 'Ship to' : 'Dikirim ke',
-                language: en ? 'Language' : 'Bahasa',
-                currency: en ? 'Currency' : 'Mata Uang',
-                reset: en ? 'Reset' : 'Reset',
-                save: en ? 'Save' : 'Simpan',
-                navHome: en ? 'Home' : 'Beranda',
-                navShop: en ? 'Shop' : 'Toko',
-                navOrders: en ? 'My Orders' : 'Pesanan Saya',
-                navSignOut: en ? 'Sign Out' : 'Keluar',
-                navSignInRegister: en ? 'Sign In / Register' : 'Masuk / Daftar',
-            };
-            return map[key] || key;
-        },
-        currencyCode() {
-            return (this.currency || '').split(' - ')[0] || 'IDR';
-        }
-    }"
-    x-init="init()"
-    class="refrens-nav fixed top-0 inset-x-0 z-50">
+<nav id="siteNav" 
+    x-data="{ 
+        open: false, 
+        searchOpen: false, 
+        searchQuery: '', 
+        searchResults: [], 
+        searchLoading: false, 
+        localeOpen: false, 
+        shippingCountry: 'Indonesia', 
+        language: 'Bahasa', 
+        currency: 'IDR - Indonesian Rupiah', 
+        scrolled: false, 
+        init() { 
+            window.addEventListener('scroll', () => { 
+                this.scrolled = window.pageYOffset > 10; 
+            }); 
+        }, 
+        openSearch() { 
+            this.open = false; 
+            this.localeOpen = false; 
+            this.searchOpen = true; 
+            this.$nextTick(() => { this.$refs.searchInput.focus(); }); 
+        }, 
+        closeSearch() { 
+            this.searchOpen = false; 
+            this.searchQuery = ''; 
+            this.searchResults = []; 
+        }, 
+        openLocale() { 
+            this.open = false; 
+            this.searchOpen = false; 
+            this.localeOpen = true; 
+        }, 
+        closeLocale() { 
+            this.localeOpen = false; 
+        }, 
+        currencyCode() { 
+            return this.currency.split(' - ')[0]; 
+        }, 
+        t(key) { 
+            const strings = { 
+                'Indonesia': { 
+                    title: 'Pengaturan Wilayah', 
+                    subtitle: 'Sesuaikan pengalaman belanja Anda', 
+                    shipTo: 'Kirim Ke', 
+                    language: 'Bahasa', 
+                    currency: 'Mata Uang', 
+                    reset: 'Atur Ulang', 
+                    save: 'Simpan', 
+                    navHome: 'Beranda', 
+                    navShop: 'Toko', 
+                    navOrders: 'Pesanan Saya', 
+                    navSignOut: 'Keluar', 
+                    navSignInRegister: 'Masuk / Daftar' 
+                }, 
+                'English': { 
+                    title: 'Regional Settings', 
+                    subtitle: 'Customize your shopping experience', 
+                    shipTo: 'Ship To', 
+                    language: 'Language', 
+                    currency: 'Currency', 
+                    reset: 'Reset', 
+                    save: 'Save', 
+                    navHome: 'Home', 
+                    navShop: 'Shop', 
+                    navOrders: 'My Orders', 
+                    navSignOut: 'Sign Out', 
+                    navSignInRegister: 'Sign In / Register' 
+                } 
+            }; 
+            const lang = (this.language === 'English') ? 'English' : 'Indonesia'; 
+            return strings[lang][key] || key; 
+        }, 
+        saveLocale() { 
+            this.closeLocale(); 
+        }, 
+        resetLocale() { 
+            this.shippingCountry = 'Indonesia'; 
+            this.language = 'Bahasa'; 
+            this.currency = 'IDR - Indonesian Rupiah'; 
+        } 
+    }" 
+    x-init="init()" 
+    class="refrens-nav fixed top-0 inset-x-0 z-50" 
+    :class="{ 'refrens-nav--scrolled': scrolled, 'refrens-nav--active': open || searchOpen || localeOpen }" 
+    @keydown.escape.window="open = false; searchOpen = false; localeOpen = false">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-20 md:h-16 items-center">
             <div class="flex items-center gap-2">
@@ -208,7 +151,8 @@
         </div>
     </div>
 
-    <div x-show="searchOpen" x-cloak class="fixed inset-0 z-[90]" @keydown.escape.window="closeSearch()">
+    <div x-show="searchOpen" x-cloak class="fixed inset-0 z-[90]" @keydown.escape.window="closeSearch()"
+         x-init="$watch('searchOpen', val => { if(val) document.body.classList.add('overflow-hidden'); else if(!open) document.body.classList.remove('overflow-hidden'); })">
         <div class="fixed inset-0 bg-black/40 backdrop-blur-[2px]" @click="closeSearch()"></div>
         <div class="fixed inset-x-0 top-0 bg-white shadow-2xl">
             <div class="max-w-3xl mx-auto px-4 py-4">
@@ -287,7 +231,8 @@
     <!-- Mobile Sidebar / Overlay -->
     <div x-show="open" 
          class="fixed inset-0 z-[60]" 
-         style="display: none;">
+         style="display: none;"
+         x-init="$watch('open', val => { if(val) document.body.classList.add('overflow-hidden'); else document.body.classList.remove('overflow-hidden'); })">
         <!-- Backdrop -->
         <div class="fixed inset-0 bg-black/30 backdrop-blur-[2px]" @click="open = false"
              x-show="open"
