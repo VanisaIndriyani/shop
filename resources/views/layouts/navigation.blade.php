@@ -95,7 +95,7 @@
     :class="{ 'refrens-nav--scrolled': scrolled, 'refrens-nav--active': open || searchOpen || localeOpen }" 
     @keydown.escape.window="open = false; searchOpen = false; localeOpen = false">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-20 md:h-16 items-center">
+        <div class="flex justify-between h-24 md:h-20 items-center">
             <div class="flex items-center gap-2">
                 @if(request()->routeIs('shop.show') || request()->routeIs('account.*') || request()->routeIs('orders.show') || request()->routeIs('checkout.*'))
                     <a href="{{ route('shop.index') }}" class="inline-flex items-center justify-center p-2 rounded-md text-gray-900 hover:text-black focus:outline-none transition duration-150 ease-in-out" aria-label="Back">
@@ -112,7 +112,7 @@
                     </button>
                 @endif
                 <a href="{{ url('/') }}" class="flex-shrink-0">
-                    <img class="refrens-logo h-20 md:h-16 w-auto object-contain" src="{{ asset('img/logoo.png') }}" alt="REFRENS">
+                    <img class="refrens-logo h-24 md:h-20 w-auto object-contain scale-125 origin-left" src="{{ asset('img/logoo.png') }}" alt="REFRENS">
                 </a>
             </div>
 
