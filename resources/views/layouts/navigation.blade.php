@@ -234,10 +234,10 @@
 
     <!-- Mobile Sidebar / Overlay -->
     <div x-show="open" 
-         class="fixed inset-0 z-[200]" 
+         class="fixed inset-0 z-[300]" 
          style="display: none;">
         <!-- Backdrop -->
-        <div class="fixed inset-0 bg-black/50 backdrop-blur-[4px]" @click="open = false"
+        <div class="fixed inset-0 bg-white" @click="open = false"
              x-show="open"
              x-transition:enter="ease-out duration-300"
              x-transition:enter-start="opacity-0"
@@ -247,26 +247,28 @@
              x-transition:leave-end="opacity-0"></div>
         
         <!-- Sidebar Content -->
-        <div class="fixed inset-y-0 left-0 w-[80%] max-w-[300px] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-[201]"
+        <div class="fixed inset-0 bg-white transform transition-transform duration-300 ease-in-out z-[301]"
              :class="open ? 'translate-x-0' : '-translate-x-full'"
              @click.stop>
 
             <div class="flex flex-col h-full bg-white">
                 <div class="flex items-center justify-between p-5 border-b border-gray-100 bg-white">
-                    <button type="button" @click="openSearch()" class="text-gray-900 hover:text-black focus:outline-none">
-                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                    </button>
+                    <div class="flex items-center gap-4">
+                        <button type="button" @click="openSearch()" class="text-gray-900 hover:text-black focus:outline-none">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </button>
+                    </div>
                    
                     <button @click="open = false" class="text-gray-400 hover:text-gray-600 transition-colors">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
 
-                <div class="flex-1 py-4 space-y-1 overflow-y-auto bg-white px-2">
+                <div class="flex-1 py-6 space-y-1 overflow-y-auto bg-white px-4">
                     <a href="{{ url('/') }}" 
                        class="group flex items-center gap-3 px-6 py-3 text-base font-semibold transition-colors rounded-xl {{ (request()->is('/') || request()->is('')) ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
                         <svg class="h-5 w-5 {{ (request()->is('/') || request()->is('')) ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
