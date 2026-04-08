@@ -50,7 +50,7 @@
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-white">
             @include('layouts.navigation')
-            <div class="{{ request()->is('/') ? '' : 'pt-16' }}">
+         <div class="pt-20 md:pt-16">
 
             @php
                 $flashSuccess = session('success');

@@ -15,10 +15,11 @@
     .refrens-sheet__backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(2px)}
     .refrens-sheet__panel{position:fixed;left:0;right:0;bottom:0;max-height:86vh;background:#fff;border-top-left-radius:22px;border-top-right-radius:22px;overflow:auto}
     .refrens-sheet__handle{width:56px;height:6px;border-radius:999px;background:#e5efff;margin:10px auto}
-    .refrens-topbtn{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border:1px solid #2563eb;border-radius:12px;background:#fff;color:#2563eb;font-weight:700;font-size:14px;transition:transform .15s ease,background-color .15s ease,color .15s ease}
-    .refrens-topbtn:hover{background:rgba(37,99,235,.08)}
+    .refrens-topbtn{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border:1px solid #2563eb;border-radius:12px;background:#fff;color:#2563eb;font-weight:700;font-size:14px;transition:transform .15s ease,background-color .15s ease,color .15s ease;text-decoration:none !important}
+    .refrens-topbtn *{text-decoration:none !important}
+    .refrens-topbtn:hover{background:rgba(37,99,235,.08);text-decoration:none !important}
     .refrens-topbtn:active{transform:scale(.98)}
-    .refrens-topbtn--active{background:#2563eb;color:#fff}
+    .refrens-topbtn--active{background:#2563eb;color:#fff;text-decoration:none !important}
     .refrens-accordion{border-bottom:1px solid rgba(0,0,0,.06);padding:12px 0}
     .refrens-accordion summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-weight:800}
     .refrens-accordion summary::-webkit-details-marker{display:none}
@@ -37,12 +38,52 @@
     .refrens-sortitem__check{opacity:0;color:#2563eb}
     .refrens-sortitem input:checked ~ .refrens-sortitem__check{opacity:1}
     .refrens-sizegrid{display:flex;flex-wrap:wrap;gap:10px}
+
+    :root{
+        --nav-height: 64px;
+    }
+
+    @media (max-width: 640px){
+        :root{
+            --nav-height: 72px;
+        }
+    }
+
+    .shop-sticky-filter{
+        position: sticky;
+        top: var(--nav-height);
+        z-index: 30;
+        background: white;
+        padding-top: 4px;
+        padding-bottom: 8px;
+        margin-left: -1rem;
+        margin-right: -1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,.08);
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .shop-sticky-filter a, .shop-sticky-filter a *, .shop-sticky-filter button, .shop-sticky-filter button * {
+        text-decoration: none !important;
+    }
+
+    @media (min-width: 640px){
+        .shop-sticky-filter{
+            position: static;
+            margin: 0;
+            padding: 0;
+            box-shadow: none;
+            border-bottom: 0;
+            background: transparent;
+        }
+    }
 </style>
 
 <div class="bg-white min-h-screen">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         
-        <div class="grid grid-cols-2 gap-3 mb-6 sticky top-16 z-30 bg-white py-2 -mx-4 px-4 shadow-sm sm:static sm:bg-transparent sm:shadow-none sm:py-0 sm:mx-0 sm:px-0">
+        <div class="grid grid-cols-2 gap-3 mb-8 shop-sticky-filter">
             <a id="shopFilterBtn" href="#filter" class="refrens-topbtn">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
                 <span>Filter</span>

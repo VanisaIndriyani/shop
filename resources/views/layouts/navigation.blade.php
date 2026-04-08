@@ -1,99 +1,163 @@
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
 <style>
-    .refrens-logo{background:transparent;mix-blend-mode:multiply}
-    .refrens-nav{background:{{ request()->is('/') ? 'transparent' : '#fff' }};-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom:0;transition:all .3s ease;z-index:100}
-    .refrens-nav.refrens-nav--scrolled,
-    .refrens-nav.refrens-nav--active {background:#fff !important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:0;box-shadow:0 8px 24px rgba(0,0,0,.06);z-index:101}
+  .refrens-logo-text {
+    font-family: 'Archivo Black', sans-serif;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+  a.no-underline, a.no-underline:hover, a.no-underline span, .group.no-underline, .group.no-underline:hover {
+    text-decoration: none !important;
+  }
+  .refrens-nav{background:{{ request()->is('/') ? 'transparent' : '#fff' }};-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom:0;transition:all .3s ease}
+ .refrens-nav.refrens-nav--scrolled{
+    background:#fff !important;
+    backdrop-filter:none !important;
+}
 </style>
-<nav id="siteNav" 
-    x-data="{ 
-        open: false, 
-        searchOpen: false, 
-        searchQuery: '', 
-        searchResults: [], 
-        searchLoading: false, 
-        localeOpen: false, 
-        shippingCountry: 'Indonesia', 
-        language: 'Bahasa', 
-        currency: 'IDR - Indonesian Rupiah', 
-        scrolled: false,
+<nav id="siteNav" x-data="{
+        open: false,
+        localeOpen: false,
+        searchOpen: false,
+        searchQuery: '',
+        searchLoading: false,
+        searchResults: [],
+        recentSearches: [],
+        searchDebounce: null,
+        shippingCountry: 'Indonesia',
+        language: 'Bahasa',
+        currency: 'IDR - Indonesian Rupiah',
         init() {
-            window.addEventListener('scroll', () => {
-                this.scrolled = window.pageYOffset > 10;
+            const saved = localStorage.getItem('refrens_locale');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    if (data.shippingCountry) this.shippingCountry = data.shippingCountry;
+                    if (data.language) this.language = data.language;
+                    if (data.currency) this.currency = data.currency;
+                } catch (e) {}
+            }
+
+            this.loadRecentSearches();
+            this.$watch('searchQuery', (val) => {
+                const v = String(val || '').trim();
+                if (this.searchDebounce) clearTimeout(this.searchDebounce);
+                if (!this.searchOpen) return;
+                if (v.length === 0) {
+                    this.searchResults = [];
+                    return;
+                }
+                this.searchDebounce = setTimeout(() => {
+                    this.fetchSearch(v);
+                }, 250);
             });
-            this.$watch('open || searchOpen || localeOpen', val => {
-                if (val) document.body.classList.add('overflow-hidden');
-                else document.body.classList.remove('overflow-hidden');
+        },
+        openSearch() {
+            this.open = false;
+            this.localeOpen = false;
+            this.searchOpen = true;
+            this.searchQuery = '';
+            this.searchResults = [];
+            this.loadRecentSearches();
+            this.$nextTick(() => {
+                if (this.$refs?.searchInput) this.$refs.searchInput.focus();
             });
-        }, 
-        openSearch() { 
-            this.open = false; 
-            this.localeOpen = false; 
-            this.searchOpen = true; 
-            this.$nextTick(() => { this.$refs.searchInput.focus(); }); 
-        }, 
-        closeSearch() { 
-            this.searchOpen = false; 
-            this.searchQuery = ''; 
-            this.searchResults = []; 
-        }, 
-        openLocale() { 
-            this.open = false; 
-            this.searchOpen = false; 
-            this.localeOpen = true; 
-        }, 
-        closeLocale() { 
-            this.localeOpen = false; 
-        }, 
-        currencyCode() { 
-            return this.currency.split(' - ')[0]; 
-        }, 
-        t(key) { 
-            const strings = { 
-                'Indonesia': { 
-                    title: 'Pengaturan Wilayah', 
-                    subtitle: 'Sesuaikan pengalaman belanja Anda', 
-                    shipTo: 'Kirim Ke', 
-                    language: 'Bahasa', 
-                    currency: 'Mata Uang', 
-                    reset: 'Atur Ulang', 
-                    save: 'Simpan', 
-                    navHome: 'Beranda', 
-                    navShop: 'Toko', 
-                    navOrders: 'Pesanan Saya', 
-                    navSignOut: 'Keluar', 
-                    navSignInRegister: 'Masuk / Daftar' 
-                }, 
-                'English': { 
-                    title: 'Regional Settings', 
-                    subtitle: 'Customize your shopping experience', 
-                    shipTo: 'Ship To', 
-                    language: 'Language', 
-                    currency: 'Currency', 
-                    reset: 'Reset', 
-                    save: 'Save', 
-                    navHome: 'Home', 
-                    navShop: 'Shop', 
-                    navOrders: 'My Orders', 
-                    navSignOut: 'Sign Out', 
-                    navSignInRegister: 'Sign In / Register' 
-                } 
-            }; 
-            const lang = (this.language === 'English') ? 'English' : 'Indonesia'; 
-            return strings[lang][key] || key; 
-        }, 
-        saveLocale() { 
-            this.closeLocale(); 
-        }, 
-        resetLocale() { 
-            this.shippingCountry = 'Indonesia'; 
-            this.language = 'Bahasa'; 
-            this.currency = 'IDR - Indonesian Rupiah'; 
-        } 
-    }" 
-    x-init="init()" 
-    class="refrens-nav fixed top-0 inset-x-0 z-50" 
-    :class="{ 'refrens-nav--scrolled': scrolled, 'refrens-nav--active': open || searchOpen || localeOpen }" 
-    @keydown.escape.window="open = false; searchOpen = false; localeOpen = false">
+        },
+        closeSearch() {
+            this.searchOpen = false;
+            this.searchQuery = '';
+            this.searchResults = [];
+            this.searchLoading = false;
+        },
+        clearSearch() {
+            this.searchQuery = '';
+            this.searchResults = [];
+            this.$nextTick(() => {
+                if (this.$refs?.searchInput) this.$refs.searchInput.focus();
+            });
+        },
+        loadRecentSearches() {
+            try {
+                const raw = localStorage.getItem('refrens_recent_searches');
+                this.recentSearches = raw ? JSON.parse(raw) : [];
+                if (!Array.isArray(this.recentSearches)) this.recentSearches = [];
+            } catch (e) {
+                this.recentSearches = [];
+            }
+        },
+        saveRecentSearch(q) {
+            const v = String(q || '').trim();
+            if (!v) return;
+            const list = [v, ...(this.recentSearches || [])].filter((x, i, arr) => x && arr.indexOf(x) === i).slice(0, 8);
+            this.recentSearches = list;
+            localStorage.setItem('refrens_recent_searches', JSON.stringify(list));
+        },
+        goSearch(q) {
+            const v = String(q || this.searchQuery || '').trim();
+            if (!v) return;
+            this.saveRecentSearch(v);
+            window.location.href = `{{ route('shop.index') }}?q=${encodeURIComponent(v)}`;
+        },
+        async fetchSearch(q) {
+            this.searchLoading = true;
+            try {
+                const res = await fetch(`{{ route('shop.search') }}?q=${encodeURIComponent(q)}`, { headers: { 'Accept': 'application/json' } });
+                const data = await res.json();
+                this.searchResults = Array.isArray(data.results) ? data.results : [];
+                window.dispatchEvent(new CustomEvent('refrens:ui-refresh'));
+            } catch (e) {
+                this.searchResults = [];
+            } finally {
+                this.searchLoading = false;
+            }
+        },
+        openLocale() {
+            this.localeOpen = true;
+        },
+        closeLocale() {
+            this.localeOpen = false;
+        },
+        saveLocale() {
+            localStorage.setItem('refrens_locale', JSON.stringify({
+                shippingCountry: this.shippingCountry,
+                language: this.language,
+                currency: this.currency
+            }));
+            window.dispatchEvent(new CustomEvent('refrens:locale-updated'));
+            this.closeLocale();
+        },
+        resetLocale() {
+            this.shippingCountry = 'Indonesia';
+            this.language = 'Bahasa';
+            this.currency = 'IDR - Indonesian Rupiah';
+            this.saveLocale();
+        },
+        isEnglish() {
+            return String(this.language || '').toLowerCase().includes('english');
+        },
+        t(key) {
+            const en = this.isEnglish();
+            const map = {
+                title: en ? 'Settings' : 'Pengaturan',
+                subtitle: en ? 'Country, language, and currency' : 'Negara, bahasa, dan mata uang',
+                shipTo: en ? 'Ship to' : 'Dikirim ke',
+                language: en ? 'Language' : 'Bahasa',
+                currency: en ? 'Currency' : 'Mata Uang',
+                reset: en ? 'Reset' : 'Reset',
+                save: en ? 'Save' : 'Simpan',
+                navHome: en ? 'Home' : 'Beranda',
+                navShop: en ? 'Shop' : 'Toko',
+                navOrders: en ? 'My Orders' : 'Pesanan Saya',
+                navSignOut: en ? 'Sign Out' : 'Keluar',
+                navSignInRegister: en ? 'Sign In / Register' : 'Masuk / Daftar',
+            };
+            return map[key] || key;
+        },
+        currencyCode() {
+            return (this.currency || '').split(' - ')[0] || 'IDR';
+        }
+    }"
+    x-init="init()"
+    class="refrens-nav fixed top-0 inset-x-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-20 md:h-16 items-center">
             <div class="flex items-center gap-2">
@@ -111,8 +175,8 @@
                         </svg>
                     </button>
                 @endif
-                <a href="{{ url('/') }}" class="flex-shrink-0">
-                    <img class="refrens-logo h-20 md:h-16 w-auto object-contain" src="{{ asset('img/logoo.png') }}" alt="REFRENS">
+                <a href="{{ url('/') }}" class="flex-shrink-0 flex items-center !no-underline hover:!no-underline no-underline" style="text-decoration: none !important;">
+                    <span class="refrens-logo-text text-3xl md:text-4xl font-black text-blue-600 tracking-tighter uppercase" style="text-decoration: none !important;">REFRENS</span>
                 </a>
             </div>
 
@@ -155,10 +219,9 @@
         </div>
     </div>
 
-    <!-- Search Overlay -->
-    <div x-show="searchOpen" x-cloak class="fixed inset-0 z-[110]" @keydown.escape.window="closeSearch()">
+    <div x-show="searchOpen" x-cloak class="fixed inset-0 z-[90]" @keydown.escape.window="closeSearch()">
         <div class="fixed inset-0 bg-black/40 backdrop-blur-[2px]" @click="closeSearch()"></div>
-        <div class="fixed inset-x-0 top-0 bg-white shadow-2xl z-[111]">
+        <div class="fixed inset-x-0 top-0 bg-white shadow-2xl">
             <div class="max-w-3xl mx-auto px-4 py-4">
                 <div class="flex items-center gap-3">
                     <button type="button" @click="closeSearch()" class="text-gray-500 hover:text-gray-900">
@@ -233,11 +296,9 @@
     </div>
 
     <!-- Mobile Sidebar / Overlay -->
-    <div x-show="open" 
-         class="fixed inset-0 z-[300]" 
-         style="display: none;">
+<div x-show="open" x-cloak class="fixed inset-0 z-[9999]">
         <!-- Backdrop -->
-        <div class="fixed inset-0 bg-white" @click="open = false"
+        <div class="fixed inset-0 bg-black/30 backdrop-blur-[2px]" @click="open = false"
              x-show="open"
              x-transition:enter="ease-out duration-300"
              x-transition:enter-start="opacity-0"
@@ -246,38 +307,41 @@
              x-transition:leave-start="opacity-100"
              x-transition:leave-end="opacity-0"></div>
         
-        <!-- Sidebar Content -->
-        <div class="fixed inset-0 bg-white transform transition-transform duration-300 ease-in-out z-[301]"
-             :class="open ? 'translate-x-0' : '-translate-x-full'"
-             @click.stop>
+ <div class="fixed inset-y-0 left-0 w-[280px] bg-white z-[10000] shadow-2xl transform transition-transform duration-300 ease-in-out will-change-transform"
+     style="isolation:isolate; background:#fff !important; backdrop-filter:none !important;"
+     :class="open ? 'translate-x-0' : '-translate-x-full'"
+     @click.stop>
 
-            <div class="flex flex-col h-screen bg-white">
-                <div class="flex items-center justify-between p-5 border-b border-gray-100 bg-white h-28 md:h-24">
-                    <div class="flex items-center gap-4">
-                        <button type="button" @click="openSearch()" class="text-gray-900 hover:text-black focus:outline-none">
-                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            <div class="flex flex-col h-full">
+                <div class="flex items-center justify-between p-6 border-b border-gray-100">
+                    <div class="flex items-center gap-3">
+                        <button @click="open = false" class="text-gray-900 hover:text-black transition-colors">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
+                        <a href="{{ url('/') }}" class="flex-shrink-0 flex items-center !no-underline hover:!no-underline no-underline" style="text-decoration: none !important;">
+                            <span class="refrens-logo-text text-2xl font-black text-blue-600 tracking-tighter uppercase" style="text-decoration: none !important;">REFRENS</span>
+                        </a>
                     </div>
-                   
-                    <button @click="open = false" class="text-gray-400 hover:text-gray-600 transition-colors">
-                        <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+
+                    <button type="button" @click="openSearch()" class="text-gray-900 hover:text-black focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                         </svg>
                     </button>
                 </div>
 
-                <div class="flex-1 py-6 space-y-1 overflow-y-auto bg-white px-4">
+                <div class="flex-1 py-3 space-y-1">
                     <a href="{{ url('/') }}" 
-                       class="group flex items-center gap-3 px-6 py-3 text-base font-semibold transition-colors rounded-xl {{ (request()->is('/') || request()->is('')) ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
+                       class="group !no-underline flex items-center gap-3 px-6 py-3 text-base font-semibold transition-colors rounded-xl {{ (request()->is('/') || request()->is('')) ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}" style="text-decoration: none !important;">
                         <svg class="h-5 w-5 {{ (request()->is('/') || request()->is('')) ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                         </svg>
                         <span x-text="t('navHome')"></span>
                     </a>
                     <a href="{{ route('shop.index') }}" 
-                       class="group flex items-center gap-3 px-6 py-3 text-base font-semibold transition-colors rounded-xl {{ request()->routeIs('shop.*') ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
+                       class="group !no-underline flex items-center gap-3 px-6 py-3 text-base font-semibold transition-colors rounded-xl {{ request()->routeIs('shop.*') ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}" style="text-decoration: none !important;">
                         <svg class="h-5 w-5 {{ request()->routeIs('shop.*') ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                         </svg>
@@ -285,7 +349,7 @@
                     </a>
 
                     @auth
-                        <a href="{{ route('account.index', ['tab' => 'orders']) }}" class="group flex items-center gap-3 px-6 py-3 text-base font-semibold transition-colors rounded-xl {{ request()->routeIs('account.index') ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
+                        <a href="{{ route('account.index', ['tab' => 'orders']) }}" class="group !no-underline flex items-center gap-3 px-6 py-3 text-base font-semibold transition-colors rounded-xl {{ request()->routeIs('account.index') ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}" style="text-decoration: none !important;">
                             <svg class="h-5 w-5 {{ request()->routeIs('account.index') ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 8h10M7 12h10M7 16h6M5 6a2 2 0 012-2h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6z"/>
                             </svg>
@@ -293,7 +357,7 @@
                         </a>
                         <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Apakah Anda yakin ingin keluar?')">
                             @csrf
-                            <button type="submit" class="group w-full flex items-center gap-3 px-6 py-3 text-base font-semibold transition-colors rounded-xl text-red-600 hover:bg-red-50">
+                            <button type="submit" class="group w-full flex items-center gap-3 px-6 py-3 text-base font-semibold transition-colors rounded-xl text-red-600 hover:bg-red-50 !no-underline" style="text-decoration: none !important;">
                                 <svg class="h-5 w-5 text-red-500 group-hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 11-4 0v-1m0-10V5a2 2 0 114 0v1"/>
                                 </svg>
@@ -302,14 +366,14 @@
                         </form>
                     @else
                         <div class="px-6 pt-3">
-                            <a href="{{ route('account.index', ['login' => 1]) }}" class="flex items-center justify-center w-full px-4 py-3 bg-gray-900 text-white font-semibold rounded-xl hover:bg-black transition-colors shadow-lg shadow-gray-200">
+                            <a href="{{ route('account.index', ['login' => 1]) }}" class="flex items-center justify-center w-full px-4 py-3 bg-gray-900 text-white font-semibold rounded-xl hover:bg-black transition-colors shadow-lg shadow-gray-200 !no-underline" style="text-decoration: none !important;">
                                 <span x-text="t('navSignInRegister')"></span>
                             </a>
                         </div>
                     @endauth
                 </div>
 
-                <div class="border-t border-gray-100 p-4 bg-white">
+                <div class="border-t border-gray-100 p-4">
                     <button type="button" @click="openLocale()" class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors">
                         <div class="flex items-center gap-3">
                             <div class="w-9 h-6 rounded-md overflow-hidden shadow-sm ring-1 ring-black/10 bg-white">
