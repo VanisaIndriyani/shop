@@ -34,7 +34,7 @@
             register: en ? 'Register' : 'Daftar',
             logout: en ? 'Logout' : 'Keluar',
             findUs: en ? 'Find us on Instagram' : 'Temukan kami di Instagram',
-            allRights: en ? 'ALL RIGHTS RESERVED' : '',
+            allRights: en ? 'ALL RIGHTS' : '',
         };
         return map[key] || key;
     }
