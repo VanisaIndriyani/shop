@@ -51,7 +51,7 @@
 
     .shop-sticky-filter{
         position: sticky;
-        top: var(--nav-height);
+        top: calc(var(--nav-height) + 12px);
         z-index: 30;
         background: white;
         padding-top: 4px;

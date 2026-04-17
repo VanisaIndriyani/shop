@@ -73,7 +73,7 @@
     .refrens-shiprow{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px}
     .refrens-shiprow small{display:block;color:#6b7280;font-weight:600}
     .refrens-shipaction{color:#dc2626;font-weight:700;text-decoration:none}
-    .refrens-shipaction:hover{text-decoration:underline}
+    .refrens-shipaction:hover{text-decoration:none}
     .refrens-addbar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:#fff;border-top:1px solid rgba(0,0,0,.10);padding:10px 12px calc(10px + env(safe-area-inset-bottom))}
     .refrens-addbar__inner{max-width:520px;margin:0 auto;display:flex;align-items:center;gap:10px}
     .refrens-qty{display:flex;align-items:center;border:1px solid rgba(0,0,0,.10);border-radius:12px;overflow:hidden;height:44px}
@@ -94,6 +94,14 @@
     .refrens-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
     .refrens-grid .refrens-mini{width:auto}
     .refrens-sold{position:absolute;left:8px;bottom:8px;background:rgba(0,0,0,.55);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px}
+    .refrens-pdp-title{font-size:20px;font-weight:900;line-height:1.15;color:#111827;margin:0}
+    .refrens-pdp-price{font-size:18px;font-weight:900;color:#2563eb;margin:0}
+    .refrens-iconbtn{width:36px;height:36px;border-radius:999px;border:1px solid rgba(0,0,0,.08);background:#fff;display:flex;align-items:center;justify-content:center;color:#2563eb;padding:0}
+    .refrens-iconbtn:hover{background:rgba(37,99,235,.08);color:#1d4ed8}
+    @media (min-width: 768px){
+        .refrens-pdp-title{font-size:28px}
+        .refrens-pdp-price{font-size:20px}
+    }
     .swiper-wrapper {
         transition-timing-function: ease-out !important; /* Ganti ke ease-out agar lebih natural di akhir gerakan */
     }
@@ -252,9 +260,9 @@
                             <span class="badge rounded-pill text-bg-light border">{{ $product->category }}</span>
                         @endif
                     </div>
-                    <h1 class="text-xl fw-bold text-gray-900 mb-2">{{ $product->name }}</h1>
+                    <h1 class="refrens-pdp-title mb-2">{{ $product->name }}</h1>
                     <div class="d-flex align-items-center justify-content-between gap-3">
-                        <p class="h5 fw-bold text-blue-600 mb-0" data-money-idr="{{ (float) $product->price }}">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
+                        <p class="refrens-pdp-price" data-money-idr="{{ (float) $product->price }}">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
                         <div style="margin-top:-2px;">
                             @auth
                                 @php
@@ -264,20 +272,20 @@
                                     <form method="POST" action="{{ route('wishlist.destroy', $product) }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-link p-0 text-blue-600" aria-label="Remove from wishlist">
+                                        <button type="submit" class="refrens-iconbtn" aria-label="Remove from wishlist">
                                             <i class="bi bi-heart-fill" style="font-size:16px;"></i>
                                         </button>
                                     </form>
                                 @else
                                     <form method="POST" action="{{ route('wishlist.store', $product) }}">
                                         @csrf
-                                        <button type="submit" class="btn btn-link p-0 text-blue-600" aria-label="Add to wishlist">
+                                        <button type="submit" class="refrens-iconbtn" aria-label="Add to wishlist">
                                             <i class="bi bi-heart" style="font-size:16px;"></i>
                                         </button>
                                     </form>
                                 @endif
                             @else
-                                <a href="{{ route('account.index', ['login' => 1]) }}" class="btn btn-link p-0 text-blue-600" aria-label="Login">
+                                <a href="{{ route('account.index', ['login' => 1]) }}" class="refrens-iconbtn !no-underline" style="text-decoration: none !important;" aria-label="Login">
                                     <i class="bi bi-heart" style="font-size:16px;"></i>
                                 </a>
                             @endauth
@@ -297,6 +305,22 @@
                                     <button type="button" style="width:40px;height:40px" @click="quantity > 1 ? quantity-- : null">-</button>
                                     <input type="text" style="width:40px;height:40px" x-model="quantity" readonly>
                                     <button type="button" style="width:40px;height:40px" @click="quantity++">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="refrens-infocard p-3 mb-4 d-none d-md-block">
+                        <div class="d-flex align-items-start justify-content-between gap-3">
+                            <div>
+                                <div class="refrens-infocard__title">Jumlah</div>
+                                <div class="refrens-infocard__sub">Maks: {{ max(0, (int) $product->stock) }}</div>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="refrens-qty">
+                                    <button type="button" @click="quantity > 1 ? quantity-- : null">-</button>
+                                    <input type="text" x-model="quantity" readonly>
+                                    <button type="button" @click="quantity++">+</button>
                                 </div>
                             </div>
                         </div>
@@ -331,6 +355,9 @@
                                     {{ $s }}
                                 </button>
                             @endforeach
+                        </div>
+                        <div class="text-muted mt-2" style="font-size:11px;font-weight:600" x-show="size">
+                            Ukuran dipilih: <span class="fw-bold" x-text="size"></span>
                         </div>
                     </div>
 
@@ -490,7 +517,8 @@
             .refrens-cartitem__price{font-size:12px;font-weight:900;color:#111827;margin-top:6px}
             .refrens-cartitem__bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}
             .refrens-cartlinks{display:flex;gap:14px;align-items:center}
-            .refrens-cartlink{border:0;background:transparent;padding:0;font-size:11px;font-weight:800;color:#111827;text-decoration:underline}
+            .refrens-cartlink{border:0;background:transparent;padding:0;font-size:11px;font-weight:800;color:#111827;text-decoration:none}
+            .refrens-cartlink:hover{text-decoration:none}
             .refrens-cartqty{display:flex;align-items:center;border:1px solid rgba(0,0,0,.10);border-radius:999px;overflow:hidden;height:30px;background:#fff}
             .refrens-cartqty button{width:30px;height:30px;border:0;background:transparent;font-weight:900;color:#111827}
             .refrens-cartqty span{min-width:26px;text-align:center;font-weight:900;font-size:12px;color:#111827}

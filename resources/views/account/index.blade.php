@@ -381,7 +381,7 @@
                         <div class="mb-3">
                             <div class="input-group input-group-lg">
                                 <span class="input-group-text bg-white"><i class="bi bi-key"></i></span>
-                                <input name="password" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="form-control @error('password') is-invalid @enderror" placeholder="PIN (6 digit)" required>
+                                <input name="password" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="form-control @error('password') is-invalid @enderror" placeholder="Password" required>
                             </div>
                             @error('password') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                         </div>
@@ -437,7 +437,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">PIN (6 digit)</label>
+                            <label class="form-label fw-semibold">Password</label>
                             <input name="password" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="form-control form-control-lg @error('password') is-invalid @enderror" required>
                             @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>

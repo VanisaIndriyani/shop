@@ -62,7 +62,7 @@
                                 </div>
 
                                 <div class="col-12">
-                                    <label class="form-label fw-semibold">PIN (6 digit)</label>
+                                    <label class="form-label fw-semibold">Password</label>
                                     <div class="input-group input-group-lg">
                                         <input id="registerPassword" name="password" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="form-control @error('password') is-invalid @enderror" placeholder="••••••" required>
                                         <button class="btn btn-outline-secondary" type="button" data-toggle-password="#registerPassword">
