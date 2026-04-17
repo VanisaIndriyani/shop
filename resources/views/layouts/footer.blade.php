@@ -129,10 +129,7 @@
             </div>
 
             <!-- Copyright -->
-            <div class="py-4 flex justify-between items-center">
-                <p class="text-[5px] text-white tracking-[0.05em] font-black uppercase">© 2026 REFRENS.</p>
-                <p class="text-[5px] text-white tracking-[0.05em] font-black uppercase text-right" x-text="t('allRights')">ALL RIGHTS RESERVED.</p>
-            </div>
+          
         </div>
 
         <!-- DESKTOP: Grid Layout (Hidden on Desktop) -->
