@@ -442,7 +442,7 @@
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-3">
                     <div class="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-1" x-text="t('language')"></div>
                     <select x-model="language" class="w-full rounded-2xl border border-gray-200 bg-white px-3 py-2.5 text-sm font-semibold text-gray-900 focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
-                        <option value="Bahasa">Bahasa</option>
+                        <option value="Bahasa">Indonesia</option>
                         <option value="English">English</option>
                     </select>
                 </div>

@@ -85,7 +85,7 @@
     .checkout-terms a{color:#dc2626;font-weight:900;text-decoration:none}
 </style>
 
-<div class="checkout-wrap" x-data="{ paymentMethod: '{{ old('payment_method', 'bank_transfer') }}', paymentOpen: false, msgOpen: false, msgMode: 'front', msgText: '' }">
+<div class="checkout-wrap" x-data="{ paymentMethod: 'bank_transfer', msgOpen: false, msgMode: 'front', msgText: '' }">
     <div class="checkout-card">
         <div class="checkout-body">
             <div class="checkout-h1">Detail Alamat</div>
@@ -108,15 +108,14 @@
                 <div class="checkout-section">
                     <div class="checkout-section__title">Metode Pembayaran</div>
                     <input type="hidden" name="payment_method" x-model="paymentMethod">
-                    <button type="button" class="w-100 checkout-payrow" @click="paymentOpen = true">
+                    <div class="w-100 checkout-payrow">
                         <div class="checkout-payleft">
-                            <div class="tag">QRIS</div>
+                            <div class="tag">Transfer / QRIS</div>
                         </div>
                         <div class="checkout-payright">
-                            <span x-text="paymentMethod === 'bank_transfer' ? 'QRIS' : 'COD'"></span>
-                            <i class="bi bi-chevron-right"></i>
+                            <span>Transfer / QRIS</span>
                         </div>
-                    </button>
+                    </div>
                     @error('payment_method') <div class="text-danger small mt-2">{{ $message }}</div> @enderror
                     <div class="mt-3" x-show="paymentMethod === 'bank_transfer'">
                         <div class="checkout-label">QRIS</div>
@@ -223,34 +222,6 @@
             </div>
 
             <button type="button" class="checkout-msgbtn" @click="msgOpen = false">Konfirmasi</button>
-            <div class="pb-3"></div>
-        </div>
-    </div>
-</div>
-
-<div class="checkout-sheet" :class="paymentOpen ? 'is-open' : ''" x-cloak>
-    <div class="checkout-sheet__backdrop" @click="paymentOpen = false"></div>
-    <div class="checkout-sheet__panel">
-        <div class="px-3">
-            <div class="checkout-sheet__handle"></div>
-            <div class="d-flex align-items-center justify-content-between mb-2">
-                <div class="checkout-sheet__title">Metode Pembayaran</div>
-                <button type="button" class="btn btn-sm btn-light rounded-circle" @click="paymentOpen = false"><i class="bi bi-x-lg"></i></button>
-            </div>
-            <button type="button" class="w-100 checkout-sheet__item" @click="paymentMethod='bank_transfer'; paymentOpen=false">
-                <div>
-                    <div class="l">QRIS</div>
-                    <div class="s">Transfer / QRIS</div>
-                </div>
-                <i class="bi bi-check-circle-fill text-primary" x-show="paymentMethod === 'bank_transfer'"></i>
-            </button>
-            <button type="button" class="w-100 checkout-sheet__item" @click="paymentMethod='cod'; paymentOpen=false">
-                <div>
-                    <div class="l">COD</div>
-                    <div class="s">Bayar saat barang sampai</div>
-                </div>
-                <i class="bi bi-check-circle-fill text-primary" x-show="paymentMethod === 'cod'"></i>
-            </button>
             <div class="pb-3"></div>
         </div>
     </div>

@@ -24,17 +24,17 @@
     t(key) {
         const en = this.isEnglish();
         const map = {
-            about: 'ABOUT US',
-            account: 'ACCOUNT',
-            payment: 'PAYMENT',
-            shipping: 'Shipment Method',
+            about: en ? 'ABOUT US' : 'TENTANG KAMI',
+            account: en ? 'ACCOUNT' : 'AKUN',
+            payment: en ? 'PAYMENT' : 'PEMBAYARAN',
+            shipping: en ? 'Shipment Method' : 'METODE PENGIRIMAN',
             hi: en ? 'Hi,' : 'Hi,',
             orderHistory: en ? 'Order History' : 'Riwayat Pesanan',
             login: en ? 'Login' : 'Login',
             register: en ? 'Register' : 'Daftar',
             logout: en ? 'Logout' : 'Keluar',
-            findUs: en ? 'Find more about us on Instagram' : 'Temukan lebih banyak tentang kami di Instagram',
-            allRights: en ? 'ALL RIGHTS RESERVED.' : '',
+            findUs: en ? 'Find us on Instagram' : 'Temukan kami di Instagram',
+            allRights: en ? 'ALL RIGHTS RESERVED' : '',
         };
         return map[key] || key;
     }
@@ -45,14 +45,14 @@
         <div class="md:hidden space-y-0">
             <!-- ABOUT US -->
             <div x-data="{ open: false }" class="border-b border-white/30">
-                <button @click="open = !open" class="flex justify-between items-center w-full py-4 text-left font-bold text-[12px] uppercase focus:outline-none">
+                <button @click="open = !open" class="flex justify-between items-center w-full py-4 text-left font-bold text-[11px] uppercase focus:outline-none">
                     <span x-text="t('about')">ABOUT US</span>
                     <svg :class="{'rotate-180': open}" class="h-4 w-4 transform transition-transform duration-200 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
                     </svg>
                 </button>
                 <div x-show="open" x-collapse class="pb-4">
-                    <p class="text-[10px] font-medium text-blue-100 leading-relaxed uppercase">
+                    <p class="text-[8px] font-medium text-blue-100 leading-relaxed uppercase">
                         <span x-text="t('findUs')">Find more about us on Instagram</span> 
                         <a href="https://instagram.com/refrens.co" target="_blank" class="text-white font-bold !no-underline hover:text-blue-200 transition-colors" style="text-decoration: none !important;">@refrens.co</a>
                     </p>
@@ -61,7 +61,7 @@
 
             <!-- ACCOUNT -->
             <div x-data="{ open: false }" class="border-b border-white/30">
-                <button @click="open = !open" class="flex justify-between items-center w-full py-4 text-left font-bold text-[12px] uppercase focus:outline-none">
+                <button @click="open = !open" class="flex justify-between items-center w-full py-4 text-left font-bold text-[11px] uppercase focus:outline-none">
                     <span x-text="t('account')">ACCOUNT</span>
                     <svg :class="{'rotate-180': open}" class="h-4 w-4 transform transition-transform duration-200 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
@@ -70,17 +70,17 @@
                 <div x-show="open" x-collapse class="pb-4 space-y-4">
                     @auth
                         <div class="flex flex-col space-y-3">
-                            <div class="text-[10px] text-blue-200 italic font-medium uppercase"><span x-text="t('hi')"></span> {{ Auth::user()->name }}</div>
-                            <a href="{{ route('account.index', ['tab' => 'orders']) }}" class="text-[10px] font-bold text-white hover:text-blue-200 transition-colors uppercase !no-underline" style="text-decoration: none !important;" x-text="t('orderHistory')"></a>
+                            <div class="text-[8px] text-blue-200 italic font-medium uppercase"><span x-text="t('hi')"></span> {{ Auth::user()->name }}</div>
+                            <a href="{{ route('account.index', ['tab' => 'orders']) }}" class="text-[8px] font-bold text-white hover:text-blue-200 transition-colors uppercase !no-underline" style="text-decoration: none !important;" x-text="t('orderHistory')"></a>
                             <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Apakah Anda yakin ingin keluar?')">
                                 @csrf
-                                <button type="submit" class="text-[10px] font-bold text-red-400 hover:text-red-300 block w-full text-left uppercase !no-underline" style="text-decoration: none !important;" x-text="t('logout')"></button>
+                                <button type="submit" class="text-[8px] font-bold text-red-400 hover:text-red-300 block w-full text-left uppercase !no-underline" style="text-decoration: none !important;" x-text="t('logout')"></button>
                             </form>
                         </div>
                     @else
                         <div class="flex flex-col space-y-3 pt-2">
-                            <a href="{{ route('account.index', ['login' => 1]) }}" class="text-[10px] font-bold uppercase text-white hover:text-blue-100 transition-all !no-underline" style="text-decoration: none !important;" x-text="t('login')"></a>
-                            <a href="{{ route('account.index', ['register' => 1]) }}" class="text-[10px] font-bold uppercase text-white hover:text-blue-100 transition-all !no-underline" style="text-decoration: none !important;" x-text="t('register')"></a>
+                            <a href="{{ route('account.index', ['login' => 1]) }}" class="text-[8px] font-bold uppercase text-white hover:text-blue-100 transition-all !no-underline" style="text-decoration: none !important;" x-text="t('login')"></a>
+                            <a href="{{ route('account.index', ['register' => 1]) }}" class="text-[8px] font-bold uppercase text-white hover:text-blue-100 transition-all !no-underline" style="text-decoration: none !important;" x-text="t('register')"></a>
                         </div>
                     @endauth
                 </div>
@@ -88,7 +88,7 @@
 
             <!-- PAYMENT -->
             <div x-data="{ open: false }" class="border-b border-white/30">
-                <button @click="open = !open" class="flex justify-between items-center w-full py-4 text-left font-bold text-[12px] uppercase focus:outline-none">
+                <button @click="open = !open" class="flex justify-between items-center w-full py-4 text-left font-bold text-[11px] uppercase focus:outline-none">
                     <span x-text="t('payment')">PAYMENT</span>
                     <svg :class="{'rotate-180': open}" class="h-4 w-4 transform transition-transform duration-200 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
@@ -103,7 +103,7 @@
 
             <!-- SHIPPING -->
             <div x-data="{ open: false }" class="border-b border-white/30">
-                <button @click="open = !open" class="flex justify-between items-center w-full py-4 text-left font-bold text-[12px] uppercase focus:outline-none">
+                <button @click="open = !open" class="flex justify-between items-center w-full py-4 text-left font-bold text-[11px] uppercase focus:outline-none">
                     <span x-text="t('shipping')">Shipment Method</span>
                     <svg :class="{'rotate-180': open}" class="h-4 w-4 transform transition-transform duration-200 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
@@ -130,8 +130,8 @@
 
             <!-- Copyright -->
             <div class="py-6 flex justify-between items-center">
-                <p class="text-[7px] text-white tracking-[0.05em] font-black uppercase">© 2026 REFRENS.</p>
-                <p class="text-[7px] text-white tracking-[0.05em] font-black uppercase text-right" x-text="t('allRights')">ALL RIGHTS RESERVED.</p>
+                <p class="text-[6px] text-white tracking-[0.05em] font-black uppercase">© 2026 REFRENS.</p>
+                <p class="text-[6px] text-white tracking-[0.05em] font-black uppercase text-right" x-text="t('allRights')">ALL RIGHTS RESERVED.</p>
             </div>
         </div>
 
@@ -139,9 +139,9 @@
         <div class="hidden md:grid md:grid-cols-4 gap-12 py-20">
             <!-- ABOUT US -->
             <div>
-                <h3 class="text-[12px] font-bold uppercase mb-6" x-text="t('about')">ABOUT US</h3>
+                <h3 class="text-[11px] font-bold uppercase mb-6" x-text="t('about')">ABOUT US</h3>
                 <div class="space-y-4">
-                    <p class="text-[10px] text-blue-100 leading-relaxed uppercase"><span x-text="t('findUs')">Find more about us on Instagram</span> <a href="https://instagram.com/refrens.co" target="_blank" class="text-white !no-underline" style="text-decoration: none !important;">@refrens.co</a></p>
+                    <p class="text-[8px] text-blue-100 leading-relaxed uppercase"><span x-text="t('findUs')">Find more about us on Instagram</span> <a href="https://instagram.com/refrens.co" target="_blank" class="text-white !no-underline" style="text-decoration: none !important;">@refrens.co</a></p>
                     <div class="flex space-x-5">
                         <a href="https://www.instagram.com/refrens.co" target="_blank" class="text-white hover:text-blue-200 transition-colors">
                             <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772 A4.902 4.902 0 015.468 2.53c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd" /></svg>
@@ -155,8 +155,8 @@
 
             <!-- ACCOUNT -->
             <div>
-                <h3 class="text-[12px] font-bold uppercase mb-6" x-text="t('account')">ACCOUNT</h3>
-                <div class="flex flex-col space-y-3 text-[10px]">
+                <h3 class="text-[11px] font-bold uppercase mb-6" x-text="t('account')">ACCOUNT</h3>
+                <div class="flex flex-col space-y-3 text-[8px]">
                     @auth
                         <a href="{{ route('account.index', ['tab' => 'orders']) }}" class="text-blue-100 hover:text-white transition-colors uppercase font-bold !no-underline" style="text-decoration: none !important;" x-text="t('orderHistory')">ORDER HISTORY</a>
                         <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Apakah Anda yakin ingin keluar?')">
@@ -164,15 +164,15 @@
                             <button type="submit" class="text-red-400 hover:text-red-300 text-left uppercase font-bold !no-underline" style="text-decoration: none !important;" x-text="t('logout')">LOGOUT</button>
                         </form>
                     @else
-                        <a href="{{ route('account.index', ['login' => 1]) }}" class="text-blue-100 hover:text-white transition-colors uppercase font-bold !no-underline" style="text-decoration: none !important;" x-text="t('login')">LOGIN</a>
-                        <a href="{{ route('account.index', ['register' => 1]) }}" class="text-blue-100 hover:text-white transition-colors uppercase font-bold !no-underline" style="text-decoration: none !important;" x-text="t('register')">REGISTER</a>
+                        <a href="{{ route('account.index', ['login' => 1]) }}" class="text-[7px] text-blue-100 hover:text-white transition-colors uppercase font-bold !no-underline" style="text-decoration: none !important;" x-text="t('login')">LOGIN</a>
+                        <a href="{{ route('account.index', ['register' => 1]) }}" class="text-[7px] text-blue-100 hover:text-white transition-colors uppercase font-bold !no-underline" style="text-decoration: none !important;" x-text="t('register')">REGISTER</a>
                     @endauth
                 </div>
             </div>
 
             <!-- PAYMENT -->
             <div>
-                <h3 class="text-[12px] font-bold uppercase mb-6" x-text="t('payment')">PAYMENT</h3>
+                <h3 class="text-[11px] font-bold uppercase mb-6" x-text="t('payment')">PAYMENT</h3>
                 <div class="flex justify-start">
                     <img src="{{ asset('img/pay.png') }}" alt="PAYMENT" class="h-auto w-[180px] object-contain" loading="lazy">
                 </div>
@@ -180,7 +180,7 @@
 
             <!-- SHIPPING -->
             <div>
-                <h3 class="text-[12px] font-bold uppercase mb-6" x-text="t('shipping')">Shipment Method</h3>
+                <h3 class="text-[11px] font-bold uppercase mb-6" x-text="t('shipping')">Shipment Method</h3>
                 <div class="flex justify-start items-center">
                     <img src="{{ asset('img/jne.png') }}" alt="Shipment Method" class="h-auto" style="width: 70px !important;" loading="lazy">
                 </div>

@@ -27,7 +27,7 @@ class CheckoutController extends Controller
     {
         $request->validate([
             'address' => 'required|string|max:255',
-            'payment_method' => 'required|in:bank_transfer,cod',
+            'payment_method' => 'required|in:bank_transfer',
             'payment_proof' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 

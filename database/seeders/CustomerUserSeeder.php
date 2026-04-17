@@ -98,7 +98,7 @@ class CustomerUserSeeder extends Seeder
             ],
             [
                 'status' => 'processing',
-                'payment_method' => 'cod',
+                'payment_method' => 'bank_transfer',
                 'shipping_courier' => null,
                 'tracking_number' => null,
                 'shipped_at' => null,
@@ -125,7 +125,7 @@ class CustomerUserSeeder extends Seeder
             ],
             [
                 'status' => 'cancelled',
-                'payment_method' => 'cod',
+                'payment_method' => 'bank_transfer',
                 'shipping_courier' => null,
                 'tracking_number' => null,
                 'shipped_at' => null,
