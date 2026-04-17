@@ -176,7 +176,7 @@
                     </button>
                 @endif
                 <a href="{{ url('/') }}" class="flex-shrink-0 flex items-center !no-underline hover:!no-underline no-underline" style="text-decoration: none !important;">
-                    <span class="refrens-logo-text text-3xl md:text-4xl font-black text-blue-600 tracking-tighter uppercase" style="text-decoration: none !important;">REFRENS</span>
+                    <span class="refrens-logo-text text-2xl md:text-3xl font-black text-blue-600 tracking-tighter uppercase" style="text-decoration: none !important;">REFRENS</span>
                 </a>
             </div>
 
@@ -321,7 +321,7 @@
                             </svg>
                         </button>
                         <a href="{{ url('/') }}" class="flex-shrink-0 flex items-center !no-underline hover:!no-underline no-underline" style="text-decoration: none !important;">
-                            <span class="refrens-logo-text text-2xl font-black text-blue-600 tracking-tighter uppercase" style="text-decoration: none !important;">REFRENS</span>
+                            <span class="refrens-logo-text text-xl font-black text-blue-600 tracking-tighter uppercase" style="text-decoration: none !important;">REFRENS</span>
                         </a>
                     </div>
 
