@@ -86,13 +86,8 @@
     </div>
     <div class="col-12 col-xl-4">
         <div class="card content-card">
-            <div class="card-header bg-white border-0 px-4 py-3">
-                <div class="fw-bold">Status Pesanan</div>
-                <div class="text-muted small">Distribusi status saat ini</div>
-            </div>
-            <div class="card-body px-4 py-3">
-                <canvas id="statusChart" height="140"></canvas>
-            </div>
+         
+           
         </div>
     </div>
 </div>
