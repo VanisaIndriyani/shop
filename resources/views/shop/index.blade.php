@@ -12,7 +12,7 @@
 <style>
     .refrens-sheet{position:fixed;inset:0;z-index:20000;opacity:0;pointer-events:none;transition:opacity .2s ease}
     .refrens-sheet:target{opacity:1;pointer-events:auto}
-    .refrens-sheet__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(2px)}
+    .refrens-sheet__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35)}
     .refrens-sheet__panel{position:absolute;left:0;right:0;bottom:0;max-height:86vh;background:#fff;border-top-left-radius:22px;border-top-right-radius:22px;overflow:hidden;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .22s cubic-bezier(.22,.61,.36,1)}
     .refrens-sheet:target .refrens-sheet__panel{transform:translateY(0)}
     .refrens-sheet__panel form{flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch}
