@@ -12,7 +12,7 @@
 <style>
     .refrens-sheet{position:fixed;inset:0;z-index:20000;opacity:0;pointer-events:none;transition:opacity .2s ease}
     .refrens-sheet:target{opacity:1;pointer-events:auto}
-    .refrens-sheet__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35)}
+    .refrens-sheet__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(2px)}
     .refrens-sheet__panel{position:absolute;left:0;right:0;bottom:0;max-height:86vh;background:#fff;border-top-left-radius:22px;border-top-right-radius:22px;overflow:hidden;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .22s cubic-bezier(.22,.61,.36,1)}
     .refrens-sheet:target .refrens-sheet__panel{transform:translateY(0)}
     .refrens-sheet__panel form{flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch}
@@ -22,13 +22,11 @@
     .refrens-sheet__close{width:44px;height:44px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:transparent;color:#111827;text-decoration:none !important}
     .refrens-sheet__close:hover{background:rgba(0,0,0,.04)}
     .refrens-sheet__body{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:0 16px}
-    .refrens-topbtn{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border:1px solid #2563eb;border-radius:12px;background:#fff;color:#2563eb;font-weight:700;font-size:14px;transition:transform .15s ease,background-color .15s ease,color .15s ease;font-variation-settings:normal;text-decoration:none !important}
-    .refrens-topbtn svg{width:18px;height:18px;flex:0 0 auto}
+    .refrens-topbtn{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border:1px solid #2563eb;border-radius:12px;background:#fff;color:#2563eb;font-weight:700;font-size:14px;transition:transform .15s ease,background-color .15s ease,color .15s ease;text-decoration:none !important}
     .refrens-topbtn *{text-decoration:none !important}
     .refrens-topbtn:hover{background:rgba(37,99,235,.08);text-decoration:none !important}
     .refrens-topbtn:active{transform:scale(.98)}
-    .refrens-topbtn--active,.refrens-topbtn--selected{background:#2563eb;color:#fff;font-weight:900;text-decoration:none !important}
-    .refrens-topbtn--active svg,.refrens-topbtn--selected svg{transform:scale(1.08)}
+    .refrens-topbtn--active{background:#2563eb;color:#fff;text-decoration:none !important}
     .refrens-accordion{border-bottom:1px solid rgba(0,0,0,.08);padding:14px 0}
     .refrens-accordion summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-weight:800;font-size:14px;color:#111827;padding:10px 0}
     .refrens-accordion summary::-webkit-details-marker{display:none}
@@ -40,12 +38,17 @@
     .refrens-pill--active{background:rgba(37,99,235,.10);border-color:rgba(37,99,235,.75);color:#1d4ed8}
     .refrens-applybar{position:sticky;bottom:0;background:#fff;padding:14px 16px;border-top:1px solid rgba(0,0,0,.08)}
     .refrens-check{display:flex;align-items:center;gap:12px;padding:12px 0}
-    .refrens-check input{appearance:none !important;-webkit-appearance:none !important;width:18px;height:18px;border:2px solid rgba(37,99,235,.85);border-radius:4px;background:#fff;position:relative;flex:0 0 auto;background-image:none !important;box-shadow:none !important;outline:none !important}
+    .refrens-check input{appearance:none !important;-webkit-appearance:none !important;width:18px;height:18px;border:2px solid rgba(15,23,42,.22);border-radius:4px;background:#fff;position:relative;flex:0 0 auto;background-image:none !important;box-shadow:none !important;outline:none !important}
     .refrens-check input:focus{box-shadow:0 0 0 3px rgba(37,99,235,.18) !important}
     .refrens-check input:checked{background:#fff;border-color:#2563eb}
     .refrens-check input:checked::after{content:'';position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #2563eb;border-width:0 2px 2px 0;transform:rotate(45deg)}
     .refrens-check input[type="radio"]{border-radius:999px}
     .refrens-check input[type="radio"]:checked::after{left:50%;top:50%;width:8px;height:8px;border-radius:999px;border:0;background:#2563eb;transform:translate(-50%,-50%)}
+    .refrens-check input[type="radio"]:checked + .refrens-check__label{color:#2563eb;font-weight:900}
+    .refrens-check input[type="checkbox"]{border-color:rgba(37,99,235,.55)}
+    .refrens-check input[type="checkbox"]:checked{background:#2563eb;border-color:#2563eb}
+    .refrens-check input[type="checkbox"]:checked::after{border-color:#fff}
+    .refrens-check input[type="checkbox"]:checked + .refrens-check__label{color:#2563eb;font-weight:900}
     .refrens-check__label{font-weight:700;color:#111827;font-size:14px}
     .refrens-more{display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 0;border:0;background:transparent;color:#111827;font-weight:700;font-size:13px}
     .refrens-more i{transition:transform .15s ease}
@@ -54,9 +57,8 @@
     .refrens-catwrap.is-open .refrens-cat-extra{display:flex}
     .refrens-sortitem{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(0,0,0,.08)}
     .refrens-sortitem:last-child{border-bottom:0}
-    .refrens-sortitem__label{font-weight:500;font-size:14px;color:#111827}
+    .refrens-sortitem__label{font-weight:700;font-size:14px;color:#111827}
     .refrens-sortitem__check{opacity:0;color:#2563eb}
-    .refrens-sortitem input:checked + .refrens-sortitem__label{font-weight:900;color:#0f172a}
     .refrens-sortitem input:checked ~ .refrens-sortitem__check{opacity:1}
     .refrens-sizegrid{display:flex;flex-wrap:wrap;gap:10px}
 
@@ -98,26 +100,64 @@
             border-bottom: 0;
             background: transparent;
         }
+        .refrens-topbtn i {
+    font-size: 18px;
+}
+.refrens-topbtn i {
+    font-size: 16px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+}
+
+.refrens-topbtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px; /* biar lebih rapet kayak gambar */
+}
     }
 </style>
 
 <div class="bg-white min-h-screen">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         
-        <div class="grid grid-cols-2 gap-3 mb-8 shop-sticky-filter">
-            <a id="shopFilterBtn" href="#filter" class="refrens-topbtn {{ $hasFilters ? 'refrens-topbtn--selected' : '' }}">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                </svg>
-                <span>Filter</span>
-            </a>
-            <a id="shopSortBtn" href="#sort" class="refrens-topbtn {{ $hasSort ? 'refrens-topbtn--selected' : '' }}">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 4h12M3 8h8M3 12h5M18 7v13m0 0l-3-3m3 3l3-3" />
-                </svg>
-                <span>Urutan</span>
-            </a>
-        </div>
+       <div class="grid grid-cols-2 gap-3 mb-8 shop-sticky-filter">
+    
+    <a id="shopFilterBtn" href="#filter" class="refrens-topbtn">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+            <line x1="6" y1="4" x2="6" y2="20"></line>
+            <circle cx="6" cy="10" r="2"></circle>
+
+            <line x1="12" y1="4" x2="12" y2="20"></line>
+            <circle cx="12" cy="6" r="2"></circle>
+
+            <line x1="18" y1="4" x2="18" y2="20"></line>
+            <circle cx="18" cy="14" r="2"></circle>
+        </svg>
+        <span>Filter</span>
+    </a>
+
+    <!-- URUTAN -->
+    <a id="shopSortBtn" href="#sort" class="refrens-topbtn">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+            
+            <!-- garis list -->
+            <line x1="10" y1="6" x2="20" y2="6"></line>
+            <line x1="10" y1="12" x2="20" y2="12"></line>
+            <line x1="10" y1="18" x2="20" y2="18"></line>
+
+           
+
+            <!-- panah bawah -->
+            <line x1="3" y1="4" x2="3" y2="18"></line>
+            <polyline points="1,16 3,18 5,16"></polyline>
+
+        </svg>
+        <span>Urutan</span>
+    </a>
+
+</div>
 
         <div id="filter" class="refrens-sheet" role="dialog" aria-modal="true">
             <a class="refrens-sheet__backdrop" href="{{ request()->fullUrl() }}" aria-label="Close"></a>
@@ -330,8 +370,8 @@
                             ['name_desc','Nama Produk (Z-A)'],
                         ] as [$val, $label])
                             <label class="refrens-sortitem">
-                                <input class="visually-hidden" type="radio" name="sort" value="{{ $val }}" {{ $sort === $val ? 'checked' : '' }} onchange="this.form.submit()">
                                 <div class="refrens-sortitem__label">{{ $label }}</div>
+                                <input class="visually-hidden" type="radio" name="sort" value="{{ $val }}" {{ $sort === $val ? 'checked' : '' }} onchange="this.form.submit()">
                                 <i class="bi bi-check2 refrens-sortitem__check"></i>
                             </label>
                         @endforeach
