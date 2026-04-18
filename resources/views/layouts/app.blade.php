@@ -20,6 +20,7 @@
         <style>
             html {
                 scroll-behavior: auto;
+                overflow-x: hidden;
             }
             :root{
                 --bs-primary:#2563eb;
@@ -29,6 +30,7 @@
             }
             body {
                 font-family: 'Poppins', sans-serif;
+                overflow-x: hidden;
             }
             .font-sans{font-family:'Poppins',sans-serif !important}
             [x-cloak] { display: none !important; }

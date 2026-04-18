@@ -147,7 +147,7 @@
                         $gallery = [$product->image];
                     }
                 @endphp
-                <div class="position-relative -mx-4 sm:mx-0">
+                <div class="position-relative">
                     @if(!empty($gallery))
                         <div class="swiper refrens-productswiper refrens-productswiper--main refrens-productframe">
                             <div class="swiper-wrapper">

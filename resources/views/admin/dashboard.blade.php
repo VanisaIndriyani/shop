@@ -1,68 +1,88 @@
 @extends('layouts.admin')
 
 @section('content')
+<style>
+    .admin-hero{border:0;border-radius:18px;overflow:hidden;box-shadow:0 12px 30px rgba(16,24,40,.06);background:linear-gradient(135deg,#2563eb,#4f46e5)}
+    .admin-hero__inner{padding:18px 18px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .admin-hero__title{font-weight:900;font-size:22px;line-height:1.1}
+    .admin-hero__sub{font-weight:700;color:rgba(255,255,255,.82);margin-top:6px}
+    .admin-hero__actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .admin-hero__btn{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:999px;padding:10px 14px;font-weight:900;text-decoration:none}
+    .admin-hero__btn:hover{background:rgba(255,255,255,.18);color:#fff}
+    .admin-stat{border:0;border-radius:18px;box-shadow:0 12px 30px rgba(16,24,40,.06)}
+    .admin-stat__icon{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center}
+    .admin-mini{border:0;border-radius:18px;box-shadow:0 12px 30px rgba(16,24,40,.06)}
+    .admin-mini__title{font-weight:900}
+    .admin-chartbox{position:relative;height:180px}
+    .admin-chartbox canvas{width:100% !important;height:100% !important}
+    @media (min-width: 768px){
+        .admin-chartbox{height:220px}
+    }
+</style>
+
+<div class="admin-hero mb-4">
+    <div class="admin-hero__inner">
+        <div class="min-w-0">
+            <div class="admin-hero__title">Dashboard</div>
+            <div class="admin-hero__sub">Ringkasan toko & aktivitas terbaru</div>
+        </div>
+        <div class="admin-hero__actions">
+            <a href="{{ route('admin.orders.index') }}" class="admin-hero__btn"><i class="bi bi-cart3 me-1"></i> Pesanan</a>
+            <a href="{{ route('admin.products.index') }}" class="admin-hero__btn"><i class="bi bi-box-seam me-1"></i> Produk</a>
+            <a href="{{ route('admin.messages.index') }}" class="admin-hero__btn"><i class="bi bi-chat-dots me-1"></i> Pesan</a>
+            <a href="{{ route('admin.reports.index') }}" class="admin-hero__btn"><i class="bi bi-file-earmark-text me-1"></i> Laporan</a>
+        </div>
+    </div>
+</div>
+
 <div class="row g-4 mb-4">
     <div class="col-12 col-md-6 col-xl-3">
-        <div class="card content-card">
+        <div class="card admin-stat">
             <div class="card-body d-flex align-items-center justify-content-between">
                 <div>
                     <div class="text-muted fw-semibold small">Total Pesanan</div>
                     <div class="fs-3 fw-bold mt-1">{{ $totalOrders }}</div>
                 </div>
-                <div class="bg-primary bg-opacity-10 text-primary rounded-4 d-flex align-items-center justify-content-center" style="width:52px;height:52px;">
+                <div class="admin-stat__icon bg-primary bg-opacity-10 text-primary">
                     <i class="bi bi-cart3 fs-4"></i>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-12 col-md-6 col-xl-3">
-        <div class="card content-card">
-            <div class="card-body d-flex align-items-center justify-content-between">
-                <div>
-                    <div class="text-muted fw-semibold small">Pesan Belum Dibaca</div>
-                    <div class="fs-3 fw-bold mt-1">{{ $unreadMessages ?? 0 }}</div>
-                    <a href="{{ route('admin.messages.index') }}" class="small fw-semibold text-primary text-decoration-none">Lihat pesan</a>
-                </div>
-                <div class="bg-info bg-opacity-10 text-info rounded-4 d-flex align-items-center justify-content-center" style="width:52px;height:52px;">
-                    <i class="bi bi-chat-dots fs-4"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-md-6 col-xl-3">
-        <div class="card content-card">
+        <div class="card admin-stat">
             <div class="card-body d-flex align-items-center justify-content-between">
                 <div>
                     <div class="text-muted fw-semibold small">Pendapatan Selesai</div>
                     <div class="fs-5 fw-bold mt-2">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</div>
                 </div>
-                <div class="bg-success bg-opacity-10 text-success rounded-4 d-flex align-items-center justify-content-center" style="width:52px;height:52px;">
+                <div class="admin-stat__icon bg-success bg-opacity-10 text-success">
                     <i class="bi bi-currency-dollar fs-4"></i>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-12 col-md-6 col-xl-3">
-        <div class="card content-card">
+        <div class="card admin-stat">
             <div class="card-body d-flex align-items-center justify-content-between">
                 <div>
                     <div class="text-muted fw-semibold small">Total Customer</div>
                     <div class="fs-3 fw-bold mt-1">{{ $totalCustomers }}</div>
                 </div>
-                <div class="bg-warning bg-opacity-10 text-warning rounded-4 d-flex align-items-center justify-content-center" style="width:52px;height:52px;">
+                <div class="admin-stat__icon bg-warning bg-opacity-10 text-warning">
                     <i class="bi bi-people fs-4"></i>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-12 col-md-6 col-xl-3">
-        <div class="card content-card">
+        <div class="card admin-stat">
             <div class="card-body d-flex align-items-center justify-content-between">
                 <div>
                     <div class="text-muted fw-semibold small">Total Produk</div>
                     <div class="fs-3 fw-bold mt-1">{{ $totalProducts }}</div>
                 </div>
-                <div class="bg-danger bg-opacity-10 text-danger rounded-4 d-flex align-items-center justify-content-center" style="width:52px;height:52px;">
+                <div class="admin-stat__icon bg-danger bg-opacity-10 text-danger">
                     <i class="bi bi-box-seam fs-4"></i>
                 </div>
             </div>
@@ -85,9 +105,27 @@
         </div>
     </div>
     <div class="col-12 col-xl-4">
-        <div class="card content-card">
-         
-           
+        <div class="card admin-mini">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-start justify-content-between gap-3">
+                    <div>
+                        <div class="admin-mini__title">Status Pesanan</div>
+                        <div class="text-muted small">Ringkasan semua status</div>
+                    </div>
+                    <a href="{{ route('admin.orders.index') }}" class="btn btn-sm btn-outline-primary rounded-pill">Detail</a>
+                </div>
+
+                <div class="mt-3 admin-chartbox">
+                    <canvas id="statusChart"></canvas>
+                </div>
+
+                <div class="mt-3 d-flex align-items-center justify-content-between gap-3">
+                    <div>
+                        <div class="text-muted small fw-semibold">Pesan belum dibaca</div>
+                        <div class="fw-bold fs-4">{{ $unreadMessages ?? 0 }}</div>
+                    </div>
+                    <a href="{{ route('admin.messages.index') }}" class="btn btn-primary rounded-pill fw-bold px-4">Buka Pesan</a>
+                </div>
         </div>
     </div>
 </div>
@@ -259,8 +297,12 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: 'bottom' }
+                        legend: {
+                            position: 'bottom',
+                            labels: { boxWidth: 10, boxHeight: 10, padding: 10, font: { size: 11, weight: '700' } }
+                        }
                     },
                     cutout: '68%'
                 }

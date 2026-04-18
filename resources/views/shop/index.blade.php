@@ -10,31 +10,48 @@
 @endphp
 
 <style>
-    .refrens-sheet{display:none;position:fixed;inset:0;z-index:1000}
-    .refrens-sheet:target{display:block}
-    .refrens-sheet__backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(2px)}
-    .refrens-sheet__panel{position:fixed;left:0;right:0;bottom:0;max-height:86vh;background:#fff;border-top-left-radius:22px;border-top-right-radius:22px;overflow:auto}
-    .refrens-sheet__handle{width:56px;height:6px;border-radius:999px;background:#e5efff;margin:10px auto}
+    .refrens-sheet{position:fixed;inset:0;z-index:20000;opacity:0;pointer-events:none;transition:opacity .2s ease}
+    .refrens-sheet:target{opacity:1;pointer-events:auto}
+    .refrens-sheet__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(2px)}
+    .refrens-sheet__panel{position:absolute;left:0;right:0;bottom:0;max-height:86vh;background:#fff;border-top-left-radius:22px;border-top-right-radius:22px;overflow:hidden;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .22s cubic-bezier(.22,.61,.36,1)}
+    .refrens-sheet:target .refrens-sheet__panel{transform:translateY(0)}
+    .refrens-sheet__panel form{flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch}
+    .refrens-sheet__header{display:flex;align-items:center;justify-content:space-between;padding:18px 16px;border-bottom:1px solid rgba(0,0,0,.08);background:#fff}
+    .refrens-sheet__title{font-weight:900;font-size:24px;line-height:1.1;color:#111827}
+    .refrens-sheet__title--sort{font-size:16px}
+    .refrens-sheet__close{width:44px;height:44px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:transparent;color:#111827;text-decoration:none !important}
+    .refrens-sheet__close:hover{background:rgba(0,0,0,.04)}
+    .refrens-sheet__body{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:0 16px}
     .refrens-topbtn{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border:1px solid #2563eb;border-radius:12px;background:#fff;color:#2563eb;font-weight:700;font-size:14px;transition:transform .15s ease,background-color .15s ease,color .15s ease;text-decoration:none !important}
     .refrens-topbtn *{text-decoration:none !important}
     .refrens-topbtn:hover{background:rgba(37,99,235,.08);text-decoration:none !important}
     .refrens-topbtn:active{transform:scale(.98)}
     .refrens-topbtn--active{background:#2563eb;color:#fff;text-decoration:none !important}
-    .refrens-accordion{border-bottom:1px solid rgba(0,0,0,.06);padding:12px 0}
-    .refrens-accordion summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-weight:800}
+    .refrens-accordion{border-bottom:1px solid rgba(0,0,0,.08);padding:14px 0}
+    .refrens-accordion summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-weight:800;font-size:14px;color:#111827;padding:10px 0}
     .refrens-accordion summary::-webkit-details-marker{display:none}
+    .refrens-accordion summary i{transition:transform .15s ease}
+    .refrens-accordion[open] summary i{transform:rotate(180deg)}
     .refrens-pill{position:relative;display:inline-flex;align-items:center;justify-content:center;padding:.42rem .8rem;border:1px solid rgba(37,99,235,.35);border-radius:10px;font-weight:800;font-size:.82rem;background:#fff;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
     .refrens-pill input{display:none}
     .refrens-pill__label{display:inline-flex;align-items:center;justify-content:center}
     .refrens-pill--active{background:rgba(37,99,235,.10);border-color:rgba(37,99,235,.75);color:#1d4ed8}
-    .refrens-applybar{position:sticky;bottom:0;background:#fff;padding:14px;border-top:1px solid rgba(0,0,0,.06)}
-    .refrens-radio{display:flex;align-items:center;gap:12px;padding:10px 0}
-    .refrens-radio .form-check-input{margin:0;accent-color:#2563eb}
-    .refrens-radio .refrens-radio__label{font-weight:700;color:#111827}
-    .refrens-radio .form-check-input:checked + .refrens-radio__label{color:#2563eb}
-    .refrens-sortitem{display:flex;align-items:center;justify-content:space-between;padding:14px 14px;border-bottom:1px solid rgba(0,0,0,.06)}
+    .refrens-applybar{position:sticky;bottom:0;background:#fff;padding:14px 16px;border-top:1px solid rgba(0,0,0,.08)}
+    .refrens-check{display:flex;align-items:center;gap:12px;padding:12px 0}
+    .refrens-check input{appearance:none;-webkit-appearance:none;width:18px;height:18px;border:2px solid rgba(37,99,235,.85);border-radius:4px;background:#fff;position:relative;flex:0 0 auto}
+    .refrens-check input:checked{background:#fff;border-color:#2563eb}
+    .refrens-check input:checked::after{content:'';position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #2563eb;border-width:0 2px 2px 0;transform:rotate(45deg)}
+    .refrens-check input[type="radio"]{border-radius:999px}
+    .refrens-check input[type="radio"]:checked::after{left:4px;top:4px;width:8px;height:8px;border-radius:999px;border:0;background:#2563eb;transform:none}
+    .refrens-check__label{font-weight:700;color:#111827;font-size:14px}
+    .refrens-more{display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 0;border:0;background:transparent;color:#111827;font-weight:700;font-size:13px}
+    .refrens-more i{transition:transform .15s ease}
+    .refrens-more.is-open i{transform:rotate(180deg)}
+    .refrens-cat-extra{display:none}
+    .refrens-catwrap.is-open .refrens-cat-extra{display:flex}
+    .refrens-sortitem{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(0,0,0,.08)}
     .refrens-sortitem:last-child{border-bottom:0}
-    .refrens-sortitem__label{font-weight:700}
+    .refrens-sortitem__label{font-weight:700;font-size:14px;color:#111827}
     .refrens-sortitem__check{opacity:0;color:#2563eb}
     .refrens-sortitem input:checked ~ .refrens-sortitem__check{opacity:1}
     .refrens-sizegrid{display:flex;flex-wrap:wrap;gap:10px}
@@ -97,18 +114,14 @@
         <div id="filter" class="refrens-sheet" role="dialog" aria-modal="true">
             <a class="refrens-sheet__backdrop" href="{{ request()->fullUrl() }}" aria-label="Close"></a>
             <div class="refrens-sheet__panel">
-                <div class="px-4 pt-2 pb-3">
-                    <div class="refrens-sheet__handle"></div>
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                        <div class="fw-bold fs-5">Filter</div>
-                        <a href="{{ request()->fullUrl() }}" class="btn btn-sm btn-light rounded-circle" aria-label="Close">
-                            <i class="bi bi-x-lg"></i>
-                        </a>
-                    </div>
+                <div class="refrens-sheet__header">
+                    <div class="refrens-sheet__title">Filter</div>
+                    <a href="{{ request()->fullUrl() }}" class="refrens-sheet__close" aria-label="Close">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
                 </div>
-
                 <form action="{{ route('shop.index') }}" method="GET">
-                    <div class="px-4 pb-3">
+                    <div class="refrens-sheet__body">
                         @if(request('q'))
                             <input type="hidden" name="q" value="{{ request('q') }}">
                         @endif
@@ -124,20 +137,32 @@
                             <div class="pt-3">
                                 @php
                                     $categoryList = $categories instanceof \Illuminate\Support\Collection ? $categories->values() : collect($categories)->values();
-                                    $hasCategoryParam = request()->has('category');
-                                    $categorySelected = (string) request('category', '');
+                                    $selectedCategories = [];
+                                    if (request()->filled('category')) {
+                                        $selectedCategories[] = (string) request('category');
+                                    }
+                                    if (request()->has('categories') && is_array(request('categories'))) {
+                                        $selectedCategories = array_values(array_filter(array_map('strval', (array) request('categories'))));
+                                    }
                                 @endphp
-                                <div class="border-top pt-2">
-                                    <label class="refrens-radio">
-                                        <input class="form-check-input" type="radio" name="category" value="" {{ $hasCategoryParam && $categorySelected === '' ? 'checked' : '' }}>
-                                        <span class="refrens-radio__label">Semua</span>
-                                    </label>
+                                <div class="border-top pt-2 refrens-catwrap" data-catwrap>
                                     @foreach($categoryList as $category)
-                                        <label class="refrens-radio">
-                                            <input class="form-check-input" type="radio" name="category" value="{{ $category }}" {{ $hasCategoryParam && $categorySelected === $category ? 'checked' : '' }}>
-                                            <span class="refrens-radio__label">{{ $category }}</span>
+                                        @php
+                                            $cat = (string) $category;
+                                            $isChecked = in_array($cat, $selectedCategories, true);
+                                            $isExtra = $loop->index >= 5;
+                                        @endphp
+                                        <label class="refrens-check {{ $isExtra ? 'refrens-cat-extra' : '' }}">
+                                            <input type="checkbox" name="categories[]" value="{{ $cat }}" {{ $isChecked ? 'checked' : '' }}>
+                                            <span class="refrens-check__label">{{ $cat }}</span>
                                         </label>
                                     @endforeach
+                                    @if($categoryList->count() > 5)
+                                        <button type="button" class="refrens-more" data-catmore>
+                                            <span>Lihat lainnya</span>
+                                            <i class="bi bi-chevron-down"></i>
+                                        </button>
+                                    @endif
                                 </div>
                             </div>
                         </details>
@@ -152,13 +177,13 @@
                                     $currentType = request('type') === 'featured' ? 'featured' : '';
                                 @endphp
                                 <div class="border-top pt-2">
-                                    <label class="refrens-radio">
-                                        <input class="form-check-input" type="radio" name="type" value="" {{ $currentType === '' ? 'checked' : '' }}>
-                                        <span class="refrens-radio__label">Semua Produk</span>
+                                    <label class="refrens-check">
+                                        <input type="radio" name="type" value="" {{ $currentType === '' ? 'checked' : '' }}>
+                                        <span class="refrens-check__label">Semua Produk</span>
                                     </label>
-                                    <label class="refrens-radio">
-                                        <input class="form-check-input" type="radio" name="type" value="featured" {{ $currentType === 'featured' ? 'checked' : '' }}>
-                                        <span class="refrens-radio__label">Produk Unggulan</span>
+                                    <label class="refrens-check">
+                                        <input type="radio" name="type" value="featured" {{ $currentType === 'featured' ? 'checked' : '' }}>
+                                        <span class="refrens-check__label">Produk Unggulan</span>
                                     </label>
                                 </div>
                             </div>
@@ -172,13 +197,13 @@
                             <div class="pt-3">
                                 @php $availability = request('availability', 'all'); @endphp
                                 <div class="border-top pt-2">
-                                    <label class="refrens-radio">
-                                        <input class="form-check-input" type="radio" name="availability" value="all" {{ $availability === 'all' ? 'checked' : '' }}>
-                                        <span class="refrens-radio__label">Semua</span>
+                                    <label class="refrens-check">
+                                        <input type="radio" name="availability" value="all" {{ $availability === 'all' ? 'checked' : '' }}>
+                                        <span class="refrens-check__label">Semua</span>
                                     </label>
-                                    <label class="refrens-radio">
-                                        <input class="form-check-input" type="radio" name="availability" value="in" {{ $availability === 'in' ? 'checked' : '' }}>
-                                        <span class="refrens-radio__label">Ada Stok</span>
+                                    <label class="refrens-check">
+                                        <input type="radio" name="availability" value="in" {{ $availability === 'in' ? 'checked' : '' }}>
+                                        <span class="refrens-check__label">Ada Stok</span>
                                     </label>
                                 </div>
                             </div>
@@ -193,27 +218,28 @@
                                 @php
                                     $hasPriceRange = request()->has('price_range');
                                     $priceRange = (string) request('price_range', '');
+                                    $priceSelected = $hasPriceRange ? $priceRange : '';
                                 @endphp
                                 <div class="border-top pt-2">
-                                    <label class="refrens-radio">
-                                        <input class="form-check-input" type="radio" name="price_range" value="" {{ $hasPriceRange && $priceRange === '' ? 'checked' : '' }}>
-                                        <span class="refrens-radio__label">Semua Harga</span>
+                                    <label class="refrens-check">
+                                        <input type="radio" name="price_range" value="" {{ $priceSelected === '' ? 'checked' : '' }}>
+                                        <span class="refrens-check__label">Semua Harga</span>
                                     </label>
-                                    <label class="refrens-radio">
-                                        <input class="form-check-input" type="radio" name="price_range" value="under_75000" {{ $hasPriceRange && $priceRange === 'under_75000' ? 'checked' : '' }}>
-                                        <span class="refrens-radio__label">Di bawah Rp 75,000</span>
+                                    <label class="refrens-check">
+                                        <input type="radio" name="price_range" value="under_75000" {{ $priceSelected === 'under_75000' ? 'checked' : '' }}>
+                                        <span class="refrens-check__label">Di bawah Rp 75,000</span>
                                     </label>
-                                    <label class="refrens-radio">
-                                        <input class="form-check-input" type="radio" name="price_range" value="75000_150000" {{ $hasPriceRange && $priceRange === '75000_150000' ? 'checked' : '' }}>
-                                        <span class="refrens-radio__label">Rp 75,000 - Rp 150,000</span>
+                                    <label class="refrens-check">
+                                        <input type="radio" name="price_range" value="75000_150000" {{ $priceSelected === '75000_150000' ? 'checked' : '' }}>
+                                        <span class="refrens-check__label">Rp 75,000 - Rp 150,000</span>
                                     </label>
-                                    <label class="refrens-radio">
-                                        <input class="form-check-input" type="radio" name="price_range" value="150000_220000" {{ $hasPriceRange && $priceRange === '150000_220000' ? 'checked' : '' }}>
-                                        <span class="refrens-radio__label">Rp 150,000 - Rp 220,000</span>
+                                    <label class="refrens-check">
+                                        <input type="radio" name="price_range" value="150000_220000" {{ $priceSelected === '150000_220000' ? 'checked' : '' }}>
+                                        <span class="refrens-check__label">Rp 150,000 - Rp 220,000</span>
                                     </label>
-                                    <label class="refrens-radio">
-                                        <input class="form-check-input" type="radio" name="price_range" value="220000_plus" {{ $hasPriceRange && $priceRange === '220000_plus' ? 'checked' : '' }}>
-                                        <span class="refrens-radio__label">Rp 220,000+</span>
+                                    <label class="refrens-check">
+                                        <input type="radio" name="price_range" value="220000_plus" {{ $priceSelected === '220000_plus' ? 'checked' : '' }}>
+                                        <span class="refrens-check__label">Rp 220,000+</span>
                                     </label>
                                 </div>
                             </div>
@@ -232,11 +258,6 @@
                                     $numberSizes = ['39','40','41','42','43'];
                                 @endphp
                                 <div class="refrens-sizegrid mb-2">
-                                    @php $checkedAll = $hasSizeParam && $size === ''; @endphp
-                                    <label class="refrens-pill {{ $checkedAll ? 'refrens-pill--active' : '' }}">
-                                        <input type="radio" name="size" value="" {{ $checkedAll ? 'checked' : '' }}>
-                                        <span class="refrens-pill__label">Semua</span>
-                                    </label>
                                     @foreach($letterSizes as $s)
                                         @php $checked = $hasSizeParam && $size === (string) $s; @endphp
                                         <label class="refrens-pill {{ $checked ? 'refrens-pill--active' : '' }}">
@@ -270,18 +291,14 @@
         <div id="sort" class="refrens-sheet" role="dialog" aria-modal="true">
             <a class="refrens-sheet__backdrop" href="{{ request()->fullUrl() }}" aria-label="Close"></a>
             <div class="refrens-sheet__panel">
-                <div class="px-4 pt-2 pb-3">
-                    <div class="refrens-sheet__handle"></div>
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                        <div class="fw-bold fs-5">Urutkan produk berdasarkan</div>
-                        <a href="{{ request()->fullUrl() }}" class="btn btn-sm btn-light rounded-circle" aria-label="Close">
-                            <i class="bi bi-x-lg"></i>
-                        </a>
-                    </div>
+                <div class="refrens-sheet__header">
+                    <div class="refrens-sheet__title refrens-sheet__title--sort">Urutkan produk berdasarkan</div>
+                    <a href="{{ request()->fullUrl() }}" class="refrens-sheet__close" aria-label="Close">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
                 </div>
-
                 <form action="{{ route('shop.index') }}" method="GET">
-                    <div class="px-4 pb-3">
+                    <div class="refrens-sheet__body">
                         @foreach(request()->except('sort') as $k => $v)
                             @if(is_array($v))
                                 @foreach($v as $vv)
@@ -293,25 +310,23 @@
                         @endforeach
 
                         @php $sort = request('sort', 'latest'); @endphp
-                        <div class="bg-white rounded-4 overflow-hidden border">
-                            @foreach([
-                                ['featured','Unggulan'],
-                                ['latest','Terbaru'],
-                                ['oldest','Terlama'],
-                                ['popular','Terpopuler'],
-                                ['rating_desc','Rating Tertinggi'],
-                                ['price_asc','Harga Terendah'],
-                                ['price_desc','Harga Tertinggi'],
-                                ['name_asc','Nama Produk (A-Z)'],
-                                ['name_desc','Nama Produk (Z-A)'],
-                            ] as [$val, $label])
-                                <label class="refrens-sortitem">
-                                    <div class="refrens-sortitem__label">{{ $label }}</div>
-                                    <input class="visually-hidden" type="radio" name="sort" value="{{ $val }}" {{ $sort === $val ? 'checked' : '' }} onchange="this.form.submit()">
-                                    <i class="bi bi-check2 refrens-sortitem__check"></i>
-                                </label>
-                            @endforeach
-                        </div>
+                        @foreach([
+                            ['featured','Unggulan'],
+                            ['latest','Terbaru'],
+                            ['oldest','Terlama'],
+                            ['popular','Terpopuler'],
+                            ['rating_desc','Rating Tertinggi'],
+                            ['price_asc','Harga Terendah'],
+                            ['price_desc','Harga Tertinggi'],
+                            ['name_asc','Nama Produk (A-Z)'],
+                            ['name_desc','Nama Produk (Z-A)'],
+                        ] as [$val, $label])
+                            <label class="refrens-sortitem">
+                                <div class="refrens-sortitem__label">{{ $label }}</div>
+                                <input class="visually-hidden" type="radio" name="sort" value="{{ $val }}" {{ $sort === $val ? 'checked' : '' }} onchange="this.form.submit()">
+                                <i class="bi bi-check2 refrens-sortitem__check"></i>
+                            </label>
+                        @endforeach
                     </div>
                 </form>
             </div>
@@ -388,8 +403,53 @@
             if (btnFilter) btnFilter.classList.toggle('refrens-topbtn--active', hash === '#filter');
             if (btnSort) btnSort.classList.toggle('refrens-topbtn--active', hash === '#sort');
         }
+        let lockedScrollY = 0;
+        function lockScroll() {
+            if (document.body.classList.contains('refrens-lockscroll')) return;
+            lockedScrollY = window.scrollY || window.pageYOffset || 0;
+            document.body.classList.add('refrens-lockscroll');
+            document.body.style.position = 'fixed';
+            document.body.style.top = '-' + lockedScrollY + 'px';
+            document.body.style.left = '0';
+            document.body.style.right = '0';
+            document.body.style.width = '100%';
+        }
+        function unlockScroll() {
+            if (!document.body.classList.contains('refrens-lockscroll')) return;
+            document.body.classList.remove('refrens-lockscroll');
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.left = '';
+            document.body.style.right = '';
+            document.body.style.width = '';
+            window.scrollTo(0, lockedScrollY);
+        }
+        function syncScrollLock() {
+            const hash = window.location.hash || '';
+            if (hash === '#filter' || hash === '#sort') {
+                lockScroll();
+                return;
+            }
+            unlockScroll();
+        }
+        function initCategoryMore() {
+            const wrap = document.querySelector('[data-catwrap]');
+            const btn = document.querySelector('[data-catmore]');
+            if (!wrap || !btn) return;
+            btn.addEventListener('click', function () {
+                const isOpen = wrap.classList.toggle('is-open');
+                btn.classList.toggle('is-open', isOpen);
+                const label = btn.querySelector('span');
+                if (label) label.textContent = isOpen ? 'Lihat lebih sedikit' : 'Lihat lainnya';
+            });
+        }
         syncTopButtons();
-        window.addEventListener('hashchange', syncTopButtons);
+        syncScrollLock();
+        initCategoryMore();
+        window.addEventListener('hashchange', function () {
+            syncTopButtons();
+            syncScrollLock();
+        });
     })();
 </script>
 @endpush
